@@ -40,7 +40,6 @@ import java.util.List;
 
 @Component
 public class MissiveMapper implements BaseMapper {
-    private final WorkPlaceFeignService workPlaceFeignService;
     private final SenderMapper senderMapper;
     private final SignatoryMapper signatoryMapper;
     private final ConfirmativeMapper confirmativeMapper;
@@ -48,29 +47,8 @@ public class MissiveMapper implements BaseMapper {
     private final InReceiverMapper inReceiverMapper;
     private final ContentFileService contentFileService;
     private final MissiveFileMapper missiveFileMapper;
-    private final MissiveRepository missiveRepository;
-    private final EntityGetter entityGetter;
-    private final ConfirmativeService confirmativeService;
-    private final OutReceiverService outReceiverService;
-    private final InReceiverService inReceiverService;
-    private final ConfirmativeRepository confirmativeRepository;
-    private final SignatoryRepository signatoryRepository;
-    private final OutReceiverRepository outReceiverRepository;
-    private final InReceiverRepository inReceiverRepository;
-    private final ContentFileRepository contentFileRepository;
-    private final MissiveFileRepository missiveFileRepository;
 
-    public MissiveMapper(WorkPlaceFeignService workPlaceFeignService, SenderMapper senderMapper,
-                         SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper,
-                         OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper,
-                         ContentFileService contentFileService, MissiveFileMapper missiveFileMapper,
-                         MissiveRepository missiveRepository, EntityGetter entityGetter,
-                         ConfirmativeService confirmativeService, OutReceiverService outReceiverService,
-                         InReceiverService inReceiverService, MissiveFileService missiveFileService,
-                         ConfirmativeRepository confirmativeRepository, SignatoryRepository signatoryRepository,
-                         OutReceiverRepository outReceiverRepository, InReceiverRepository inReceiverRepository,
-                         ContentFileRepository contentFileRepository, MissiveFileRepository missiveFileRepository) {
-        this.workPlaceFeignService = workPlaceFeignService;
+    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper) {
         this.senderMapper = senderMapper;
         this.signatoryMapper = signatoryMapper;
         this.confirmativeMapper = confirmativeMapper;
@@ -78,17 +56,6 @@ public class MissiveMapper implements BaseMapper {
         this.inReceiverMapper = inReceiverMapper;
         this.contentFileService = contentFileService;
         this.missiveFileMapper = missiveFileMapper;
-        this.missiveRepository = missiveRepository;
-        this.entityGetter = entityGetter;
-        this.confirmativeService = confirmativeService;
-        this.outReceiverService = outReceiverService;
-        this.inReceiverService = inReceiverService;
-        this.confirmativeRepository = confirmativeRepository;
-        this.signatoryRepository = signatoryRepository;
-        this.outReceiverRepository = outReceiverRepository;
-        this.inReceiverRepository = inReceiverRepository;
-        this.contentFileRepository = contentFileRepository;
-        this.missiveFileRepository = missiveFileRepository;
     }
 
     public Missive toEntity(MissiveCreateDTO createDTO) {
@@ -105,9 +72,8 @@ public class MissiveMapper implements BaseMapper {
         List<ContentFile> baseFiles = contentFileService.getContentFiles(createDTO.getBaseFileIDs());
         ContentFile missiveFileContent = contentFileService.getContentFile(createDTO.getMissiveFileContentID());
         MissiveFile missiveFile = missiveFileMapper.toEntity(missiveFileContent);
-        Missive missive = new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(),
+        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(),
                 outReceivers, inReceivers, baseFiles, Collections.singletonList(missiveFile));
-        return missive;
     }
 
 }

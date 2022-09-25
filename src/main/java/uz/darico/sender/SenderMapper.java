@@ -13,9 +13,8 @@ public class SenderMapper implements BaseMapper {
     }
 
     public Sender toEntity(Long workPlaceID) {
-        Sender sender = new Sender( workPlaceID,
+        return new Sender( workPlaceID,
                 workPlaceFeignService.getUserID(workPlaceID),
                 SenderStatus.PREPARING.getCode());
-        return sender;
     }
 }
