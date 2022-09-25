@@ -1,5 +1,6 @@
 package uz.darico.missive;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
@@ -10,6 +11,7 @@ import uz.darico.confirmative.ConfirmativeService;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileRepository;
 import uz.darico.contentFile.ContentFileService;
+import uz.darico.exception.exception.UniversalException;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.InReceiverRepository;
@@ -28,6 +30,7 @@ import uz.darico.outReceiver.OutReceiverService;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
 import uz.darico.sender.SenderMapper;
 import uz.darico.sender.SenderRepository;
+import uz.darico.sender.SenderService;
 import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryMapper;
 import uz.darico.signatory.SignatoryRepository;
@@ -37,19 +40,11 @@ import uz.darico.workPlace.WorkPlaceFeignService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MissiveService extends AbstractService<MissiveRepository, MissiveValidator, MissiveMapper> {
-
-    private final SenderRepository senderRepository;
-    private final SignatoryRepository signatoryRepository;
-    private final ConfirmativeRepository confirmativeRepository;
-    private final InReceiverRepository inReceiverRepository;
-    private final OutReceiverRepository outReceiverRepository;
-    private final ContentFileRepository contentFileRepository;
-    private final MissiveFileRepository missiveFileRepository;
-    private final EntityGetter entityGetter;
-    private final WorkPlaceFeignService workPlaceFeignService;
     private final ConfirmativeService confirmativeService;
     private final OutReceiverService outReceiverService;
     private final InReceiverService inReceiverService;
@@ -57,88 +52,72 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     private final SignatoryService signatoryService;
     private final ContentFileService contentFileService;
-    private final SenderMapper senderMapper;
-    private final SignatoryMapper signatoryMapper;
-    private final ConfirmativeMapper confirmativeMapper;
-    private final OutReceiverMapper outReceiverMapper;
-    private final InReceiverMapper inReceiverMapper;
-    private final MissiveFileMapper missiveFileMapper;
+    private final SenderService senderService;
 
-    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, SenderRepository senderRepository, SignatoryRepository signatoryRepository, ConfirmativeRepository confirmativeRepository, InReceiverRepository inReceiverRepository, OutReceiverRepository outReceiverRepository, ContentFileRepository contentFileRepository, MissiveFileRepository missiveFileRepository, EntityGetter entityGetter, WorkPlaceFeignService workPlaceFeignService, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, ConfirmativeRepository confirmativeRepository1, SignatoryRepository signatoryRepository1, OutReceiverRepository outReceiverRepository1, InReceiverRepository inReceiverRepository1, ContentFileRepository contentFileRepository1, MissiveFileRepository missiveFileRepository1, SignatoryService signatoryService, ContentFileService contentFileService, SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, MissiveFileMapper missiveFileMapper) {
+
+    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, SignatoryService signatoryService, ContentFileService contentFileService, SenderService senderService) {
         super(repository, validator, mapper);
-        this.senderRepository = senderRepository;
-        this.signatoryRepository = signatoryRepository;
-        this.confirmativeRepository = confirmativeRepository;
-        this.inReceiverRepository = inReceiverRepository;
-        this.outReceiverRepository = outReceiverRepository;
-        this.contentFileRepository = contentFileRepository;
-        this.missiveFileRepository = missiveFileRepository;
-        this.entityGetter = entityGetter;
-        this.workPlaceFeignService = workPlaceFeignService;
         this.confirmativeService = confirmativeService;
         this.outReceiverService = outReceiverService;
         this.inReceiverService = inReceiverService;
         this.missiveFileService = missiveFileService;
         this.signatoryService = signatoryService;
         this.contentFileService = contentFileService;
-        this.senderMapper = senderMapper;
-        this.signatoryMapper = signatoryMapper;
-        this.confirmativeMapper = confirmativeMapper;
-        this.outReceiverMapper = outReceiverMapper;
-        this.inReceiverMapper = inReceiverMapper;
-        this.missiveFileMapper = missiveFileMapper;
+        this.senderService = senderService;
     }
 
     public ResponseEntity<?> create(MissiveCreateDTO createDTO) {
         validator.validForCreate(createDTO);
         Missive missive = mapper.toEntity(createDTO);
-        missive.setSender(senderRepository.save(missive.getSender()));
-        missive.setSignatory(signatoryRepository.save(missive.getSignatory()));
-        missive.setConfirmatives(confirmativeRepository.saveAll(missive.getConfirmatives()));
-        missive.setOutReceivers(outReceiverRepository.saveAll(missive.getOutReceivers()));
-        missive.setInReceivers(inReceiverRepository.saveAll(missive.getInReceivers()));
-        missive.setBaseFiles(contentFileRepository.saveAll(missive.getBaseFiles()));
-        missive.setMissiveFiles(missiveFileRepository.saveAll(missive.getMissiveFiles()));
+        missive.setSender(senderService.save(missive.getSender()));
+        missive.setSignatory(signatoryService.save(missive.getSignatory()));
+        missive.setConfirmatives(confirmativeService.saveAll(missive.getConfirmatives()));
+        missive.setOutReceivers(outReceiverService.saveAll(missive.getOutReceivers()));
+        missive.setInReceivers(inReceiverService.saveAll(missive.getInReceivers()));
+        missive.setBaseFiles(contentFileService.saveAll(missive.getBaseFiles()));
+        missive.setMissiveFiles(missiveFileService.saveAll(missive.getMissiveFiles()));
         Missive saved = repository.save(missive);
         return ResponseEntity.ok(true);
     }
 
     public ResponseEntity<?> update(MissiveUpdateDTO updateDTO) {
         validator.validForUpdate(updateDTO);
-        Missive missive = entityGetter.getMissive(updateDTO.getID());
-        Long signatoryWorkPlaceID = updateDTO.getSignatoryWorkPlaceID();
+        Missive missive = getMissive(updateDTO.getID());
+
         Signatory signatory = missive.getSignatory();
-        if (!signatoryWorkPlaceID.equals(signatory.getWorkPlaceID())) {
-            Long signatoryUserID = workPlaceFeignService.getUserID(updateDTO.getSignatoryWorkPlaceID());
-            signatory.setWorkPlaceID(updateDTO.getSignatoryWorkPlaceID());
-            signatory.setUserID(signatoryUserID);
-            signatoryRepository.save(signatory);
-        }
-        List<Long> confirmativeWorkPlaceIDs = updateDTO.getConfirmativeWorkPlaceIDs();
-        List<Confirmative> confirmatives = confirmativeMapper.toEntity(confirmativeWorkPlaceIDs);
-        confirmativeService.deleteAll(missive.getConfirmatives());
-        List<OutReceiverCreateDTO> outReceiverCreateDTOs = updateDTO.getOutReceivers();
-        List<OutReceiver> outReceivers = outReceiverMapper.toEntity(outReceiverCreateDTOs);
-        outReceiverService.deleteAll(missive.getOutReceivers());
-        List<InReceiverCreateDTO> inReceiverCreateDTOs = updateDTO.getInReceivers();
-        List<InReceiver> inReceivers = inReceiverMapper.toEntity(inReceiverCreateDTOs);
-        inReceiverService.deleteAll(missive.getInReceivers());
-        List<ContentFile> baseFiles = contentFileService.getContentFiles(updateDTO.getBaseFileIDs());
-        contentFileService.deleteAll(missive.getBaseFiles());
-        ContentFile missiveFileContent = contentFileService.getContentFile(updateDTO.getMissiveFileID());
-        MissiveFile missiveFile = missiveFileMapper.toEntity(missiveFileContent);
-        List<MissiveFile> savedMissiveFiles = missiveFileRepository.saveAll(Collections.singletonList(missiveFile));
-        List<Confirmative> newConfirmatives = confirmativeRepository.saveAll(confirmatives);
-        List<OutReceiver> newOutReceivers = outReceiverRepository.saveAll(outReceivers);
-        List<InReceiver> newInReceivers = inReceiverRepository.saveAll(inReceivers);
-        List<ContentFile> newContentFiles = contentFileRepository.saveAll(baseFiles);
+        signatoryService.edit(signatory, updateDTO.getSignatoryWorkPlaceID());
+
+        List<Long> newConfirmativeWorkPlaceIDs = updateDTO.getConfirmativeWorkPlaceIDs();
+        List<Confirmative> newConfirmatives = confirmativeService.refresh(newConfirmativeWorkPlaceIDs, missive.getConfirmatives());
         missive.setConfirmatives(newConfirmatives);
+
+        List<OutReceiverCreateDTO> outReceiverCreateDTOs = updateDTO.getOutReceivers();
+        List<OutReceiver> newOutReceivers = outReceiverService.refresh(outReceiverCreateDTOs, missive.getOutReceivers());
         missive.setOutReceivers(newOutReceivers);
+
+        List<InReceiverCreateDTO> inReceiverCreateDTOs = updateDTO.getInReceivers();
+        List<InReceiver> newInReceivers = inReceiverService.refresh(inReceiverCreateDTOs, missive.getInReceivers());
         missive.setInReceivers(newInReceivers);
+
+        List<UUID> baseFileIDs = updateDTO.getBaseFileIDs();
+        List<ContentFile> newContentFiles = contentFileService.refresh(baseFileIDs, missive.getBaseFiles());
         missive.setBaseFiles(newContentFiles);
-        missive.setMissiveFiles(savedMissiveFiles);
+
+        ContentFile missiveFileContent = contentFileService.getContentFile(updateDTO.getMissiveFileContentID());
+        List<MissiveFile> newMissiveFiles = missiveFileService.refresh(missiveFileContent, missive.getMissiveFiles());
+        missive.setMissiveFiles(newMissiveFiles);
+
         repository.save(missive);
         return ResponseEntity.ok(true);
     }
+
+    public Missive getMissive(UUID ID) {
+        Optional<Missive> missiveOptional = repository.findById(ID);
+        if (missiveOptional.isEmpty()) {
+            throw new UniversalException("Missive not found", HttpStatus.BAD_REQUEST);
+        }
+        return missiveOptional.get();
+    }
+
 
 }

@@ -30,4 +30,8 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
         repository.deleteFromRelatedTable(IDs);
         repository.deleteAll(IDs);
     }
+
+    public List<Confirmative> saveAll(List<Confirmative> confirmatives) {
+        return repository.saveAll(confirmatives);
+    }
 }
