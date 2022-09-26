@@ -75,7 +75,7 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String folder = FILE_PATH + "/" + orgID;
         Path path = Path.of(folder);
         File file2 = new File(folder);
-        if (!file2.exists()) {
+        if (!file2.isDirectory()) {
             file2.mkdirs();
         }
         MultipartFile file = request.getFile("file");
@@ -100,9 +100,9 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
             }
             String generatedName = UUID.randomUUID() + extention;
             String url = folder + "/" + generatedName;
-            File file1 = new File(url);
-            file1.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(file1);
+            Path of = Path.of(url);
+            Files.createFile(of);
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(url));
             fileOutputStream.write(file.getBytes());
             fileOutputStream.close();
             fileOutputStream.flush();
