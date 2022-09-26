@@ -40,4 +40,8 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
     public List<MissiveFile> saveAll(List<MissiveFile> missiveFiles) {
         return repository.saveAll(missiveFiles);
     }
+
+    public List<MissiveFile> getAll(UUID ID) {
+        return repository.getAll(ID);
+    }
 }

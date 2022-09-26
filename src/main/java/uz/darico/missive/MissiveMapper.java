@@ -11,6 +11,8 @@ import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.MissiveCreateDTO;
 import uz.darico.missive.dto.MissiveGetDTO;
+import uz.darico.missive.dto.MissiveListDTO;
+import uz.darico.missive.projections.MissiveListProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileMapper;
 import uz.darico.outReceiver.OutReceiver;
@@ -65,5 +67,10 @@ public class MissiveMapper implements BaseMapper {
 
     public MissiveGetDTO toGetDTO(Missive missive) {
         return new MissiveGetDTO();
+    }
+
+    public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {
+
+        return null;
     }
 }

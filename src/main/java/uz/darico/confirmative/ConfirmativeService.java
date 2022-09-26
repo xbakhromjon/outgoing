@@ -38,4 +38,8 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
     public void notReady(UUID id) {
 
     }
+
+    public List<Confirmative> getAll(UUID ID) {
+        return repository.getAll(ID);
+    }
 }

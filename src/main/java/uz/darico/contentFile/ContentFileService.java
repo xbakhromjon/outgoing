@@ -130,7 +130,7 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         return ResponseEntity.ok().headers(headers).contentLength(send.length()).contentType(MediaType.parseMediaType(fileEntity.getContentType())).body(resource);
     }
 
-    public ResponseEntity<Boolean> download(String id,HttpServletResponse response) throws IOException {
+    public ResponseEntity<Boolean> download(String id, HttpServletResponse response) throws IOException {
         UUID ID = baseUtils.strToUUID(id);
         ContentFile fileEntity = getPersist(ID);
         String mimeType = URLConnection.guessContentTypeFromName(fileEntity.getOriginalName());
@@ -154,4 +154,7 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         });
     }
 
+    public List<ContentFile> getAll(UUID ID) {
+        return repository.getAll(ID);
+    }
 }

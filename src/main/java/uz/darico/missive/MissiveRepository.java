@@ -5,9 +5,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import uz.darico.base.repository.BaseRepository;
+import uz.darico.missive.dto.MissiveGetDTO;
+import uz.darico.missive.projections.MissiveListProjection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,4 +40,12 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     @Query(nativeQuery = true, value = "update missive set is_ready = true where id = :ID")
     @Modifying
     void prepareToSend(UUID ID);
+
+    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, s.userid senderUserID, m.short_info shortInfo\n" +
+            "from missive m\n" +
+            "         inner join sender s on m.sender_id = s.id\n" +
+            "where s.work_placeid = :workPlaceID\n" +
+            "  and not s.is_ready_to_send\n" +
+            "limit :limit offset :offset")
+    List<MissiveListProjection> getSketchies(Long workPlaceID, Integer limit, Integer offset);
 }

@@ -1,6 +1,7 @@
 package uz.darico.missive;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 import uz.darico.base.entity.Auditable;
 import uz.darico.confirmative.Confirmative;
 import uz.darico.contentFile.ContentFile;
@@ -41,6 +42,8 @@ public class Missive extends Auditable {
     @OneToMany
     private List<MissiveFile> missiveFiles;
     private Boolean isReady = false;
+    @Type(type = "text")
+    private String shortInfo;
 
 
     public Missive(Long orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,

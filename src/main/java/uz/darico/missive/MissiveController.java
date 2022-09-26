@@ -6,6 +6,7 @@ import uz.darico.base.controller.AbstractController;
 import uz.darico.missive.dto.MissiveCreateDTO;
 import uz.darico.missive.dto.MissiveRejectDTO;
 import uz.darico.missive.dto.MissiveUpdateDTO;
+import uz.darico.utils.SearchDTO;
 
 @RestController
 @RequestMapping("/missive")
@@ -53,6 +54,11 @@ public class MissiveController extends AbstractController<MissiveService> {
     @PatchMapping("/reject")
     public ResponseEntity<?> reject(@RequestBody MissiveRejectDTO rejectDTO) {
         return service.reject(rejectDTO);
+    }
+
+    @PostMapping("/sketchy")
+    public ResponseEntity<?> getList(@RequestBody SearchDTO searchDTO) {
+         return service.getList(searchDTO);
     }
 
 

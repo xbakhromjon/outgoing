@@ -17,4 +17,7 @@ public interface MissiveFileRepository extends JpaRepository<MissiveFile, UUID>,
     @Query(nativeQuery = true, value = "update missive_file set is_deleted = true  where id in :IDs")
     @Modifying
     void deleteAll(List<UUID> IDs);
+
+    @Query(nativeQuery = true, value = "select * from missive_file where id in (select * from missive_missive_files where missive_id = :ID)")
+    List<MissiveFile> getAll(UUID ID);
 }

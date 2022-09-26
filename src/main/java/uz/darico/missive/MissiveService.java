@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
 import uz.darico.confirmative.Confirmative;
+import uz.darico.confirmative.ConfirmativeMapper;
 import uz.darico.confirmative.ConfirmativeService;
+import uz.darico.confirmative.dto.ConfirmativeShortInfoDTO;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
@@ -16,10 +18,8 @@ import uz.darico.feedback.signatory.SignatoryFeedback;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverService;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
-import uz.darico.missive.dto.MissiveCreateDTO;
-import uz.darico.missive.dto.MissiveGetDTO;
-import uz.darico.missive.dto.MissiveRejectDTO;
-import uz.darico.missive.dto.MissiveUpdateDTO;
+import uz.darico.missive.dto.*;
+import uz.darico.missive.projections.MissiveListProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileService;
 import uz.darico.outReceiver.OutReceiver;
@@ -30,8 +30,11 @@ import uz.darico.sender.SenderService;
 import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryService;
 import uz.darico.utils.BaseUtils;
+import uz.darico.utils.SearchDTO;
+import uz.darico.utils.Tab;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,12 +51,13 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     private final BaseUtils baseUtils;
     private final SignatoryFeedBackService signatoryFeedBackService;
     private final ConfFeedBackService confFeedBackService;
-
+    private final ConfirmativeMapper confirmativeMapper;
 
     public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService,
                           MissiveFileService missiveFileService, SignatoryService signatoryService,
                           ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils,
-                          SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService) {
+                          SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService,
+                          ConfirmativeMapper confirmativeMapper) {
         super(repository, validator, mapper);
         this.confirmativeService = confirmativeService;
         this.outReceiverService = outReceiverService;
@@ -65,6 +69,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         this.baseUtils = baseUtils;
         this.signatoryFeedBackService = signatoryFeedBackService;
         this.confFeedBackService = confFeedBackService;
+        this.confirmativeMapper = confirmativeMapper;
     }
 
     public ResponseEntity<?> create(MissiveCreateDTO createDTO) {
@@ -177,4 +182,78 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
+    public ResponseEntity<?> getList(SearchDTO searchDTO) {
+        List<MissiveListDTO> listDTOs = getSketchies(searchDTO);
+        return ResponseEntity.ok(listDTOs);
+    }
+
+    public List<MissiveListDTO> getSketchies(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.HOMAKI.getCode())) {
+            List<MissiveListProjection> missiveListProjections = repository.getSketchies(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
+            List<MissiveListDTO> missiveListDTOs = mapper.toListDTO(missiveListProjections);
+            for (MissiveListDTO missiveListDTO : missiveListDTOs) {
+                UUID ID = missiveListDTO.getID();
+                // confirmative
+                List<Confirmative> confirmatives = confirmativeService.getAll(ID);
+                List<ConfirmativeShortInfoDTO> confirmativeShortInfoDTOs = confirmativeMapper.toShortInfoDTO(confirmatives);
+                missiveListDTO.setConfirmatives(confirmativeShortInfoDTOs);
+                // file
+                List<ContentFile> baseFiles = contentFileService.getAll(ID);
+                missiveListDTO.setBaseFiles(baseFiles);
+                // missiveFile
+                List<MissiveFile> missiveFiles = missiveFileService.getAll(ID);
+                missiveListDTO.setMissiveFiles(missiveFiles);
+            }
+            return missiveListDTOs;
+        }
+        return getInProcess(searchDTO);
+    }
+
+    public List<MissiveListDTO> getInProcess(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.JARAYONDA.getCode())) {
+
+        }
+
+        return getForConfirm(searchDTO);
+    }
+
+    public List<MissiveListDTO> getForConfirm(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLASH_UCHUN.getCode())) {
+
+        }
+
+        return getConfirmed(searchDTO);
+    }
+
+    public List<MissiveListDTO> getConfirmed(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLANGAN.getCode())) {
+
+        }
+
+        return getForSign(searchDTO);
+    }
+
+    public List<MissiveListDTO> getForSign(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.IMZOLASH_UCHUN.getCode())) {
+
+        }
+
+        return getSigned(searchDTO);
+    }
+
+    public List<MissiveListDTO> getSigned(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.IMZOLANGAN.getCode())) {
+
+        }
+
+        return getSent(searchDTO);
+    }
+
+    public List<MissiveListDTO> getSent(SearchDTO searchDTO) {
+        if (Objects.equals(searchDTO.getTab(), Tab.YUBORILGAN.getCode())) {
+
+        }
+        throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);
+    }
 }

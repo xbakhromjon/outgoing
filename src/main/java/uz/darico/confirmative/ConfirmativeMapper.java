@@ -1,6 +1,7 @@
 package uz.darico.confirmative;
 
 import org.springframework.stereotype.Component;
+import uz.darico.confirmative.dto.ConfirmativeShortInfoDTO;
 import uz.darico.workPlace.WorkPlaceFeignService;
 import uz.darico.base.mapper.BaseMapper;
 
@@ -26,5 +27,10 @@ public class ConfirmativeMapper implements BaseMapper {
             confirmatives.add(confirmative);
         }
         return confirmatives;
+    }
+
+    public List<ConfirmativeShortInfoDTO> toShortInfoDTO(List<Confirmative> confirmatives) {
+
+        return null;
     }
 }

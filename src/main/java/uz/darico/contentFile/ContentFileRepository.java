@@ -23,4 +23,7 @@ public interface ContentFileRepository extends JpaRepository<ContentFile, UUID>,
 
     @Query(nativeQuery = true, value = "select * from content_file where id in :IDs")
     List<ContentFile> findByIDs(List<UUID> IDs);
+
+    @Query(nativeQuery = true, value = "select * from content_file where id in (select base_files_id from missive_base_files where missive_id = :ID)")
+    List<ContentFile> getAll(UUID ID);
 }
