@@ -8,6 +8,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/swagger-ui/**", "/missive/**", "/test/**");
+        web.ignoring().antMatchers("/**/**");
     }
 }

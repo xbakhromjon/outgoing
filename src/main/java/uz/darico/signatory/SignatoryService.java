@@ -35,4 +35,12 @@ public class SignatoryService extends AbstractService<SignatoryRepository, Signa
             repository.save(signatory);
         }
     }
+
+    public boolean existsByID(UUID rejectedBy) {
+        return repository.existsById(rejectedBy);
+    }
+
+    public void notReady(UUID id) {
+
+    }
 }

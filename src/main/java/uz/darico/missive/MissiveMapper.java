@@ -1,20 +1,6 @@
 package uz.darico.missive;
 
 import org.springframework.stereotype.Component;
-import uz.darico.confirmative.ConfirmativeRepository;
-import uz.darico.confirmative.ConfirmativeService;
-import uz.darico.contentFile.ContentFileRepository;
-import uz.darico.inReceiver.InReceiverRepository;
-import uz.darico.inReceiver.InReceiverService;
-import uz.darico.missive.dto.MissiveUpdateDTO;
-import uz.darico.missiveFile.MissiveFileRepository;
-import uz.darico.missiveFile.MissiveFileService;
-import uz.darico.outReceiver.OutReceiverRepository;
-import uz.darico.outReceiver.OutReceiverService;
-import uz.darico.signatory.SignatoryRepository;
-import uz.darico.signatory.SignatoryService;
-import uz.darico.utils.EntityGetter;
-import uz.darico.workPlace.WorkPlaceFeignService;
 import uz.darico.base.mapper.BaseMapper;
 import uz.darico.confirmative.Confirmative;
 import uz.darico.confirmative.ConfirmativeMapper;
@@ -24,6 +10,7 @@ import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.MissiveCreateDTO;
+import uz.darico.missive.dto.MissiveGetDTO;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileMapper;
 import uz.darico.outReceiver.OutReceiver;
@@ -76,4 +63,7 @@ public class MissiveMapper implements BaseMapper {
                 outReceivers, inReceivers, baseFiles, Collections.singletonList(missiveFile));
     }
 
+    public MissiveGetDTO toGetDTO(Missive missive) {
+        return new MissiveGetDTO();
+    }
 }

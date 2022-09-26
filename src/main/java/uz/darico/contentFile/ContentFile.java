@@ -13,10 +13,10 @@ import javax.sql.rowset.spi.SyncResolver;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "content_file")
 public class ContentFile extends Auditable {
     private String path;
     private String originalName;
     private String generatedName;
-    private Double size;
+    private Long size;
+    private String contentType;
 }
