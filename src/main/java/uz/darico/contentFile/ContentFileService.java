@@ -28,7 +28,7 @@ import java.util.UUID;
 public class ContentFileService extends AbstractService<ContentFileRepository, InReceiverValidator, ContentFileMapper> {
 
     private final BaseUtils baseUtils;
-    private final String FILE_PATH = "/home/database";
+    private final String FILE_PATH = "/home/xbakhromjon/database";
     private final ServletContext servletContext;
 
     public ContentFileService(ContentFileRepository repository, InReceiverValidator validator, ContentFileMapper mapper,
@@ -75,8 +75,8 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String folder = FILE_PATH + "/" + orgID;
         Path path = Path.of(folder);
         File file2 = new File(folder);
-        if (!file2.isDirectory()) {
-            file2.mkdirs();
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
         }
         MultipartFile file = request.getFile("file");
         if (file != null) {
@@ -100,8 +100,6 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
             }
             String generatedName = UUID.randomUUID() + extention;
             String url = folder + "/" + generatedName;
-            Path of = Path.of(url);
-            Files.createFile(of);
             FileOutputStream fileOutputStream = new FileOutputStream(new File(url));
             fileOutputStream.write(file.getBytes());
             fileOutputStream.close();
