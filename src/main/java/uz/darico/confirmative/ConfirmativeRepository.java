@@ -22,6 +22,20 @@ public interface ConfirmativeRepository extends JpaRepository<Confirmative, UUID
     @Modifying
     void deleteFromRelatedTable(List<UUID> IDs);
 
-    @Query(nativeQuery = true, value = "select * from confirmative where id in (select confirmatives_id from missive_confirmatives where missive_id = :ID)")
-    List<Confirmative> getAll(UUID ID);
+    @Query(nativeQuery = true, value = "select * from confirmative where id in (select confirmatives_id from missive_confirmatives where missive_id = :missiveID)")
+    List<Confirmative> getAll(UUID missiveID);
+
+    @Query(nativeQuery = true, value = "select *\n" +
+            "from confirmative\n" +
+            "where id in (select confirmatives_id from missive_confirmatives where missive_confirmatives.missive_id = (select missive_id from missive_confirmatives where confirmatives_id = :confID))")
+    List<Confirmative> getAllSiblings(UUID confID);
+
+    @Query(nativeQuery = true, value = "update confirmative set prev_is_ready = true where id = :ID")
+    @Modifying
+    void prevReady(UUID ID);
+
+    @Query(nativeQuery = true, value = "update confirmative set is_ready_to_send = false, prev_is_ready = false where id in (select confirmatives_id from missive_confirmatives where missive_id = :missiveID)")
+    @Modifying
+    void notReadyByMissiveID(UUID missiveID);
+
 }

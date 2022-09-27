@@ -84,7 +84,9 @@ public class MissiveMapper implements BaseMapper {
     }
 
     public MissiveGetDTO toGetDTO(Missive missive) {
-        return new MissiveGetDTO();
+        return new MissiveGetDTO(missive.getOrgID(), missive.getSender(), missive
+                .getSignatory(), missive.getConfirmatives(), missive.getDepartmentID(), missive.getOutReceivers(),
+                missive.getInReceivers(), missive.getBaseFiles(), missive.getMissiveFiles(), missive.getIsReady());
     }
 
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {

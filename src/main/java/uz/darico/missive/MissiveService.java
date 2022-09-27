@@ -12,9 +12,7 @@ import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
 import uz.darico.feedback.conf.ConfFeedBackService;
-import uz.darico.feedback.conf.ConfFeedback;
 import uz.darico.feedback.signatory.SignatoryFeedBackService;
-import uz.darico.feedback.signatory.SignatoryFeedback;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverService;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
@@ -90,6 +88,14 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         validator.validForUpdate(updateDTO);
         Missive missive = getMissive(updateDTO.getID());
 
+        if (!missive.getSender().getWorkPlaceID().equals(updateDTO.getWorkPlaceID())) {
+            throw new UniversalException("Sender not updatable", HttpStatus.BAD_REQUEST);
+        }
+
+        if (missive.getSender().getIsReadyToSend()) {
+            throw new UniversalException("Missive not updatable", HttpStatus.BAD_REQUEST);
+        }
+
         Signatory signatory = missive.getSignatory();
         signatoryService.edit(signatory, updateDTO.getSignatoryWorkPlaceID());
 
@@ -118,7 +124,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     }
 
     public Missive getMissive(UUID ID) {
-        Optional<Missive> missiveOptional = repository.findById(ID);
+        Optional<Missive> missiveOptional = repository.find(ID);
         if (missiveOptional.isEmpty()) {
             throw new UniversalException("Missive not found", HttpStatus.BAD_REQUEST);
         }
@@ -146,20 +152,17 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
-    public ResponseEntity<?> readyForConfirmative(String confId) {
+
+    public ResponseEntity<?> readyForConf(String confId) {
         UUID confID = baseUtils.strToUUID(confId);
-        List<Boolean> booleans = repository.readyForConf(confID);
-        boolean isReady = true;
-        for (Boolean aBoolean : booleans) {
-            if (!aBoolean) {
-                isReady = false;
-            }
-        }
-        if (isReady) {
-            repository.ready(confID);
+        repository.readyForConf(confID);
+        boolean canPrevReady = confirmativeService.nextPrevReady(confID);
+        if (!canPrevReady) {
+            repository.readyByConfID(confID);
         }
         return ResponseEntity.ok(true);
     }
+
 
     public ResponseEntity<?> sign(String id) {
         UUID ID = baseUtils.strToUUID(id);
@@ -173,21 +176,13 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         rejectDTO.setRejectedByUUID(rejectedByUUID);
         Sender sender = senderService.getPersistByMissiveID(ID);
         if (signatoryService.existsByID(rejectedByUUID)) {
-            SignatoryFeedback signatoryFeedback =
-                    signatoryFeedBackService.create(rejectDTO);
-            List<SignatoryFeedback> signatoryFeedbacks = sender.getSignatoryFeedbacks();
-            signatoryFeedbacks.add(signatoryFeedback);
-            sender.setSignatoryFeedbacks(signatoryFeedbacks);
+            signatoryFeedBackService.add(rejectDTO, sender);
         } else {
-            ConfFeedback confFeedback = confFeedBackService.create(rejectDTO);
-            List<ConfFeedback> confFeedbacks = sender.getConfFeedbacks();
-            confFeedbacks.add(confFeedback);
-            sender.setConfFeedbacks(confFeedbacks);
+            confFeedBackService.add(rejectDTO, sender);
         }
+        sender.setIsReadyToSend(false);
         senderService.save(sender);
-        confirmativeService.notReady(ID);
-        signatoryService.notReady(ID);
-        senderService.notReady(ID);
+        confirmativeService.notReadyByMissiveID(ID);
         return ResponseEntity.ok(true);
     }
 
@@ -216,83 +211,64 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     }
 
     public List<MissiveListProjection> getSketchies(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
+        int offset = searchDTO.getPage() * searchDTO.getSize();
+        searchDTO.setOffset(offset);
         if (Objects.equals(searchDTO.getTab(), Tab.HOMAKI.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getSketchies(searchDTO.getWorkPlace(),
+            return repository.getSketchies(searchDTO.getWorkPlace(),
                     searchDTO.getSize(), offset);
-            return missiveListProjections;
         }
         return getInProcess(searchDTO);
     }
 
     public List<MissiveListProjection> getInProcess(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
         if (Objects.equals(searchDTO.getTab(), Tab.JARAYONDA.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getInProcesses(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
-            return missiveListProjections;
+            return repository.getInProcesses(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getForConfirm(searchDTO);
     }
 
     public List<MissiveListProjection> getForConfirm(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLASH_UCHUN.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getForConfirm(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
-            return missiveListProjections;
+            return repository.getForConfirm(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getConfirmed(searchDTO);
     }
 
     public List<MissiveListProjection> getConfirmed(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLANGAN.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getConfirmed(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
-            return missiveListProjections;
+            return repository.getConfirmed(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getForSign(searchDTO);
     }
 
     public List<MissiveListProjection> getForSign(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLASH_UCHUN.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getForSign(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
-            return missiveListProjections;
+            return repository.getForSign(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getSigned(searchDTO);
     }
 
     public List<MissiveListProjection> getSigned(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLANGAN.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getSigned(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
-            return missiveListProjections;
+            return repository.getSigned(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getSent(searchDTO);
     }
 
     public List<MissiveListProjection> getSent(SearchDTO searchDTO) {
-        int offset = searchDTO
-                .getPage() * searchDTO.getSize();
         if (Objects.equals(searchDTO.getTab(), Tab.YUBORILGAN.getCode())) {
-            List<MissiveListProjection> missiveListProjections = repository.getSent(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
-            return missiveListProjections;
+            return repository.getSent(searchDTO.getWorkPlace(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
         throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);
     }

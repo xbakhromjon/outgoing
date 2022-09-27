@@ -17,4 +17,5 @@ public class SearchDTO {
     private Integer page;
     private Integer size = 20;
     private Integer tab;
+    private Integer offset;
 }

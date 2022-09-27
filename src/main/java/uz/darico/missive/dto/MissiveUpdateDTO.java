@@ -25,6 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MissiveUpdateDTO {
     private UUID ID;
+    private Long workPlaceID;
     private Long signatoryWorkPlaceID;
     private List<Long> confirmativeWorkPlaceIDs;
     private List<OutReceiverCreateDTO> outReceivers;

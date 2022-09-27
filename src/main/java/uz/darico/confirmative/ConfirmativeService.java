@@ -5,6 +5,7 @@ import uz.darico.base.entity.AbstractEntity;
 import uz.darico.base.service.AbstractService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,11 +36,28 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
         return repository.saveAll(confirmatives);
     }
 
-    public void notReady(UUID id) {
-
+    public void notReadyByMissiveID(UUID missiveID) {
+        repository.notReadyByMissiveID(missiveID);
     }
 
-    public List<Confirmative> getAll(UUID ID) {
-        return repository.getAll(ID);
+    public List<Confirmative> getAll(UUID missiveID) {
+        return repository.getAll(missiveID);
+    }
+
+    public List<Confirmative> getAllSiblings(UUID confID) {
+        return repository.getAllSiblings(confID);
+    }
+
+    public boolean nextPrevReady(UUID confID) {
+        List<Confirmative> allSiblings = getAllSiblings(confID);
+        Confirmative current = allSiblings.stream().filter(item -> item.getId().equals(confID)).findFirst().get();
+        Integer orderNumber = current.getOrderNumber();
+        Optional<Confirmative> nextOptional = allSiblings.stream().filter(item -> item.getOrderNumber() == orderNumber + 1).findFirst();
+        if (nextOptional.isPresent()) {
+            Confirmative next = nextOptional.get();
+            repository.prevReady(next.getId());
+            return true;
+        }
+        return false;
     }
 }

@@ -7,12 +7,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uz.darico.exception.exception.UniversalException;
+import uz.darico.exception.exception.ValidationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UniversalException.class)
-    public ResponseEntity<?> InvalidExceptionHandler(UniversalException exception, WebRequest webRequest) {
+    public ResponseEntity<?> UniversalExceptionHandler(UniversalException exception, WebRequest webRequest) {
+        return new ResponseEntity<>(exception.getMessage(), exception.getStatus());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> ValidationExceptionHandler(ValidationException exception, WebRequest webRequest) {
         return new ResponseEntity<>(exception.getMessage(), exception.getStatus());
     }
 

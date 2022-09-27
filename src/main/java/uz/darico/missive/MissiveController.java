@@ -42,8 +42,8 @@ public class MissiveController extends AbstractController<MissiveService> {
     }
 
     @PatchMapping("/ready-conf")
-    public ResponseEntity<?> readyForConfirmative(@RequestParam(name = "conf") String confId) {
-        return service.readyForConfirmative(confId);
+    public ResponseEntity<?> readyForConf(@RequestParam(name = "conf") String confId) {
+        return service.readyForConf(confId);
     }
 
     @PatchMapping("/sign")

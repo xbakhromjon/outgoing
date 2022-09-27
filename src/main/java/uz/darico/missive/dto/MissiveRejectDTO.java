@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MissiveRejectDTO {
     private String missive;
+
     // confID or signatoryID
     private String message;
     private String rejectedBy;

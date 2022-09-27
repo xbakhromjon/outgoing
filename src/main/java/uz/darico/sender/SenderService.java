@@ -18,8 +18,8 @@ public class SenderService extends AbstractService<SenderRepository, SenderValid
         return repository.save(sender);
     }
 
-    public Sender getPersistByMissiveID(UUID ID) {
-        Optional<Sender> optional = repository.findById(ID);
+    public Sender getPersistByMissiveID(UUID missiveID) {
+        Optional<Sender> optional = repository.findByMissiveId(missiveID);
         return optional.orElseThrow(() -> {
             throw new UniversalException("Sender Not Found", HttpStatus.BAD_REQUEST);
         });
