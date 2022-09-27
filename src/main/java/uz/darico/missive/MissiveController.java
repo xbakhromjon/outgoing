@@ -56,10 +56,9 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.reject(rejectDTO);
     }
 
-    @PostMapping("/sketchy")
+    @PostMapping("/list")
     public ResponseEntity<?> getList(@RequestBody SearchDTO searchDTO) {
          return service.getList(searchDTO);
     }
-
 
 }

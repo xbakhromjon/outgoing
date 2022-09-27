@@ -6,12 +6,16 @@ import uz.darico.confirmative.Confirmative;
 import uz.darico.confirmative.ConfirmativeMapper;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
+import uz.darico.feign.DepartmentFeignService;
+import uz.darico.feign.UserFeignService;
+import uz.darico.feign.obj.UserInfo;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.MissiveCreateDTO;
 import uz.darico.missive.dto.MissiveGetDTO;
 import uz.darico.missive.dto.MissiveListDTO;
+import uz.darico.missive.dto.MissiveListDTOBuilder;
 import uz.darico.missive.projections.MissiveListProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileMapper;
@@ -22,9 +26,13 @@ import uz.darico.sender.Sender;
 import uz.darico.sender.SenderMapper;
 import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryMapper;
+import uz.darico.feign.WorkPlaceFeignService;
+import uz.darico.utils.BaseUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 
 @Component
@@ -36,8 +44,14 @@ public class MissiveMapper implements BaseMapper {
     private final InReceiverMapper inReceiverMapper;
     private final ContentFileService contentFileService;
     private final MissiveFileMapper missiveFileMapper;
+    private final DepartmentFeignService departmentFeignService;
+    private final WorkPlaceFeignService workPlaceFeignService;
+    private final UserFeignService userFeignService;
+    private final BaseUtils baseUtils;
 
-    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper) {
+    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper,
+                         DepartmentFeignService departmentFeignService, WorkPlaceFeignService workPlaceFeignService, UserFeignService userFeignService,
+                         BaseUtils baseUtils) {
         this.senderMapper = senderMapper;
         this.signatoryMapper = signatoryMapper;
         this.confirmativeMapper = confirmativeMapper;
@@ -45,6 +59,10 @@ public class MissiveMapper implements BaseMapper {
         this.inReceiverMapper = inReceiverMapper;
         this.contentFileService = contentFileService;
         this.missiveFileMapper = missiveFileMapper;
+        this.departmentFeignService = departmentFeignService;
+        this.workPlaceFeignService = workPlaceFeignService;
+        this.userFeignService = userFeignService;
+        this.baseUtils = baseUtils;
     }
 
     public Missive toEntity(MissiveCreateDTO createDTO) {
@@ -70,7 +88,13 @@ public class MissiveMapper implements BaseMapper {
     }
 
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {
-
-        return null;
+        List<MissiveListDTO> missiveListDTOs = new ArrayList<>();
+        for (MissiveListProjection missiveListProjection : missiveListProjections) {
+            UserInfo userInfo = userFeignService.getUserInfo(missiveListProjection.getSenderUserID());
+            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).setDepartmentName(departmentFeignService.getName(missiveListProjection.getDepartmentID())).
+                    setSenderFirstName(userInfo.getFirstName()).setSenderLastName(userInfo.getLastName()).setShortInfo(missiveListProjection.getShortInfo()).setOrgID(missiveListProjection.getOrgID()).create();
+            missiveListDTOs.add(missiveListDTO);
+        }
+        return missiveListDTOs;
     }
 }

@@ -1,4 +1,5 @@
-package uz.darico.workPlace;
+package uz.darico.feign;
+
 
 import org.springframework.stereotype.Service;
 

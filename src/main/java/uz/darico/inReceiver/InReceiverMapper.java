@@ -1,7 +1,7 @@
 package uz.darico.inReceiver;
 
 import org.springframework.stereotype.Component;
-import uz.darico.workPlace.WorkPlaceFeignService;
+import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.base.mapper.BaseMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 

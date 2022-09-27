@@ -1,16 +1,9 @@
 package uz.darico.signatory;
 
 import org.springframework.stereotype.Service;
-import uz.darico.base.entity.AbstractEntity;
 import uz.darico.base.service.AbstractService;
-import uz.darico.outReceiver.OutReceiver;
-import uz.darico.outReceiver.OutReceiverMapper;
-import uz.darico.outReceiver.OutReceiverRepository;
-import uz.darico.outReceiver.OutReceiverValidator;
-import uz.darico.sender.Sender;
-import uz.darico.workPlace.WorkPlaceFeignService;
+import uz.darico.feign.WorkPlaceFeignService;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service

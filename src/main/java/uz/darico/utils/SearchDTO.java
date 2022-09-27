@@ -16,6 +16,5 @@ public class SearchDTO {
     private Long workPlace;
     private Integer page;
     private Integer size = 20;
-    private Integer offset = page * size;
     private Integer tab;
 }

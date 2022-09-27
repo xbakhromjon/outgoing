@@ -26,4 +26,5 @@ public class MissiveListDTO {
     private List<String> correspondent;
     private List<ContentFile> baseFiles;
     private List<MissiveFile> missiveFiles;
+
 }
