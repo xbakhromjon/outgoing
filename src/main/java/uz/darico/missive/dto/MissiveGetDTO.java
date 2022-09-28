@@ -32,5 +32,4 @@ public class MissiveGetDTO {
     private List<MissiveFile> missiveFiles;
     private Boolean isReady;
 
-
 }

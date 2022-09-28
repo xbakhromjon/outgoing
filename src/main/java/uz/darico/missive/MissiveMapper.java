@@ -29,10 +29,7 @@ import uz.darico.signatory.SignatoryMapper;
 import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.utils.BaseUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Component
@@ -84,9 +81,12 @@ public class MissiveMapper implements BaseMapper {
     }
 
     public MissiveGetDTO toGetDTO(Missive missive) {
+        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
+        missiveFiles
+                .sort(Comparator.comparing(MissiveFile::getVersion));
         return new MissiveGetDTO(missive.getOrgID(), missive.getSender(), missive
                 .getSignatory(), missive.getConfirmatives(), missive.getDepartmentID(), missive.getOutReceivers(),
-                missive.getInReceivers(), missive.getBaseFiles(), missive.getMissiveFiles(), missive.getIsReady());
+                missive.getInReceivers(), missive.getBaseFiles(), missiveFiles, missive.getIsReady());
     }
 
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {

@@ -6,7 +6,10 @@ import uz.darico.base.controller.AbstractController;
 import uz.darico.missive.dto.MissiveCreateDTO;
 import uz.darico.missive.dto.MissiveRejectDTO;
 import uz.darico.missive.dto.MissiveUpdateDTO;
+import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
 import uz.darico.utils.SearchDTO;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/missive")
@@ -59,6 +62,16 @@ public class MissiveController extends AbstractController<MissiveService> {
     @PostMapping("/list")
     public ResponseEntity<?> getList(@RequestBody SearchDTO searchDTO) {
          return service.getList(searchDTO);
+    }
+
+    @PostMapping("/version")
+    public ResponseEntity<?> createNewVersion(@RequestBody MissiveFileCreateDTO createDTO) {
+         return service.createNewVersion(createDTO);
+    }
+
+    @DeleteMapping("/version")
+    public ResponseEntity<?> deleteVersion(@RequestParam UUID missiveFileID) {
+         return service.deleteVersion(missiveFileID);
     }
 
 }

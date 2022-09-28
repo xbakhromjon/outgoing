@@ -2,14 +2,18 @@ package uz.darico.missive;
 
 import org.springframework.stereotype.Component;
 import uz.darico.base.validator.BaseValidator;
+import uz.darico.contentFile.ContentFile;
 import uz.darico.exception.exception.ValidationException;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.MissiveCreateDTO;
 import uz.darico.missive.dto.MissiveUpdateDTO;
+import uz.darico.missiveFile.MissiveFile;
+import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -82,6 +86,22 @@ public class MissiveValidator implements BaseValidator {
             if (inReceiverSet.size() != inReceivers.size()) {
                 throw new ValidationException("%s invalid inReceivers. Duplicate correspondent".formatted(inReceiverList));
             }
+        }
+    }
+
+    public void validForNewVersion(MissiveFileCreateDTO createDTO, Missive missive) {
+        if (createDTO.getMissiveID() == null) {
+            throw new ValidationException("Missive cannot be null");
+        }
+        if (createDTO.getFileID() == null) {
+            throw new ValidationException("File cannot be null");
+        }
+        if (createDTO.getWorkPlaceID() == null) {
+            throw new ValidationException("WorkPlace cannot be null");
+        }
+        List<UUID> IDs = missive.getMissiveFiles().stream().map(MissiveFile::getFile).map(ContentFile::getId).toList();
+        if (IDs.contains(createDTO.getFileID())) {
+            throw new ValidationException("File not modified");
         }
     }
 }

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Entity
 @Table(name = "missive_file")

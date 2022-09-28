@@ -20,6 +20,7 @@ import uz.darico.missive.dto.*;
 import uz.darico.missive.projections.MissiveListProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileService;
+import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
 import uz.darico.outReceiver.OutReceiver;
 import uz.darico.outReceiver.OutReceiverService;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
@@ -86,7 +87,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public ResponseEntity<?> update(MissiveUpdateDTO updateDTO) {
         validator.validForUpdate(updateDTO);
-        Missive missive = getMissive(updateDTO.getID());
+        Missive missive = getPersist(updateDTO.getID());
 
         if (!missive.getSender().getWorkPlaceID().equals(updateDTO.getWorkPlaceID())) {
             throw new UniversalException("Sender not updatable", HttpStatus.BAD_REQUEST);
@@ -123,7 +124,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
-    public Missive getMissive(UUID ID) {
+    public Missive getPersist(UUID ID) {
         Optional<Missive> missiveOptional = repository.find(ID);
         if (missiveOptional.isEmpty()) {
             throw new UniversalException("Missive not found", HttpStatus.BAD_REQUEST);
@@ -140,7 +141,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public ResponseEntity<?> get(String id) {
         UUID ID = baseUtils.strToUUID(id);
-        Missive missive = getMissive(ID);
+        Missive missive = getPersist(ID);
         MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);
         return ResponseEntity.ok(missiveGetDTO);
     }
@@ -272,4 +273,22 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         }
         throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<?> createNewVersion(MissiveFileCreateDTO createDTO) {
+        Missive missive = getPersist(createDTO.getMissiveID());
+        validator.validForNewVersion(createDTO, missive);
+        MissiveFile newVersion = missiveFileService.createNewVersion(createDTO);
+        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
+        missiveFiles.add(newVersion);
+        repository.save(missive);
+        return ResponseEntity.ok(newVersion.getId());
+    }
+
+    public ResponseEntity<?> deleteVersion(UUID missiveFileID) {
+        missiveFileService.delete(missiveFileID);
+        return ResponseEntity.ok(true);
+    }
+
+    
 }
+

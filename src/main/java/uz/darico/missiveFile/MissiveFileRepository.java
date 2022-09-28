@@ -20,4 +20,15 @@ public interface MissiveFileRepository extends JpaRepository<MissiveFile, UUID>,
 
     @Query(nativeQuery = true, value = "select * from missive_file where id in (select missive_files_id from missive_missive_files where missive_id = :ID)")
     List<MissiveFile> getAll(UUID ID);
+
+    @Query(nativeQuery = true, value = "select max(version) from missive_file where not is_deleted and id in (select missive_files_id from missive_missive_files where missive_id = :missiveID) ")
+    Integer getMaxVersion(UUID missiveID);
+
+    @Query(nativeQuery = true, value = "update missive_file set is_deleted = true where id = :missiveFileID")
+    @Modifying
+    void delete(UUID missiveFileID);
+
+    @Query(nativeQuery = true, value = "delete from missive_missive_files where missive_files_id = :missiveFileID")
+    @Modifying
+    void deleteFromRelatedTables(UUID missiveFileID);
 }
