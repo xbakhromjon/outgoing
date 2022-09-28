@@ -17,7 +17,7 @@ public class WorkPlaceFeignService {
 
     public Long getUserIDRemote(Long ID) {
         try {
-            return restTemplate.getForObject("http://213.230.125.86:80/kiruvchi/workPlace/" + ID + "/userID", Long.class);
+            return restTemplate.getForObject("http://213.230.125.86:80/kiruvchi/workPlace/getUserID/" + ID , Long.class);
         } catch (Exception e) {
             throw new UniversalException("Remote server not work", HttpStatus.INTERNAL_SERVER_ERROR);
         }
