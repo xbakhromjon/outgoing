@@ -20,7 +20,7 @@ public class WorkPlaceFeignService {
 
     public Long getUserIDRemote(Long ID) {
         try {
-            ResponseEntity<Long> response = restTemplate.getForEntity("http://http://213.230.125.86:48908/kiruvchi/api/workplace/getUserID/" + ID, Long.class);
+            ResponseEntity<Long> response = restTemplate.getForEntity("http://213.230.125.86:48908/kiruvchi/api/workplace/getUserID/" + ID, Long.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }

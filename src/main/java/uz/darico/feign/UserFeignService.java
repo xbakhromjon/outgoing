@@ -21,7 +21,7 @@ public class UserFeignService {
 
     public UserInfo getUserInfoRemote(Long ID) {
         try {
-            ResponseEntity<UserInfo> response = restTemplate.getForEntity("http://http://213.230.125.86:48908/kiruvchi/api/user/info/" + ID, UserInfo.class);
+            ResponseEntity<UserInfo> response = restTemplate.getForEntity("http://213.230.125.86:48908/kiruvchi/api/user/info/" + ID, UserInfo.class);
             return response.getBody();
         } catch (Exception e) {
             throw new UniversalException("Remote server not work or %s ID user not found".formatted(ID), HttpStatus.BAD_REQUEST);
