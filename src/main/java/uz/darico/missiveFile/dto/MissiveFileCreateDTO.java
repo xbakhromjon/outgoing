@@ -15,5 +15,5 @@ import java.util.UUID;
 public class MissiveFileCreateDTO {
     private UUID missiveID;
     private Long workPlaceID;
-    private UUID fileID;
+    private String content;
 }

@@ -12,6 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TemplateUpdateDTO {
     private UUID ID;
-    private UUID fileID;
+    private String content;
     private String createdPurpose;
 }

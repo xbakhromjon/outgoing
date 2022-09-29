@@ -5,7 +5,7 @@ import uz.darico.contentFile.ContentFile;
 public class TemplateBuilder {
     private Long workPlaceID;
     private Long userID;
-    private ContentFile file;
+    private String content;
     private String createdPurpose;
 
     public TemplateBuilder setWorkPlaceID(Long workPlaceID) {
@@ -18,8 +18,8 @@ public class TemplateBuilder {
         return this;
     }
 
-    public TemplateBuilder setFile(ContentFile file) {
-        this.file = file;
+    public TemplateBuilder setFile(String content) {
+        this.content = content;
         return this;
     }
 
@@ -29,6 +29,6 @@ public class TemplateBuilder {
     }
 
     public Template build() {
-        return new Template(workPlaceID, userID, file, createdPurpose);
+        return new Template(workPlaceID, userID, content, createdPurpose);
     }
 }

@@ -1,10 +1,12 @@
 package uz.darico.template;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 import uz.darico.base.entity.AbstractEntity;
 import uz.darico.base.entity.Auditable;
 import uz.darico.contentFile.ContentFile;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -18,8 +20,8 @@ import javax.persistence.Table;
 public class Template extends Auditable {
     private Long workPlaceID;
     private Long userID;
-    @OneToOne
-    private ContentFile file;
+    @Type(type = "text")
+    private String content;
     private String createdPurpose;
 
 }

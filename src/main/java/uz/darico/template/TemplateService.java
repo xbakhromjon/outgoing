@@ -27,9 +27,8 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
 
     public ResponseEntity<?> create(TemplateCreateDTO createDTO) {
         validator.validateForCreate(createDTO);
-        ContentFile contentFile = contentFileService.getContentFile(createDTO.getFileID());
         Template template = mapper.toEntity(createDTO);
-        template.setFile(contentFile);
+        template.setContent(createDTO.getContent());
         repository.save(template);
         return ResponseEntity.ok(true);
     }
@@ -37,10 +36,7 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
     public ResponseEntity<?> update(TemplateUpdateDTO updateDTO) {
         validator.validateForUpdate(updateDTO);
         Template template = getPersist(updateDTO.getID());
-        if (!updateDTO.getFileID().equals(template.getFile().getId())) {
-            ContentFile newContentFile = contentFileService.getContentFile(updateDTO.getFileID());
-            template.setFile(newContentFile);
-        }
+        template.setContent(updateDTO.getContent());
         template.setCreatedPurpose(updateDTO.getCreatedPurpose());
         repository.save(template);
         return ResponseEntity.ok(true);

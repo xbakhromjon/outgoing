@@ -15,6 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TemplateCreateDTO {
     private Long workPlaceID;
-    private UUID fileID;
+    private String content;
     private String createdPurpose;
 }

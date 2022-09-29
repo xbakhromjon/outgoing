@@ -27,7 +27,7 @@ public class TemplateMapper implements BaseMapper {
     }
 
     public TemplateGetDTO toGetDTO(Template template) {
-        return new TemplateGetDTO(template.getWorkPlaceID(), contentFileService.getContentFile(template.getFile().getId()), template.getCreatedPurpose());
+        return new TemplateGetDTO(template.getWorkPlaceID(), template.getContent(), template.getCreatedPurpose());
     }
 
 

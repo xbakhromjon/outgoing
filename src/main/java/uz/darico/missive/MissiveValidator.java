@@ -93,15 +93,11 @@ public class MissiveValidator implements BaseValidator {
         if (createDTO.getMissiveID() == null) {
             throw new ValidationException("Missive cannot be null");
         }
-        if (createDTO.getFileID() == null) {
+        if (createDTO.getContent() == null) {
             throw new ValidationException("File cannot be null");
         }
         if (createDTO.getWorkPlaceID() == null) {
             throw new ValidationException("WorkPlace cannot be null");
-        }
-        List<UUID> IDs = missive.getMissiveFiles().stream().map(MissiveFile::getFile).map(ContentFile::getId).toList();
-        if (IDs.contains(createDTO.getFileID())) {
-            throw new ValidationException("File not modified");
         }
     }
 }

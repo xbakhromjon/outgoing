@@ -74,8 +74,7 @@ public class MissiveMapper implements BaseMapper {
         List<InReceiverCreateDTO> inReceiverCreateDTOs = createDTO.getInReceivers();
         List<InReceiver> inReceivers = inReceiverMapper.toEntity(inReceiverCreateDTOs);
         List<ContentFile> baseFiles = contentFileService.getContentFiles(createDTO.getBaseFileIDs());
-        ContentFile missiveFileContent = contentFileService.getContentFile(createDTO.getMissiveFileContentID());
-        MissiveFile missiveFile = missiveFileMapper.toEntity(missiveFileContent);
+        MissiveFile missiveFile = missiveFileMapper.toEntity(createDTO.getContent());
         return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(),
                 outReceivers, inReceivers, baseFiles, Collections.singletonList(missiveFile));
     }

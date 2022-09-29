@@ -23,14 +23,14 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
         this.contentFileService = contentFileService;
     }
 
-    public List<MissiveFile> refresh(ContentFile missiveFileContent, List<MissiveFile> trashMissiveFiles) {
-        List<MissiveFile> newMissiveFiles = create(missiveFileContent);
+    public List<MissiveFile> refresh(String content, List<MissiveFile> trashMissiveFiles) {
+        List<MissiveFile> newMissiveFiles = create(content);
         deleteAll(trashMissiveFiles);
         return newMissiveFiles;
     }
 
-    public List<MissiveFile> create(ContentFile contentFile) {
-        MissiveFile missiveFile = mapper.toEntity(contentFile);
+    public List<MissiveFile> create(String content) {
+        MissiveFile missiveFile = mapper.toEntity(content);
         return repository.saveAll(Collections.singletonList(missiveFile));
     }
 
@@ -48,10 +48,9 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
     }
 
     public MissiveFile createNewVersion(MissiveFileCreateDTO createDTO) {
-        ContentFile contentFile = contentFileService.getContentFile(createDTO.getFileID());
         UUID missiveID = createDTO.getMissiveID();
         Integer maxVersion = repository.getMaxVersion(missiveID);
-        MissiveFile missiveFile = new MissiveFileBuilder().file(contentFile).version(maxVersion + 1).build();
+        MissiveFile missiveFile = new MissiveFileBuilder().content(createDTO.getContent()).version(maxVersion + 1).build();
         return repository.save(missiveFile);
     }
 
