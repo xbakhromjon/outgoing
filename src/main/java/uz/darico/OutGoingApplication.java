@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = "uz.darico")
 public class OutGoingApplication {
     public static void main(String[] args) {
+
         SpringApplication.run(OutGoingApplication.class, args);
     }
 }

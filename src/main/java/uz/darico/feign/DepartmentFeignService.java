@@ -2,6 +2,7 @@ package uz.darico.feign;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uz.darico.exception.exception.UniversalException;
@@ -12,14 +13,19 @@ public class DepartmentFeignService {
     private final RestTemplate restTemplate;
 
     public String getName(Long ID) {
-        return "Soliq";
+        return getNameRemote(ID);
+//        return "Soliq";
     }
 
     public String getNameRemote(Long ID) {
         try {
-            return restTemplate.getForObject("http://213.230.125.86:80/kiruvchi/department/getdepartmentUzName/" + ID, String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/department/getdepartmentUzName/" + ID, String.class);
+            if (response.getBody() == null) {
+                throw new UniversalException("", HttpStatus.BAD_REQUEST);
+            }
+            return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new UniversalException("Remote server not work or %s ID department not found".formatted(ID), HttpStatus.BAD_REQUEST);
         }
     }
 }
