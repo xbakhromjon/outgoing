@@ -14,8 +14,6 @@ import java.util.Arrays;
  **/
 @Configuration
 public class CorsConfig {
-    @Configuration
-    public static class CorsConfiguration extends org.springframework.web.cors.CorsConfiguration {
         @Bean
         public CorsWebFilter corsFilter() {
             org.springframework.web.cors.CorsConfiguration corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
@@ -28,5 +26,4 @@ public class CorsConfig {
             source.registerCorsConfiguration("/**", corsConfiguration);
             return new CorsWebFilter(source);
         }
-    }
 }
