@@ -35,19 +35,19 @@ public class OutGoingApplication {
 //        };
 //    }
 
-    @Configuration
-    public static class CorsConfiguration extends org.springframework.web.cors.CorsConfiguration {
-        @Bean
-        public CorsWebFilter corsFilter() {
-            org.springframework.web.cors.CorsConfiguration corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-            corsConfiguration.setAllowCredentials(true);
-            //corsConfiguration.addAllowedOrigin("http://localhost:3000/");
-            corsConfiguration.addAllowedOrigin("http://www.new.d-doc.uz/");
-            corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
-            corsConfiguration.addAllowedHeader("*");
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", corsConfiguration);
-            return new CorsWebFilter(source);
-        }
-    }
+//    @Configuration
+//    public static class CorsConfiguration extends org.springframework.web.cors.CorsConfiguration {
+//        @Bean
+//        public CorsWebFilter corsFilter() {
+//            org.springframework.web.cors.CorsConfiguration corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
+//            corsConfiguration.setAllowCredentials(true);
+//            //corsConfiguration.addAllowedOrigin("http://localhost:3000/");
+//            corsConfiguration.addAllowedOrigin("http://www.new.d-doc.uz/");
+//            corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
+//            corsConfiguration.addAllowedHeader("*");
+//            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//            source.registerCorsConfiguration("/**", corsConfiguration);
+//            return new CorsWebFilter(source);
+//        }
+//    }
 }
