@@ -1,5 +1,6 @@
 package uz.darico.utils;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uz.darico.confirmative.ConfStatus;
@@ -11,6 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -57,4 +59,25 @@ public class BaseUtils {
         }
         throw new UniversalException("%s confStatus code incorrect".formatted(code), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    public <E, D> ResponsePage<D> toResponsePage(Page<E> page, List<D> content) {
+        ResponsePage<D> responsePage = new ResponsePage<>();
+        responsePage.setNumberOfElements(page.getNumberOfElements());
+        responsePage.setNumber(page.getNumber());
+        responsePage.setTotalPages(page.getTotalPages());
+        responsePage.setContent(content);
+        responsePage.setTotalElements(page.getTotalElements());
+        responsePage.setSize(page.getSize());
+        return responsePage;
+    }
+
+    public <D> ResponsePage<D> toResponsePage(List<D> content, Integer page, Integer size, Integer totalElements) {
+        ResponsePage<D> responsePage = new ResponsePage<>();
+        responsePage.setNumber(page);
+        responsePage.setContent(content);
+        responsePage.setTotalElements(totalElements);
+        responsePage.setSize(size);
+        return responsePage;
+    }
+
 }

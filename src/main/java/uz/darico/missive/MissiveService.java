@@ -29,6 +29,7 @@ import uz.darico.sender.SenderService;
 import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryService;
 import uz.darico.utils.BaseUtils;
+import uz.darico.utils.ResponsePage;
 import uz.darico.utils.SearchDTO;
 import uz.darico.utils.Tab;
 
@@ -189,7 +190,11 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> getList(SearchDTO searchDTO) {
         List<MissiveListProjection> projections = getSketchies(searchDTO);
         List<MissiveListDTO> listDTOs = complete(projections);
-        return ResponseEntity.ok(listDTOs);
+        if (listDTOs.get(0) == null) {
+            return ResponseEntity.ok(ResponsePage.getEmptyInstance());
+        }
+        ResponsePage<MissiveListDTO> responsePage = baseUtils.toResponsePage(listDTOs, searchDTO.getPage(), searchDTO.getSize(), listDTOs.get(0).getTotalCount());
+        return ResponseEntity.ok(responsePage);
     }
 
     public List<MissiveListDTO> complete(List<MissiveListProjection> missiveListProjections) {
@@ -288,6 +293,6 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
-    
+
 }
 

@@ -23,6 +23,7 @@ public class MissiveListDTOBuilder {
     private List<String> correspondent;
     private List<ContentFile> baseFiles;
     private List<MissiveFile> missiveFiles;
+    private Integer totalCount;
 
     public MissiveListDTOBuilder setID(UUID ID) {
         this.ID = ID;
@@ -74,8 +75,12 @@ public class MissiveListDTOBuilder {
         return this;
     }
 
+    public MissiveListDTOBuilder setTotalCount(Integer totalCount) {
+        this.totalCount = totalCount;
+        return this;
+    }
 
     public MissiveListDTO create() {
-        return new MissiveListDTO(ID, orgID, departmentName, senderFirstName, senderLastName, confirmatives, shortInfo, correspondent, baseFiles, missiveFiles);
+        return new MissiveListDTO(ID, orgID, departmentName, senderFirstName, senderLastName, confirmatives, shortInfo, correspondent, baseFiles, missiveFiles, totalCount);
     }
 }

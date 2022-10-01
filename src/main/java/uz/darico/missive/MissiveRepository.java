@@ -43,7 +43,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     @Modifying
     void prepareToSend(UUID ID);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and s.work_placeid = :workPlaceID\n" +
@@ -51,7 +51,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getSketchies(Long workPlaceID, Integer limit, Integer offset);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and s.work_placeid = :workPlaceID\n" +
@@ -59,7 +59,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getInProcesses(Long workPlaceID, Integer limit, Integer offset);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID, s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID, s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and m.id in (select missive_confirmatives.missive_id\n" +
@@ -73,7 +73,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getForConfirm(Long workPlaceID, Integer limit, Integer offset);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and m.id in (select missive_confirmatives.missive_id from missive_confirmatives where missive_confirmatives.confirmatives_id in (select id from confirmative where confirmative.work_placeid = :workPlaceID and confirmative.is_ready_to_send))\n" +
@@ -84,7 +84,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     @Modifying
     void readyByConfID(UUID confID);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -92,7 +92,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset ")
     List<MissiveListProjection> getForSign(Long workPlaceID, Integer limit, Integer offset);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -100,7 +100,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset ")
     List<MissiveListProjection> getSigned(Long workPlaceID, Integer limit, Integer offset);
 
-    @Query(nativeQuery = true, value = "select m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
+    @Query(nativeQuery = true, value = "select count(*) over() as totalCount, m.id as ID, m.departmentid as departmentID, m.orgid as orgID,  s.userid senderUserID, m.short_info shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
