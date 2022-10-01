@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("Access-Control-Allow-Origin=*").allowedMethods("Access-Control-Allow-Methods=POST, GET, DELETE, PATCH, PUT, OPTION").
+        registry.addMapping("/**").allowedOrigins("Access-Control-Allow-Origin=http://localhost:3000/").allowedMethods("Access-Control-Allow-Methods=POST, GET, DELETE, PATCH, PUT, OPTION").
                 allowCredentials(true);
     }
 }
