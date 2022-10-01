@@ -25,28 +25,4 @@ public class OutGoingApplication {
         SpringApplication.run(OutGoingApplication.class, args);
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**").allowCredentials(true).allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH").allowedHeaders("Access-Control-Allow-Origin: *").allowedOrigins("http://localhost:3000");
-//            }
-//        };
-//    }
-
-//    @Configuration
-//    public static class CorsConfiguration extends org.springframework.web.cors.CorsConfiguration {
-//        @Bean
-//        public CorsWebFilter corsFilter() {
-//            org.springframework.web.cors.CorsConfiguration corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-//            corsConfiguration.setAllowCredentials(true);
-//            corsConfiguration.addAllowedOrigin("Access-Control-Allow-Origin=*");
-//            corsConfiguration.setAllowedMethods("Access-Control-Allow-Methods=POST, GET, DELETE, PATCH, PUT, OPTION");
-//            corsConfiguration.addAllowedHeader("");
-//            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//            source.registerCorsConfiguration("/**", corsConfiguration);
-//            return new CorsWebFilter(source);
-//        }
-//    }
 }
