@@ -28,7 +28,8 @@ import java.util.UUID;
 public class ContentFileService extends AbstractService<ContentFileRepository, InReceiverValidator, ContentFileMapper> {
 
     private final BaseUtils baseUtils;
-    private final String FILE_PATH = "/home/xbakhromjon/database";
+    private final String FILE_PATH_LINUX = "/home/xbakhromjon/database";
+    private final String FILE_PATH_WINDOWS = "";
     private final ServletContext servletContext;
 
     public ContentFileService(ContentFileRepository repository, InReceiverValidator validator, ContentFileMapper mapper,
@@ -72,9 +73,10 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
 
     public ResponseEntity<UUID> upload(String orgId, MultipartHttpServletRequest request) throws IOException {
         Long orgID = baseUtils.strToLong(orgId);
-        String folder = FILE_PATH + "/" + orgID;
-        Path path = Path.of(folder);
-        File file2 = new File(folder);
+        String folder_linux = FILE_PATH_LINUX + "/" + orgID;
+        String folder_windows = FILE_PATH_WINDOWS + "\\" + orgID;
+        Path path = Path.of(folder_windows);
+        File file2 = new File(folder_windows);
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
@@ -99,13 +101,14 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
                 extention = ".docx";
             }
             String generatedName = UUID.randomUUID() + extention;
-            String url = folder + "/" + generatedName;
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(url));
+            String url_linux = folder_linux + "/" + generatedName;
+            String url_windows = folder_windows + "\\" + generatedName;
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(url_windows));
             fileOutputStream.write(file.getBytes());
             fileOutputStream.close();
             fileOutputStream.flush();
             ContentFile fileEntity = new ContentFile();
-            fileEntity.setPath(url);
+            fileEntity.setPath(url_windows);
             fileEntity.setContentType(contentType);
             fileEntity.setSize(size);
             fileEntity.setOriginalName(originalFilename);
