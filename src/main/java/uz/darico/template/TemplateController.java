@@ -35,7 +35,7 @@ public class TemplateController extends AbstractController<TemplateService> {
         return service.get(ID);
     }
 
-    @GetMapping("/{workPlaceID}")
+    @GetMapping("/all/{workPlaceID}")
     public ResponseEntity<?> list(@PathVariable Long workPlaceID) {
         return service.list(workPlaceID);
     }
