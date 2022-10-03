@@ -57,7 +57,7 @@ public class ConfirmativeMapper implements BaseMapper {
         }
         UserInfo userInfo = userFeignService.getUserInfo(confirmative.getUserID());
         return new ConfirmativeGetDTO(userInfo.getFirstName(), userInfo.getLastName(), userInfo.getMiddleName(),
-                ConfStatus.toConfStatus(confirmative.getStatusCode()));
+                ConfStatus.toConfStatus(confirmative.getStatusCode()), confirmative.getStatusTime().toLocalDate());
     }
 
     public List<ConfirmativeGetDTO> toGetDTO(List<Confirmative> confirmatives) {

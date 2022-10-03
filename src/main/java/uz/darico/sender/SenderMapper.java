@@ -31,6 +31,6 @@ public class SenderMapper implements BaseMapper {
         }
         UserInfo userInfo = userFeignService.getUserInfo(sender.getUserID());
         return new SenderGetDTO(userInfo.getFirstName(), userInfo.getLastName(), userInfo.getMiddleName(),
-                SenderStatus.toSenderStatus(sender.getStatusCode()));
+                SenderStatus.toSenderStatus(sender.getStatusCode()), sender.getStatusTime().toLocalDate());
     }
 }

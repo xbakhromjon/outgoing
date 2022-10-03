@@ -5,6 +5,7 @@ import uz.darico.base.entity.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class Confirmative extends AbstractEntity {
     private Long workPlaceID;
     private Long userID;
     private Integer statusCode;
+    private LocalDateTime statusTime = LocalDateTime.now();
     private Integer orderNumber;
     private Boolean isReadyToSend = false;
     private Boolean prevIsReady = false;

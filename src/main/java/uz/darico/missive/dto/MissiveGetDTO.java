@@ -12,6 +12,7 @@ import uz.darico.outReceiver.dto.OutReceiverGetDTO;
 import uz.darico.sender.dto.SenderGetDTO;
 import uz.darico.signatory.dto.SignatoryGetDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -28,4 +29,5 @@ public class MissiveGetDTO {
     private List<InReceiverGetDTO> inReceivers;
     private List<ContentFile> baseFiles;
     private List<MissiveFileGetDTO> missiveFiles;
+    private LocalDate createdAt;
 }

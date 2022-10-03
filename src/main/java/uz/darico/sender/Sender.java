@@ -8,6 +8,7 @@ import uz.darico.feedback.signatory.SignatoryFeedback;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,7 @@ public class Sender extends AbstractEntity {
     private Long workPlaceID;
     private Long userID;
     private Integer statusCode;
+    private LocalDateTime statusTime = LocalDateTime.now();
     private Boolean isReadyToSend = false;
     @OneToMany
     private List<ConfFeedback> confFeedbacks;

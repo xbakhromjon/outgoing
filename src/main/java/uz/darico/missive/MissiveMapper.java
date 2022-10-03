@@ -89,7 +89,7 @@ public class MissiveMapper implements BaseMapper {
         return new MissiveGetDTO(organizationFeignService.getName(missive.getOrgID()), senderMapper.toGetDTO(missive.getSender()),
                 signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()),
                 departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()),
-                inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFiles()));
+                inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFiles()), missive.getCreatedAt().toLocalDate());
     }
 
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {

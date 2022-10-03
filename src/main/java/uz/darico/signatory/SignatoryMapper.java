@@ -32,6 +32,6 @@ public class SignatoryMapper implements BaseMapper {
         }
         UserInfo userInfo = userFeignService.getUserInfo(signatory.getUserID());
         return new SignatoryGetDTO(userInfo.getFirstName(), userInfo.getLastName(), userInfo.getMiddleName(),
-                SignatoryStatus.toSignatoryStatus(signatory.getStatusCode()));
+                SignatoryStatus.toSignatoryStatus(signatory.getStatusCode()), signatory.getStatusTime().toLocalDate());
     }
 }

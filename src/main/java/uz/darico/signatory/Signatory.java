@@ -5,6 +5,7 @@ import uz.darico.base.entity.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class Signatory extends AbstractEntity {
     private Long workPlaceID;
     private Long userID;
     private Integer statusCode;
+    private LocalDateTime statusTime = LocalDateTime.now();
     private Boolean isSigned = false;
 
     public Signatory(Long workPlaceID, Long userID, Integer statusCode) {

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 /**
  * @author : Bakhromjon Khasanboyev
  * @username: @xbakhromjon
@@ -19,4 +21,5 @@ public class SignatoryGetDTO {
     private String lastName;
     private String middleName;
     private String status;
+    private LocalDate statusTime;
 }
