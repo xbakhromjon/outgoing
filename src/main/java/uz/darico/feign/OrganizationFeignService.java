@@ -26,7 +26,7 @@ public class OrganizationFeignService {
 
     public String getNameRemote(Long ID) {
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/orgType/name/" + ID, String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/orgType/name/" + ID, String.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }
