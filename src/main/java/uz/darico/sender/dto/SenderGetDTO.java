@@ -1,0 +1,22 @@
+package uz.darico.sender.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * @author : Bakhromjon Khasanboyev
+ * @username: @xbakhromjon
+ * @since : 03/10/22, Mon, 17:15
+ **/
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class SenderGetDTO {
+    private String firstName;
+    private String lastName;
+    private String middleName;
+    private String status;
+}

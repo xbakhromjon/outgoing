@@ -2,6 +2,12 @@ package uz.darico.confirmative;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import uz.darico.exception.exception.UniversalException;
+import uz.darico.signatory.SignatoryStatus;
+
+import java.util.EnumSet;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Getter
@@ -13,4 +19,14 @@ public enum ConfStatus {
 
     private final String name;
     private final Integer code;
+
+
+    public static String toConfStatus(Integer code) {
+        EnumSet<ConfStatus> statuses = EnumSet.allOf(ConfStatus.class);
+        Optional<ConfStatus> optional = statuses.stream().filter(item -> item.getCode().equals(code)).findFirst();
+        return optional.orElseThrow(() -> {
+            throw new UniversalException("%s Conf Status Code incorrect".formatted(code), HttpStatus.BAD_REQUEST);
+        }).getName();
+    }
+
 }

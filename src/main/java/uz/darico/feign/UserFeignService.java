@@ -15,6 +15,9 @@ public class UserFeignService {
     private final RestTemplate restTemplate;
 
     public UserInfo getUserInfo(Long ID) {
+        if (ID == null) {
+            return null;
+        }
         return getUserInfoRemote(ID);
 //        return new UserInfo("Bakhromjon", "Khasanboyev", "Soxibjon o'g'li");
     }

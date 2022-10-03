@@ -1,11 +1,14 @@
 package uz.darico.confirmative;
 
 import org.springframework.stereotype.Component;
+import uz.darico.confirmative.dto.ConfirmativeGetDTO;
 import uz.darico.confirmative.dto.ConfirmativeShortInfoDTO;
 import uz.darico.feign.UserFeignService;
 import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.base.mapper.BaseMapper;
 import uz.darico.feign.obj.UserInfo;
+import uz.darico.sender.SenderStatus;
+import uz.darico.sender.dto.SenderGetDTO;
 import uz.darico.utils.BaseUtils;
 
 import java.util.ArrayList;
@@ -46,5 +49,22 @@ public class ConfirmativeMapper implements BaseMapper {
             confirmativeShortInfoDTOs.add(confirmativeShortInfoDTO);
         }
         return confirmativeShortInfoDTOs;
+    }
+
+    public ConfirmativeGetDTO toGetDTO(Confirmative confirmative) {
+        if (confirmative == null) {
+            return null;
+        }
+        UserInfo userInfo = userFeignService.getUserInfo(confirmative.getUserID());
+        return new ConfirmativeGetDTO(userInfo.getFirstName(), userInfo.getLastName(), userInfo.getMiddleName(),
+                ConfStatus.toConfStatus(confirmative.getStatusCode()));
+    }
+
+    public List<ConfirmativeGetDTO> toGetDTO(List<Confirmative> confirmatives) {
+        List<ConfirmativeGetDTO> res = new ArrayList<>();
+        confirmatives.forEach(item -> {
+            res.add(toGetDTO(item));
+        });
+        return res;
     }
 }
