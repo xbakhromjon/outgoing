@@ -10,7 +10,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/file")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class ContentFileController extends AbstractController<ContentFileService> {
 
     public ContentFileController(ContentFileService service) {

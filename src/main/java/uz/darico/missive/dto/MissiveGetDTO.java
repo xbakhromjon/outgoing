@@ -14,14 +14,16 @@ import uz.darico.signatory.dto.SignatoryGetDTO;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MissiveGetDTO {
+    private UUID ID;
     private String orgName;
-    private String email;   
+    private String email;
     private SenderGetDTO sender;
     private SignatoryGetDTO signatory;
     private List<ConfirmativeGetDTO> confirmatives;
