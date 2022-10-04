@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uz.darico.exception.exception.UniversalException;
-import uz.darico.feign.obj.UserInfo;
+import uz.darico.utils.OrgShortInfo;
 
 /**
  * @author : Bakhromjon Khasanboyev
@@ -19,14 +19,14 @@ public class OrganizationFeignService {
 
     private final RestTemplate restTemplate;
 
-    public String getName(Long ID) {
+    public OrgShortInfo getShortInfo(Long ID) {
         return getNameRemote(ID);
 //        return "Soliq";
     }
 
-    public String getNameRemote(Long ID) {
+    public OrgShortInfo getNameRemote(Long ID) {
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/orgType/name/" + ID, String.class);
+            ResponseEntity<OrgShortInfo> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/orgType/shortInfo/" + ID, OrgShortInfo.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }

@@ -16,4 +16,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class InReceiverGetDTO {
     private String orgName;
+    private String email;
 }

@@ -1,15 +1,12 @@
 package uz.darico.outReceiver;
 
 import org.springframework.stereotype.Component;
-import uz.darico.confirmative.ConfStatus;
-import uz.darico.confirmative.Confirmative;
-import uz.darico.confirmative.dto.ConfirmativeGetDTO;
 import uz.darico.feign.OrganizationFeignService;
 import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.base.mapper.BaseMapper;
-import uz.darico.feign.obj.UserInfo;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
 import uz.darico.outReceiver.dto.OutReceiverGetDTO;
+import uz.darico.utils.OrgShortInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +36,8 @@ public class OutReceiverMapper implements BaseMapper {
         if (outReceiver== null) {
             return null;
         }
-        String orgName = organizationFeignService.getName(outReceiver.getCorrespondentID());
-        return new OutReceiverGetDTO(orgName);
+        OrgShortInfo orgShortInfo = organizationFeignService.getShortInfo(outReceiver.getCorrespondentID());
+        return new OutReceiverGetDTO(orgShortInfo.getName(), orgShortInfo.getEmail());
     }
 
     public List<OutReceiverGetDTO> toGetDTO(List<OutReceiver> outReceivers) {

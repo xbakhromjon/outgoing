@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MissiveGetDTO {
     private String orgName;
+    private String email;   
     private SenderGetDTO sender;
     private SignatoryGetDTO signatory;
     private List<ConfirmativeGetDTO> confirmatives;

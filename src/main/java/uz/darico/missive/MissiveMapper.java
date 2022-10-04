@@ -29,6 +29,7 @@ import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryMapper;
 import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.utils.BaseUtils;
+import uz.darico.utils.OrgShortInfo;
 
 import java.util.*;
 
@@ -86,7 +87,8 @@ public class MissiveMapper implements BaseMapper {
         List<MissiveFile> missiveFiles = missive.getMissiveFiles();
         missiveFiles
                 .sort(Comparator.comparing(MissiveFile::getVersion));
-        return new MissiveGetDTO(organizationFeignService.getName(missive.getOrgID()), senderMapper.toGetDTO(missive.getSender()),
+        OrgShortInfo orgShortInfo = organizationFeignService.getShortInfo(missive.getOrgID());
+        return new MissiveGetDTO(orgShortInfo.getName(), orgShortInfo.getEmail(), senderMapper.toGetDTO(missive.getSender()),
                 signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()),
                 departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()),
                 inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFiles()), missive.getCreatedAt().toLocalDate());

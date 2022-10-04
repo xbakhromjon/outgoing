@@ -1,4 +1,4 @@
-package uz.darico.outReceiver.dto;
+package uz.darico.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,13 +8,13 @@ import lombok.Setter;
 /**
  * @author : Bakhromjon Khasanboyev
  * @username: @xbakhromjon
- * @since : 03/10/22, Mon, 17:17
+ * @since : 04/10/22, Tue, 10:39
  **/
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OutReceiverGetDTO {
-    private String orgName;
+public class OrgShortInfo {
+    private String name;
     private String email;
 }
