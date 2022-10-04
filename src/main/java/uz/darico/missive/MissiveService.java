@@ -190,7 +190,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> getList(SearchDTO searchDTO) {
         List<MissiveListProjection> projections = getSketchies(searchDTO);
         List<MissiveListDTO> listDTOs = complete(projections);
-        if (listDTOs.get(0) == null) {
+        if (listDTOs.isEmpty() || listDTOs.get(0) == null) {
             return ResponseEntity.ok(ResponsePage.getEmptyInstance());
         }
         ResponsePage<MissiveListDTO> responsePage = baseUtils.toResponsePage(listDTOs, searchDTO.getPage(), searchDTO.getSize(), listDTOs.get(0).getTotalCount());
