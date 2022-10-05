@@ -29,7 +29,7 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.update(updateDTO);
     }
 
-    @DeleteMapping()
+    @PatchMapping("/delete")
     public ResponseEntity<?> delete(@RequestParam(name = "id") String id) {
         return service.delete(id);
     }
