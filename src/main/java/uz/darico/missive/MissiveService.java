@@ -146,6 +146,12 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(missiveGetDTO);
     }
 
+    public ResponseEntity<?> getRaw(UUID ID) {
+        Missive missive = getPersist(ID);
+        MissiveRawDTO missiveRawDTO = mapper.toRawDTO(missive);
+        return ResponseEntity.ok(missiveRawDTO);
+    }
+
 
     public ResponseEntity<?> readyForSender(String id) {
         UUID ID = baseUtils.strToUUID(id);

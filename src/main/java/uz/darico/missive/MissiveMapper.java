@@ -1,11 +1,13 @@
 package uz.darico.missive;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uz.darico.base.mapper.BaseMapper;
 import uz.darico.confirmative.Confirmative;
 import uz.darico.confirmative.ConfirmativeMapper;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
+import uz.darico.exception.exception.UniversalException;
 import uz.darico.feign.DepartmentFeignService;
 import uz.darico.feign.OrganizationFeignService;
 import uz.darico.feign.UserFeignService;
@@ -13,10 +15,7 @@ import uz.darico.feign.obj.UserInfo;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
-import uz.darico.missive.dto.MissiveCreateDTO;
-import uz.darico.missive.dto.MissiveGetDTO;
-import uz.darico.missive.dto.MissiveListDTO;
-import uz.darico.missive.dto.MissiveListDTOBuilder;
+import uz.darico.missive.dto.*;
 import uz.darico.missive.projections.MissiveListProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileMapper;
@@ -49,9 +48,7 @@ public class MissiveMapper implements BaseMapper {
     private final BaseUtils baseUtils;
     private final OrganizationFeignService organizationFeignService;
 
-    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper,
-                         DepartmentFeignService departmentFeignService, WorkPlaceFeignService workPlaceFeignService, UserFeignService userFeignService,
-                         BaseUtils baseUtils, OrganizationFeignService organizationFeignService) {
+    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper, DepartmentFeignService departmentFeignService, WorkPlaceFeignService workPlaceFeignService, UserFeignService userFeignService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService) {
         this.senderMapper = senderMapper;
         this.signatoryMapper = signatoryMapper;
         this.confirmativeMapper = confirmativeMapper;
@@ -79,19 +76,14 @@ public class MissiveMapper implements BaseMapper {
         List<InReceiver> inReceivers = inReceiverMapper.toEntity(inReceiverCreateDTOs);
         List<ContentFile> baseFiles = contentFileService.getContentFiles(createDTO.getBaseFileIDs());
         MissiveFile missiveFile = missiveFileMapper.toEntity(createDTO.getContent());
-        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(),
-                outReceivers, inReceivers, baseFiles, Collections.singletonList(missiveFile));
+        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(), outReceivers, inReceivers, baseFiles, Collections.singletonList(missiveFile));
     }
 
     public MissiveGetDTO toGetDTO(Missive missive) {
         List<MissiveFile> missiveFiles = missive.getMissiveFiles();
-        missiveFiles
-                .sort(Comparator.comparing(MissiveFile::getVersion));
+        missiveFiles.sort(Comparator.comparing(MissiveFile::getVersion));
         OrgShortInfo orgShortInfo = organizationFeignService.getShortInfo(missive.getOrgID());
-        return new MissiveGetDTO(missive.getId(), orgShortInfo.getName(), orgShortInfo.getEmail(), senderMapper.toGetDTO(missive.getSender()),
-                signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()),
-                departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()),
-                inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFiles()), missive.getCreatedAt().toLocalDate());
+        return new MissiveGetDTO(missive.getId(), orgShortInfo.getName(), orgShortInfo.getEmail(), senderMapper.toGetDTO(missive.getSender()), signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()), departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()), inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFiles()), missive.getCreatedAt().toLocalDate());
     }
 
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {
@@ -99,10 +91,32 @@ public class MissiveMapper implements BaseMapper {
         for (MissiveListProjection missiveListProjection : missiveListProjections) {
             UserInfo userInfo = userFeignService.getUserInfo(missiveListProjection.getSenderUserID());
             String departmentName = departmentFeignService.getName(missiveListProjection.getDepartmentID());
-            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).setDepartmentName(departmentName).
-                    setSenderFirstName(userInfo.getFirstName()).setSenderLastName(userInfo.getLastName()).setShortInfo(missiveListProjection.getShortInfo()).setOrgID(missiveListProjection.getOrgID()).setTotalCount(missiveListProjection.getTotalCount()).create();
+            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).setDepartmentName(departmentName).setSenderFirstName(userInfo.getFirstName()).setSenderLastName(userInfo.getLastName()).setShortInfo(missiveListProjection.getShortInfo()).setOrgID(missiveListProjection.getOrgID()).setTotalCount(missiveListProjection.getTotalCount()).create();
             missiveListDTOs.add(missiveListDTO);
         }
         return missiveListDTOs;
+    }
+
+    public MissiveRawDTO toRawDTO(Missive missive) {
+        List<Confirmative> confirmatives = missive.getConfirmatives();
+        if (confirmatives == null) {
+            confirmatives = new ArrayList<>();
+        }
+        List<OutReceiver> outReceivers = missive.getOutReceivers();
+        if (outReceivers == null) {
+            outReceivers = new ArrayList<>();
+        }
+        List<InReceiver> inReceivers = missive.getInReceivers();
+        if (inReceivers == null) {
+            inReceivers = new ArrayList<>();
+        }
+        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
+        if (missiveFiles == null) {
+            throw new UniversalException("%s missiveID Missive files is null".formatted(missive.getId()), HttpStatus.BAD_REQUEST);
+        }
+        MissiveFile missiveFile = missiveFiles.stream().filter(item -> item.getVersion().equals(1)).findFirst().get();
+        return new MissiveRawDTO(missive.getId(), missive.getOrgID(), missive.getSender().getWorkPlaceID(), missive.getSignatory().getWorkPlaceID(),
+                confirmatives.stream().map(Confirmative::getWorkPlaceID).toList(), outReceivers.stream().map(OutReceiver::getCorrespondentID).toList(),
+                inReceivers.stream().map(InReceiver::getCorrespondentID).toList(), missive.getBaseFiles(), missiveFile.getContent());
     }
 }

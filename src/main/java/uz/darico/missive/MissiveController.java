@@ -39,6 +39,11 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.get(id);
     }
 
+    @GetMapping("/raw/{id}")
+    public ResponseEntity<?> getRaw(@PathVariable(name = "id") UUID id) {
+        return service.getRaw(id);
+    }
+
     @PatchMapping("/ready-sender")
     public ResponseEntity<?> readyForSender(@RequestParam(name = "id") String id) {
         return service.readyForSender(id);
