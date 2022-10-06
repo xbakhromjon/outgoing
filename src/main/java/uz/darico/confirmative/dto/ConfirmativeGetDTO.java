@@ -19,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ConfirmativeGetDTO {
     private UUID ID;
+    private Long workPlaceID;
     private String firstName;
     private String lastName;
     private String middleName;
