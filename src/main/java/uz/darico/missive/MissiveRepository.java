@@ -108,4 +108,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset ")
     List<MissiveListProjection> getSent(Long workPlaceID, Integer limit, Integer offset);
 
+    @Query(nativeQuery = true, value = "update missive set is_ready = false where id = :ID")
+    @Modifying
+    void notReady(UUID ID);
 }
