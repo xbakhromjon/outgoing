@@ -14,8 +14,8 @@ import java.util.UUID;
 public class MissiveRejectDTO {
     private String missive;
 
+    private String rejectedBy;
     // confID or signatoryID
     private String message;
-    private String rejectedBy;
     private UUID rejectedByUUID;
 }
