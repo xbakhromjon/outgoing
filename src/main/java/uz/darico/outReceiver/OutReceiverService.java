@@ -35,7 +35,12 @@ public class OutReceiverService extends AbstractService<OutReceiverRepository, O
         repository.deleteFromRelatedTable(IDs);
         repository.deleteAll(IDs);
     }
+
     public List<OutReceiver> saveAll(List<OutReceiver> outReceivers) {
         return repository.saveAll(outReceivers);
+    }
+
+    public List<OutReceiver> getAllByMissiveID(UUID ID) {
+        return repository.getAllByMissiveID(ID);
     }
 }

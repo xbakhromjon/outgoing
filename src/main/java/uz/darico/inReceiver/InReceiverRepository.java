@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uz.darico.base.repository.BaseRepository;
 import uz.darico.confirmative.Confirmative;
+import uz.darico.outReceiver.OutReceiver;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -21,4 +22,8 @@ public interface InReceiverRepository extends JpaRepository<InReceiver, UUID>, B
     @Query(nativeQuery = true, value = "delete from missive_in_receivers where in_receivers_id in :IDs")
     @Modifying
     void deleteFromRelatedTable(List<UUID> IDs);
+
+    @Query(nativeQuery = true, value = "select * from in_receiver where id in (select in_receivers_id from missive_in_receivers where missive_id = :ID)")
+    List<InReceiver> getAllByMissiveID(UUID ID);
+
 }

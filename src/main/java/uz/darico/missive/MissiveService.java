@@ -13,6 +13,7 @@ import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
 import uz.darico.feedback.conf.ConfFeedBackService;
 import uz.darico.feedback.signatory.SignatoryFeedBackService;
+import uz.darico.feign.OrganizationFeignService;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverService;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
@@ -33,10 +34,7 @@ import uz.darico.utils.ResponsePage;
 import uz.darico.utils.SearchDTO;
 import uz.darico.utils.Tab;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class MissiveService extends AbstractService<MissiveRepository, MissiveValidator, MissiveMapper> {
@@ -52,12 +50,13 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     private final SignatoryFeedBackService signatoryFeedBackService;
     private final ConfFeedBackService confFeedBackService;
     private final ConfirmativeMapper confirmativeMapper;
+    private final OrganizationFeignService organizationFeignService;
 
     public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService,
                           MissiveFileService missiveFileService, SignatoryService signatoryService,
                           ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils,
                           SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService,
-                          ConfirmativeMapper confirmativeMapper) {
+                          ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService) {
         super(repository, validator, mapper);
         this.confirmativeService = confirmativeService;
         this.outReceiverService = outReceiverService;
@@ -70,6 +69,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         this.signatoryFeedBackService = signatoryFeedBackService;
         this.confFeedBackService = confFeedBackService;
         this.confirmativeMapper = confirmativeMapper;
+        this.organizationFeignService = organizationFeignService;
     }
 
     public ResponseEntity<?> create(MissiveCreateDTO createDTO) {
@@ -217,7 +217,16 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
             // missiveFile
             List<MissiveFile> missiveFiles = missiveFileService.getAll(ID);
             missiveListDTO.setMissiveFiles(missiveFiles);
+
+            // correspondent
+            List<OutReceiver> outReceivers = outReceiverService.getAllByMissiveID(ID);
+            List<InReceiver> inReceivers = inReceiverService.getAllByMissiveID(ID);
+
+            List<String> correspondents = new ArrayList<>(outReceivers.stream().map(item -> organizationFeignService.getShortInfo(item.getCorrespondentID()).getName()).toList());
+            correspondents.addAll(inReceivers.stream().map(item -> organizationFeignService.getShortInfo(item.getCorrespondentID()).getName()).toList());
+            missiveListDTO.setCorrespondent(correspondents);
         }
+
         return missiveListDTOs;
     }
 

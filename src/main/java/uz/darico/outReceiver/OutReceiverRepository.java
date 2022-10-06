@@ -22,4 +22,7 @@ public interface OutReceiverRepository extends JpaRepository<OutReceiver, UUID>,
     @Query(nativeQuery = true, value = "delete from missive_out_receivers where out_receivers_id in :IDs")
     @Modifying
     void deleteFromRelatedTable(List<UUID> IDs);
+
+    @Query(nativeQuery = true, value = "select * from out_receiver where id in (select out_receivers_id from missive_out_receivers where missive_id = :ID)")
+    List<OutReceiver> getAllByMissiveID(UUID ID);
 }

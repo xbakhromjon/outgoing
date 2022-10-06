@@ -39,4 +39,8 @@ public class InReceiverService extends AbstractService<InReceiverRepository, InR
     public List<InReceiver> saveAll(List<InReceiver> inReceivers) {
         return repository.saveAll(inReceivers);
     }
+
+    public List<InReceiver> getAllByMissiveID(UUID ID) {
+        return repository.getAllByMissiveID(ID);
+    }
 }
