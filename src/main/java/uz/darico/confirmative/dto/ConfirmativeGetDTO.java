@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 /**
  * @author : Bakhromjon Khasanboyev
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmativeGetDTO {
+    private UUID ID;
     private String firstName;
     private String lastName;
     private String middleName;
