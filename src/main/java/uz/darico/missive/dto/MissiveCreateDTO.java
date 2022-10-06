@@ -24,4 +24,5 @@ public class MissiveCreateDTO {
     private List<InReceiverCreateDTO> inReceivers;
     private List<UUID> baseFileIDs;
     private String content;
+    private String shortInfo;
 }

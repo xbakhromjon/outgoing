@@ -82,6 +82,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         missive.setInReceivers(inReceiverService.saveAll(missive.getInReceivers()));
         missive.setBaseFiles(contentFileService.saveAll(missive.getBaseFiles()));
         missive.setMissiveFiles(missiveFileService.saveAll(missive.getMissiveFiles()));
+        missive.setShortInfo(createDTO.getShortInfo());
         Missive saved = repository.save(missive);
         return ResponseEntity.ok(true);
     }
