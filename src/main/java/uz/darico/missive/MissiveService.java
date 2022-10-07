@@ -236,8 +236,14 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         int offset = searchDTO.getPage() * searchDTO.getSize();
         searchDTO.setOffset(offset);
         if (Objects.equals(searchDTO.getTab(), Tab.HOMAKI.getCode())) {
+            String shortInfo = null;
+            if (searchDTO.getShortInfo() != null) {
+                shortInfo = "%" + searchDTO.getShortInfo() + "%";
+            }
+            searchDTO.setShortInfo(shortInfo);
             return repository.getSketchies(searchDTO.getWorkPlace(),
-                    searchDTO.getSize(), offset);
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
+                    searchDTO.getSize(), searchDTO.getOffset());
         }
         return getInProcess(searchDTO);
     }
@@ -245,6 +251,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public List<MissiveListProjection> getInProcess(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.JARAYONDA.getCode())) {
             return repository.getInProcesses(searchDTO.getWorkPlace(),
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
                     searchDTO.getSize(), searchDTO.getOffset());
         }
 
@@ -254,6 +261,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public List<MissiveListProjection> getForConfirm(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLASH_UCHUN.getCode())) {
             return repository.getForConfirm(searchDTO.getWorkPlace(),
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
                     searchDTO.getSize(), searchDTO.getOffset());
         }
 
@@ -263,6 +271,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public List<MissiveListProjection> getConfirmed(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLANGAN.getCode())) {
             return repository.getConfirmed(searchDTO.getWorkPlace(),
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
                     searchDTO.getSize(), searchDTO.getOffset());
         }
 
@@ -272,6 +281,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public List<MissiveListProjection> getForSign(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLASH_UCHUN.getCode())) {
             return repository.getForSign(searchDTO.getWorkPlace(),
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
                     searchDTO.getSize(), searchDTO.getOffset());
         }
 
@@ -281,6 +291,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public List<MissiveListProjection> getSigned(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLANGAN.getCode())) {
             return repository.getSigned(searchDTO.getWorkPlace(),
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
                     searchDTO.getSize(), searchDTO.getOffset());
         }
 
@@ -290,6 +301,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public List<MissiveListProjection> getSent(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.YUBORILGAN.getCode())) {
             return repository.getSent(searchDTO.getWorkPlace(),
+                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
                     searchDTO.getSize(), searchDTO.getOffset());
         }
         throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);

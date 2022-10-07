@@ -43,12 +43,11 @@ public class MissiveMapper implements BaseMapper {
     private final ContentFileService contentFileService;
     private final MissiveFileMapper missiveFileMapper;
     private final DepartmentFeignService departmentFeignService;
-    private final WorkPlaceFeignService workPlaceFeignService;
     private final UserFeignService userFeignService;
     private final BaseUtils baseUtils;
     private final OrganizationFeignService organizationFeignService;
 
-    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper, DepartmentFeignService departmentFeignService, WorkPlaceFeignService workPlaceFeignService, UserFeignService userFeignService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService) {
+    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper, DepartmentFeignService departmentFeignService, UserFeignService userFeignService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService) {
         this.senderMapper = senderMapper;
         this.signatoryMapper = signatoryMapper;
         this.confirmativeMapper = confirmativeMapper;
@@ -57,7 +56,6 @@ public class MissiveMapper implements BaseMapper {
         this.contentFileService = contentFileService;
         this.missiveFileMapper = missiveFileMapper;
         this.departmentFeignService = departmentFeignService;
-        this.workPlaceFeignService = workPlaceFeignService;
         this.userFeignService = userFeignService;
         this.baseUtils = baseUtils;
         this.organizationFeignService = organizationFeignService;

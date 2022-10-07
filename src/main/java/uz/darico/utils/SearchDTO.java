@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchDTO {
-    private String confirmative;
+    private Long confirmativeWorkPlace;
     private Long correspondent;
     private String shortInfo;
     private Long workPlace;
