@@ -13,7 +13,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public enum SignatoryStatus {
     SIGNED("SIGNED", 1),
-    REJECTED("REJECTED",2);
+    REJECTED("REJECTED",2),
+    NOT_VIEWED("NOT_VIEWED", 3),
+    VIEWED( "VIEWED", 4);
 
     private final String name;
     private final Integer code;

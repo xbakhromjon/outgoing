@@ -1,6 +1,8 @@
 package uz.darico.signatory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uz.darico.base.repository.BaseRepository;
 import uz.darico.outReceiver.OutReceiver;
@@ -9,4 +11,11 @@ import java.util.UUID;
 
 @Repository
 public interface SignatoryRepository extends JpaRepository<Signatory, UUID>, BaseRepository {
+    @Query(nativeQuery = true, value = "update signatory set status_code = 2 where id = :rejectedByUUID")
+    @Modifying
+    void reject(UUID rejectedByUUID);
+
+    @Query(nativeQuery = true, value = "update signatory set status_code = :code where id = :ID")
+    @Modifying
+    void setStatus(UUID ID, Integer code);
 }

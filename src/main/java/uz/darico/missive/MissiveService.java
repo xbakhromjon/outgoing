@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
+import uz.darico.confirmative.ConfStatus;
 import uz.darico.confirmative.Confirmative;
 import uz.darico.confirmative.ConfirmativeMapper;
 import uz.darico.confirmative.ConfirmativeService;
@@ -29,6 +30,7 @@ import uz.darico.sender.Sender;
 import uz.darico.sender.SenderService;
 import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryService;
+import uz.darico.signatory.SignatoryStatus;
 import uz.darico.utils.BaseUtils;
 import uz.darico.utils.ResponsePage;
 import uz.darico.utils.SearchDTO;
@@ -140,11 +142,41 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
-    public ResponseEntity<?> get(String id) {
+    public ResponseEntity<?> get(Long workPlaceID, String id) {
         UUID ID = baseUtils.strToUUID(id);
         Missive missive = getPersist(ID);
         MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);
+        setStatus(workPlaceID, ID);
         return ResponseEntity.ok(missiveGetDTO);
+    }
+
+    private void setStatus(Long workPlaceID, UUID missiveID) {
+        // signatory
+        Missive missive = getPersist(missiveID);
+        if (missive.getSignatory().getWorkPlaceID().equals(workPlaceID)) {
+            if (missive.getSignatory().getStatusCode().equals(SignatoryStatus.NOT_VIEWED.getCode())) {
+                signatoryService.setStatus(missive.getSignatory().getId(), SignatoryStatus.VIEWED.getCode());
+            }
+        }
+        // confirmative
+        else if (missive.getConfirmatives().stream().map(Confirmative::getWorkPlaceID).toList().contains(workPlaceID)) {
+            for (Confirmative confirmative : missive.getConfirmatives()) {
+                if (confirmative.getWorkPlaceID().equals(workPlaceID)) {
+                    if (confirmative.getStatusCode().equals(ConfStatus.NOT_VIEWED.getCode())) {
+                        confirmativeService.setStatus(confirmative.getId(), ConfStatus.VIEWED.getCode());
+                    }
+                }
+            }
+        }
+        // sender
+        else if (missive.getSender().getWorkPlaceID().equals(workPlaceID)) {
+
+        }
+        // other
+        else {
+
+        }
+
     }
 
     public ResponseEntity<?> getRaw(UUID ID) {
@@ -185,8 +217,10 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         Sender sender = senderService.getPersistByMissiveID(ID);
         if (signatoryService.existsByID(rejectedByUUID)) {
             signatoryFeedBackService.add(rejectDTO, sender);
+            signatoryService.reject(rejectedByUUID);
         } else {
             confFeedBackService.add(rejectDTO, sender);
+            confirmativeService.reject(rejectedByUUID);
         }
         sender.setIsReadyToSend(false);
         senderService.save(sender);

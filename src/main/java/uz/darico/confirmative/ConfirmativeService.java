@@ -60,4 +60,12 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
         }
         return false;
     }
+
+    public void reject(UUID rejectedByUUID) {
+        repository.setStatus(rejectedByUUID, ConfStatus.REJECTED.getCode());
+    }
+
+    public void setStatus(UUID ID, Integer code) {
+        repository.setStatus(ID, code);
+    }
 }

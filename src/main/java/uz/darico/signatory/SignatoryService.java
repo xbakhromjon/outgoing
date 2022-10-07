@@ -36,4 +36,12 @@ public class SignatoryService extends AbstractService<SignatoryRepository, Signa
     public void notReady(UUID id) {
 
     }
+
+    public void reject(UUID rejectedByUUID) {
+        repository.setStatus(rejectedByUUID, SignatoryStatus.REJECTED.getCode());
+    }
+
+    public void setStatus(UUID ID, Integer code) {
+        repository.setStatus(ID, code);
+    }
 }

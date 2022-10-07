@@ -38,4 +38,13 @@ public interface ConfirmativeRepository extends JpaRepository<Confirmative, UUID
     @Modifying
     void notReadyByMissiveID(UUID missiveID);
 
+
+    @Query(nativeQuery = true, value = "update confirmative set status_code = 2 where id = :rejectedByUUID")
+    @Modifying
+    void reject(UUID rejectedByUUID);
+
+
+    @Query(nativeQuery = true, value = "update confirmative set status_code = :code where id = :ID")
+    @Modifying
+    void setStatus(UUID ID, Integer code);
 }

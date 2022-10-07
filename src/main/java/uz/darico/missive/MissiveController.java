@@ -23,7 +23,6 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.create(createDTO);
     }
 
-
     @PatchMapping()
     public ResponseEntity<?> update(@RequestBody MissiveUpdateDTO updateDTO) {
         return service.update(updateDTO);
@@ -34,9 +33,9 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.delete(id);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable(name = "id") String id) {
-        return service.get(id);
+    @GetMapping("/{workPlaceID}/{id}")
+    public ResponseEntity<?> get(@PathVariable Long workPlaceID, @PathVariable(name = "id") String id) {
+        return service.get(workPlaceID, id);
     }
 
     @GetMapping("/raw/{id}")
