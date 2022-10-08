@@ -74,4 +74,11 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
             throw new UniversalException("MissiveFile not found", HttpStatus.BAD_REQUEST);
         });
     }
+
+    public MissiveFile getLastVersion(UUID missiveID) {
+        Optional<MissiveFile> optional = repository.findLastVersion(missiveID);
+        return optional.orElseThrow(() -> {
+            throw new UniversalException("MissiveFile last version not found", HttpStatus.BAD_REQUEST);
+        });
+    }
 }

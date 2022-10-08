@@ -5,11 +5,15 @@ import uz.darico.base.entity.AbstractEntity;
 
 import java.util.List;
 import java.util.UUID;
+
 import uz.darico.base.service.AbstractService;
 import uz.darico.confirmative.Confirmative;
+import uz.darico.email.dto.EmailSenderDTO;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
+import uz.darico.missiveFile.MissiveFile;
+import uz.darico.outReceiver.OutReceiver;
 
 @Service
 public class InReceiverService extends AbstractService<InReceiverRepository, InReceiverValidator, InReceiverMapper> {
@@ -42,5 +46,8 @@ public class InReceiverService extends AbstractService<InReceiverRepository, InR
 
     public List<InReceiver> getAllByMissiveID(UUID ID) {
         return repository.getAllByMissiveID(ID);
+    }
+
+    public void send(UUID ID, MissiveFile lastVersion) {
     }
 }
