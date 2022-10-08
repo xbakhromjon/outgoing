@@ -16,5 +16,7 @@ import java.util.UUID;
 public class TemplateCreateDTO {
     private Long workPlaceID;
     private String content;
-    private String createdPurpose;
+    private String name;
+    private UUID fileID;
+    private Boolean isGlobal = false;
 }

@@ -13,5 +13,7 @@ import java.util.UUID;
 public class TemplateUpdateDTO {
     private UUID ID;
     private String content;
-    private String createdPurpose;
+    private String name;
+    private UUID fileID;
+    private Boolean isGlobal = false;
 }

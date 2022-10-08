@@ -15,19 +15,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TemplateMapper implements BaseMapper {
     private final WorkPlaceFeignService workPlaceFeignService;
-    private final ContentFileService contentFileService;
 
 
     public Template toEntity(TemplateCreateDTO createDTO) {
-        return new TemplateBuilder().
-                setWorkPlaceID(createDTO.getWorkPlaceID()).
-                setCreatedPurpose(createDTO.getCreatedPurpose()).
-                setUserID(workPlaceFeignService.getUserID(createDTO.getWorkPlaceID())).
+        return new Template.TemplateBuilder().
+                workPlaceID(createDTO.getWorkPlaceID()).
+                name(createDTO.getName()).
+                content(createDTO.getContent()).
+                userID(workPlaceFeignService.getUserID(createDTO.getWorkPlaceID())).
+                isGlobal(createDTO.getIsGlobal()).
                 build();
     }
 
     public TemplateGetDTO toGetDTO(Template template) {
-        return new TemplateGetDTO(template.getWorkPlaceID(), template.getContent(), template.getCreatedPurpose());
+        return new TemplateGetDTO(template.getWorkPlaceID(), template.getContent(), template.getName());
     }
 
 

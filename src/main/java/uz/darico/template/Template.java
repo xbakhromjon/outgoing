@@ -15,6 +15,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Entity
 public class Template extends Auditable {
@@ -22,6 +23,8 @@ public class Template extends Auditable {
     private Long userID;
     @Type(type = "text")
     private String content;
-    private String createdPurpose;
-
+    private String name;
+    @OneToOne
+    private ContentFile image;
+    private Boolean isGlobal = false;
 }
