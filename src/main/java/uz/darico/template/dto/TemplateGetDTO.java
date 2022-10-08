@@ -13,5 +13,6 @@ import java.util.UUID;
 public class TemplateGetDTO {
     private Long workPlaceID;
     private String content;
-    private String createdPurpose;
+    private String name;
+    private ContentFile image;
 }

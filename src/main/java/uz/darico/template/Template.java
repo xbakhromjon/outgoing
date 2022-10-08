@@ -19,6 +19,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Entity
 public class Template extends Auditable {
+    private Long orgID;
     private Long workPlaceID;
     private Long userID;
     @Type(type = "text")

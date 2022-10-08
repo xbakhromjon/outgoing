@@ -7,6 +7,7 @@ import uz.darico.base.service.AbstractService;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
+import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.template.dto.TemplateCreateDTO;
 import uz.darico.template.dto.TemplateGetDTO;
 import uz.darico.template.dto.TemplateUpdateDTO;
@@ -18,11 +19,13 @@ import java.util.UUID;
 @Service
 public class TemplateService extends AbstractService<TemplateRepository, TemplateValidator, TemplateMapper> {
     private final ContentFileService contentFileService;
+    private final WorkPlaceFeignService workPlaceFeignService;
 
     public TemplateService(TemplateRepository repository, TemplateValidator validator, TemplateMapper mapper,
-                           ContentFileService contentFileService) {
+                           ContentFileService contentFileService, WorkPlaceFeignService workPlaceFeignService) {
         super(repository, validator, mapper);
         this.contentFileService = contentFileService;
+        this.workPlaceFeignService = workPlaceFeignService;
     }
 
     public ResponseEntity<?> create(TemplateCreateDTO createDTO) {
@@ -65,7 +68,8 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
     }
 
     public ResponseEntity<?> list(Long workPlaceID) {
-        List<Template> templates = repository.findAll(workPlaceID);
+        Long orID =  workPlaceFeignService.getOrgID(workPlaceID);
+        List<Template> templates = repository.findAll(workPlaceID, orID);
         List<TemplateGetDTO> templateGetDTOs = mapper.toGetDTO(templates);
         return ResponseEntity.ok(templateGetDTOs);
     }
