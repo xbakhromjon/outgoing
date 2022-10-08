@@ -8,6 +8,7 @@ import uz.darico.base.repository.BaseRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -31,4 +32,11 @@ public interface MissiveFileRepository extends JpaRepository<MissiveFile, UUID>,
     @Query(nativeQuery = true, value = "delete from missive_missive_files where missive_files_id = :missiveFileID")
     @Modifying
     void deleteFromRelatedTables(UUID missiveFileID);
+
+    @Query(nativeQuery = true, value = "select * from missive_file where id = :ID and not is_deleted")
+    Optional<MissiveFile> find(UUID ID);
+
+    @Query(nativeQuery = true, value = "update missive_file set content = :content where id = :ID")
+    @Modifying
+    void updateContent(UUID ID, String content);
 }

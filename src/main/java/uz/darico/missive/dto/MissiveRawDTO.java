@@ -29,5 +29,6 @@ public class MissiveRawDTO {
     private List<Long> outReceivers;
     private List<Long> inReceivers;
     private List<ContentFile> baseFiles;
+    private UUID missiveFileID;
     private String missiveContent;
 }

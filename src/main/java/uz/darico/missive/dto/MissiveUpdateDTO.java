@@ -31,5 +31,6 @@ public class MissiveUpdateDTO {
     private List<OutReceiverCreateDTO> outReceivers;
     private List<InReceiverCreateDTO> inReceivers;
     private List<UUID> baseFileIDs;
+    private UUID missiveFileID;
     private String content;
 }

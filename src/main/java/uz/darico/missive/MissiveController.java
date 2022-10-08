@@ -9,6 +9,7 @@ import uz.darico.missive.dto.MissiveUpdateDTO;
 import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
 import uz.darico.utils.SearchDTO;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -19,12 +20,12 @@ public class MissiveController extends AbstractController<MissiveService> {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody MissiveCreateDTO createDTO) {
+    public ResponseEntity<?> create(@RequestBody MissiveCreateDTO createDTO) throws IOException {
         return service.create(createDTO);
     }
 
     @PatchMapping()
-    public ResponseEntity<?> update(@RequestBody MissiveUpdateDTO updateDTO) {
+    public ResponseEntity<?> update(@RequestBody MissiveUpdateDTO updateDTO) throws IOException {
         return service.update(updateDTO);
     }
 

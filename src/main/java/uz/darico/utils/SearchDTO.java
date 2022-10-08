@@ -1,5 +1,6 @@
 package uz.darico.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ public class SearchDTO {
     private Integer page;
     private Integer size = 20;
     private Integer tab;
+    @JsonIgnore
     private Integer offset;
 }

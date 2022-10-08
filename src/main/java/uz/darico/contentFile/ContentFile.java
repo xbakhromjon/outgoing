@@ -11,6 +11,7 @@ import javax.sql.rowset.spi.SyncResolver;
 @Setter
 @ToString
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Entity
 public class ContentFile extends Auditable {

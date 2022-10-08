@@ -36,6 +36,7 @@ import uz.darico.utils.ResponsePage;
 import uz.darico.utils.SearchDTO;
 import uz.darico.utils.Tab;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -74,7 +75,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         this.organizationFeignService = organizationFeignService;
     }
 
-    public ResponseEntity<?> create(MissiveCreateDTO createDTO) {
+    public ResponseEntity<?> create(MissiveCreateDTO createDTO) throws IOException {
         validator.validForCreate(createDTO);
         Missive missive = mapper.toEntity(createDTO);
         missive.setSender(senderService.save(missive.getSender()));
@@ -89,7 +90,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
-    public ResponseEntity<?> update(MissiveUpdateDTO updateDTO) {
+    public ResponseEntity<?> update(MissiveUpdateDTO updateDTO) throws IOException {
         validator.validForUpdate(updateDTO);
         Missive missive = getPersist(updateDTO.getID());
 
@@ -120,8 +121,8 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         List<ContentFile> newContentFiles = contentFileService.refresh(baseFileIDs, missive.getBaseFiles());
         missive.setBaseFiles(newContentFiles);
 
-        List<MissiveFile> newMissiveFiles = missiveFileService.refresh(updateDTO.getContent(), missive.getMissiveFiles());
-        missive.setMissiveFiles(newMissiveFiles);
+        List<MissiveFile> newMissiveFiles = missiveFileService.refresh(updateDTO.getMissiveFileID(), updateDTO.getContent(), missive.getMissiveFiles());
+//        missive.setMissiveFiles(newMissiveFiles);
 
         repository.save(missive);
         return ResponseEntity.ok(true);

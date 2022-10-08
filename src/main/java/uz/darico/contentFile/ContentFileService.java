@@ -29,6 +29,7 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
 
     private final BaseUtils baseUtils;
     private final String FILE_PATH_LINUX = "/home/xbakhromjon/database";
+    private final String GENERATED_FILES_PATH = "/generated";
     private final String FILE_PATH_WINDOWS = "";
     private final ServletContext servletContext;
 
@@ -157,5 +158,19 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
 
     public List<ContentFile> getAll(UUID ID) {
         return repository.getAll(ID);
+    }
+
+    public ContentFile writeAsPDF(String content) throws IOException {
+        String path = FILE_PATH_LINUX + GENERATED_FILES_PATH;
+        Path pathObj = Path.of(path);
+        if (!Files.exists(pathObj)) {
+            Files.createDirectories(pathObj);
+        }
+        String generatedName = UUID.randomUUID().toString() + ".pdf";
+        path = path + "/" + generatedName;
+//        String path = FILE_PATH_WINDOWS +  GENERATED_FILES_PATH;
+        baseUtils.writeHtmlAsPdf(path, content);
+        ContentFile contentFile = new ContentFile.ContentFileBuilder().path(path).generatedName(generatedName).contentType("application/pdf").build();
+        return repository.save(contentFile);
     }
 }

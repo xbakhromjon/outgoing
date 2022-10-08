@@ -21,6 +21,8 @@ import javax.persistence.Table;
 public class MissiveFile extends Auditable {
     @Type(type = "text")
     private String content;
+    @OneToOne
+    private ContentFile file;
     private Integer version;
     private String rejectedPurpose;
     private Long rejectedWorkPlaceID;

@@ -1,35 +1,44 @@
 package uz.darico.missiveFile;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
+import uz.darico.exception.exception.UniversalException;
 import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
 import uz.darico.outReceiver.OutReceiverValidator;
 import uz.darico.missiveFile.MissiveFile.MissiveFileBuilder;
+import uz.darico.utils.BaseUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class MissiveFileService extends AbstractService<MissiveFileRepository, OutReceiverValidator, MissiveFileMapper> {
     private final ContentFileService contentFileService;
+    private final BaseUtils baseUtils;
 
     public MissiveFileService(MissiveFileRepository repository, OutReceiverValidator validator, MissiveFileMapper mapper,
-                              ContentFileService contentFileService) {
+                              ContentFileService contentFileService, BaseUtils baseUtils) {
         super(repository, validator, mapper);
         this.contentFileService = contentFileService;
+        this.baseUtils = baseUtils;
     }
 
-    public List<MissiveFile> refresh(String content, List<MissiveFile> trashMissiveFiles) {
-        List<MissiveFile> newMissiveFiles = create(content);
-        deleteAll(trashMissiveFiles);
-        return newMissiveFiles;
+    public List<MissiveFile> refresh(UUID missiveFileID, String content, List<MissiveFile> trashMissiveFiles) throws IOException {
+        MissiveFile missiveFile = getPersist(missiveFileID);
+        missiveFile.setContent(content);
+        String filePath = missiveFile.getFile().getPath();
+        baseUtils.writeHtmlAsPdf(filePath, content);
+        repository.updateContent(missiveFileID, content);
+//        List<MissiveFile> newMissiveFiles = create(content);
+//        deleteAll(trashMissiveFiles);
+        return new ArrayList<>();
     }
 
-    public List<MissiveFile> create(String content) {
+    public List<MissiveFile> create(String content) throws IOException {
         MissiveFile missiveFile = mapper.toEntity(content);
         return repository.saveAll(Collections.singletonList(missiveFile));
     }
@@ -57,5 +66,12 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
     public void delete(UUID missiveFileID) {
         repository.delete(missiveFileID);
         repository.deleteFromRelatedTables(missiveFileID);
+    }
+
+    public MissiveFile getPersist(UUID ID) {
+        Optional<MissiveFile> optional = repository.find(ID);
+        return optional.orElseThrow(() -> {
+            throw new UniversalException("MissiveFile not found", HttpStatus.BAD_REQUEST);
+        });
     }
 }

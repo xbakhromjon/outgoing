@@ -30,6 +30,7 @@ import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.utils.BaseUtils;
 import uz.darico.utils.OrgShortInfo;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -61,7 +62,7 @@ public class MissiveMapper implements BaseMapper {
         this.organizationFeignService = organizationFeignService;
     }
 
-    public Missive toEntity(MissiveCreateDTO createDTO) {
+    public Missive toEntity(MissiveCreateDTO createDTO) throws IOException {
         Long workPlaceID = createDTO.getWorkPlaceID();
         Sender sender = senderMapper.toEntity(workPlaceID);
         Long signatoryWorkPlaceID = createDTO.getSignatoryWorkPlaceID();
@@ -115,6 +116,6 @@ public class MissiveMapper implements BaseMapper {
         MissiveFile missiveFile = missiveFiles.stream().filter(item -> item.getVersion().equals(1)).findFirst().get();
         return new MissiveRawDTO(missive.getId(), missive.getOrgID(), missive.getSender().getWorkPlaceID(), missive.getSignatory().getWorkPlaceID(),
                 confirmatives.stream().map(Confirmative::getWorkPlaceID).toList(), outReceivers.stream().map(OutReceiver::getCorrespondentID).toList(),
-                inReceivers.stream().map(InReceiver::getCorrespondentID).toList(), missive.getBaseFiles(), missiveFile.getContent());
+                inReceivers.stream().map(InReceiver::getCorrespondentID).toList(), missive.getBaseFiles(), missiveFile.getId(), missiveFile.getContent());
     }
 }
