@@ -15,4 +15,5 @@ public class TemplateGetDTO {
     private String content;
     private String name;
     private ContentFile image;
+    private Boolean isGlobal;
 }
