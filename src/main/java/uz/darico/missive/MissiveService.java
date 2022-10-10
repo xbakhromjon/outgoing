@@ -208,7 +208,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> sign(String id) {
         UUID ID = baseUtils.strToUUID(id);
         repository.sign(ID);
-        MissiveFile lastVersion =  missiveFileService.getLastVersion(ID);
+        MissiveFile lastVersion = missiveFileService.getLastVersion(ID);
         outReceiverService.send(ID, lastVersion);
         inReceiverService.send(ID, lastVersion);
         return ResponseEntity.ok(true);
@@ -361,5 +361,9 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     }
 
 
+    public Integer getCountByJournal(UUID ID) {
+        // TODO: 10/10/22 implements here
+        return 0;
+    }
 }
 
