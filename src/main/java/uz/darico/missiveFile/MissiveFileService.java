@@ -29,9 +29,9 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
 
     public List<MissiveFile> refresh(UUID missiveFileID, String content, List<MissiveFile> trashMissiveFiles) throws IOException {
         MissiveFile missiveFile = getPersist(missiveFileID);
-        missiveFile.setContent(content);
-        String filePath = missiveFile.getFile().getPath();
-        baseUtils.writeHtmlAsPdf(filePath, content);
+//        missiveFile.setContent(content);
+//        String filePath = missiveFile.getFile().getPath();
+//        baseUtils.writeHtmlAsPdf(filePath, content);
         repository.updateContent(missiveFileID, content);
 //        List<MissiveFile> newMissiveFiles = create(content);
 //        deleteAll(trashMissiveFiles);

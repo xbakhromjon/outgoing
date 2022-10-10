@@ -17,14 +17,15 @@ import uz.darico.contentFile.ContentFile;
 @NoArgsConstructor
 public class MissiveFileGetDTO {
     private ContentFile file;
+    private String content;
     private Integer version;
     private String rejectedPurpose;
     private String rejectedFirstName;
     private String rejectedLastName;
     private String rejectedMiddleName;
 
-    public MissiveFileGetDTO(ContentFile file, Integer version, String rejectedPurpose) {
-        this.file = file;
+    public MissiveFileGetDTO(String content, Integer version, String rejectedPurpose) {
+        this.content = content;
         this.version = version;
         this.rejectedPurpose = rejectedPurpose;
     }
