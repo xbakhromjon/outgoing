@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uz.darico.base.repository.BaseRepository;
-import uz.darico.sender.Sender;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -27,4 +26,6 @@ public interface FishkaRepository extends JpaRepository<Fishka, UUID>, BaseRepos
     @Query(nativeQuery = true, value = "select * from fishka where orgid = :orgID and not is_deleted")
     List<Fishka> findAll(Long orgID);
 
+    @Query(nativeQuery = true, value = "select * from fishka where fishka_type_code = :fishkaType")
+    Optional<Fishka> findByFishkaType(Integer fishkaType);
 }

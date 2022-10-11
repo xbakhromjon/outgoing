@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
+import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
 import uz.darico.fishka.dto.FishkaCreateDTO;
 import uz.darico.fishka.dto.FishkaUpdateDTO;
-import uz.darico.sender.Sender;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +27,14 @@ public class FishkaService extends AbstractService<FishkaRepository, FishkaValid
 
     public ResponseEntity<?> create(FishkaCreateDTO createDTO) {
         validator.validForCreate(createDTO);
-        Fishka fishka = mapper.toEntity(createDTO);
-        fishka.setFile(contentFileService.getPersist(createDTO.getFileID()));
+        Fishka fishka = getPersist(createDTO.getFishkaType());
+        if (fishka != null) {
+            ContentFile file = contentFileService.getPersist(createDTO.getFileID());
+            fishka.setFile(file);
+        } else {
+            fishka = mapper.toEntity(createDTO);
+            fishka.setFile(contentFileService.getPersist(createDTO.getFileID()));
+        }
         Fishka saved = repository.save(fishka);
         return ResponseEntity.ok(mapper.toGetDTO(saved));
     }
@@ -62,5 +68,11 @@ public class FishkaService extends AbstractService<FishkaRepository, FishkaValid
         return optional.orElseThrow(() -> {
             throw new UniversalException("Fishka not found", HttpStatus.BAD_REQUEST);
         });
+    }
+
+
+    public Fishka getPersist(Integer fishkaType) {
+        Optional<Fishka> optional = repository.findByFishkaType(fishkaType);
+        return optional.orElse(null);
     }
 }

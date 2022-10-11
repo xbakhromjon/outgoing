@@ -20,7 +20,7 @@ public enum FishkaType {
     BOSS("BOSS", 1),
     CHIEF_1("CHIEF_1", 2),
     CHIEF_2("CHIEF_2", 3),
-    CHIEF_3("CHIEF_2", 4);
+    CHIEF_3("CHIEF_3", 4);
 
     private final String name;
     private final Integer code;
