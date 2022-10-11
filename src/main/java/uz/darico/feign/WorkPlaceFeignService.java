@@ -33,8 +33,8 @@ public class WorkPlaceFeignService {
 
     public Long getOrgID(Long workPlaceID) {
         try {
-//            ResponseEntity<Long> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
-            ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
+            ResponseEntity<Long> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
+//            ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }
