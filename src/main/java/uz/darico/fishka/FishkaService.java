@@ -31,6 +31,7 @@ public class FishkaService extends AbstractService<FishkaRepository, FishkaValid
         if (fishka != null) {
             ContentFile file = contentFileService.getPersist(createDTO.getFileID());
             fishka.setFile(file);
+            fishka.setIsVisible(createDTO.getIsVisible());
         } else {
             fishka = mapper.toEntity(createDTO);
             fishka.setFile(contentFileService.getPersist(createDTO.getFileID()));
