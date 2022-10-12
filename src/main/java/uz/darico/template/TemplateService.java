@@ -31,7 +31,9 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
     public ResponseEntity<?> create(TemplateCreateDTO createDTO) {
         validator.validateForCreate(createDTO);
         Template template = mapper.toEntity(createDTO);
-        template.setImage(contentFileService.getPersist(createDTO.getFileID()));
+        if (createDTO.getFileID() != null) {
+            template.setImage(contentFileService.getPersist(createDTO.getFileID()));
+        }
         repository.save(template);
         return ResponseEntity.ok(true);
     }
@@ -68,7 +70,7 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
     }
 
     public ResponseEntity<?> list(Long workPlaceID) {
-        Long orID =  workPlaceFeignService.getOrgID(workPlaceID);
+        Long orID = workPlaceFeignService.getOrgID(workPlaceID);
         List<Template> templates = repository.findAll(workPlaceID, orID);
         List<TemplateGetDTO> templateGetDTOs = mapper.toGetDTO(templates);
         return ResponseEntity.ok(templateGetDTOs);
