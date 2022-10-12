@@ -8,6 +8,7 @@ import uz.darico.feign.WorkPlaceFeignService;
 import uz.darico.template.dto.TemplateCreateDTO;
 import uz.darico.template.dto.TemplateGetDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +24,12 @@ public class TemplateMapper implements BaseMapper {
                 name(createDTO.getName()).
                 content(createDTO.getContent()).
                 userID(workPlaceFeignService.getUserID(createDTO.getWorkPlaceID())).
-                isGlobal(createDTO.getIsGlobal()).
+                isGlobal(createDTO.getIsGlobal()).createdAt(LocalDateTime.now()).
                 build();
     }
 
     public TemplateGetDTO toGetDTO(Template template) {
-        return new TemplateGetDTO(template.getWorkPlaceID(), template.getContent(), template.getName(), template.getImage(), template.getIsGlobal());
+        return new TemplateGetDTO(template.getWorkPlaceID(), template.getContent(), template.getName(), template.getImage(), template.getIsGlobal(), template.getCreatedAt());
     }
 
 

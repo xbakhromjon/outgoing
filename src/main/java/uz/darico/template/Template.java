@@ -10,12 +10,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
 @Entity
 public class Template extends Auditable {
@@ -28,4 +29,16 @@ public class Template extends Auditable {
     @OneToOne
     private ContentFile image;
     private Boolean isGlobal = false;
+
+    @Builder
+    public Template(UUID id, boolean isDeleted, LocalDateTime createdAt, Integer createdBy, LocalDateTime updatedAt, Integer updatedBy, Long orgID, Long workPlaceID, Long userID, String content, String name, ContentFile image, Boolean isGlobal) {
+        super(id, isDeleted, createdAt, createdBy, updatedAt, updatedBy);
+        this.orgID = orgID;
+        this.workPlaceID = workPlaceID;
+        this.userID = userID;
+        this.content = content;
+        this.name = name;
+        this.image = image;
+        this.isGlobal = isGlobal;
+    }
 }
