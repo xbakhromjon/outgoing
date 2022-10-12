@@ -31,7 +31,8 @@ public class Template extends Auditable {
     private Boolean isGlobal = false;
 
     @Builder
-    public Template(UUID id, boolean isDeleted, LocalDateTime createdAt, Integer createdBy, LocalDateTime updatedAt, Integer updatedBy, Long orgID, Long workPlaceID, Long userID, String content, String name, ContentFile image, Boolean isGlobal) {
+
+    public Template(UUID id, boolean isDeleted, LocalDateTime createdAt, Long createdBy, LocalDateTime updatedAt, Long updatedBy, Long orgID, Long workPlaceID, Long userID, String content, String name, ContentFile image, Boolean isGlobal) {
         super(id, isDeleted, createdAt, createdBy, updatedAt, updatedBy);
         this.orgID = orgID;
         this.workPlaceID = workPlaceID;

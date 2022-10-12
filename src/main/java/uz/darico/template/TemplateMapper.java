@@ -24,7 +24,7 @@ public class TemplateMapper implements BaseMapper {
                 name(createDTO.getName()).
                 content(createDTO.getContent()).
                 userID(workPlaceFeignService.getUserID(createDTO.getWorkPlaceID())).
-                isGlobal(createDTO.getIsGlobal()).createdAt(LocalDateTime.now()).
+                isGlobal(createDTO.getIsGlobal()).createdAt(LocalDateTime.now()).createdBy(createDTO.getWorkPlaceID()).
                 build();
     }
 

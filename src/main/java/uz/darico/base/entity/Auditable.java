@@ -42,12 +42,12 @@ public abstract class Auditable implements BaseEntity {
 
     @CreatedDate
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
-    private Integer createdBy = -1;
+    @Column(name = "created_by", updatable = false)
+    private Long createdBy = -1L;
 
     @LastModifiedDate
     @Column(name = "updated_at")
@@ -55,5 +55,5 @@ public abstract class Auditable implements BaseEntity {
 
     @LastModifiedBy
     @Column(name = "updated_by")
-    private Integer updatedBy;
+    private Long updatedBy;
 }
