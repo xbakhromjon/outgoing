@@ -24,7 +24,7 @@ public class UserFeignService {
 
     public UserInfo getUserInfoRemote(Long ID) {
         try {
-            ResponseEntity<UserInfo> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/user/info/" + ID, UserInfo.class);
+            ResponseEntity<UserInfo> response = restTemplate.getForEntity("http://192.168.30.112:8080/kiruvchi/api/user/info/" + ID, UserInfo.class);
 //            ResponseEntity<UserInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/user/info/" + ID, UserInfo.class);
             return response.getBody();
         } catch (Exception e) {
