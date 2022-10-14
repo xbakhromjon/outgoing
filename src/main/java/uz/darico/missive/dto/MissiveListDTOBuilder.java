@@ -81,6 +81,6 @@ public class MissiveListDTOBuilder {
     }
 
     public MissiveListDTO create() {
-        return new MissiveListDTO(ID, orgID, departmentName, senderFirstName, senderLastName, confirmatives, shortInfo, correspondent, baseFiles, missiveFiles, totalCount);
+        return new MissiveListDTO(ID, orgID, departmentName, senderFirstName, senderLastName, confirmatives, shortInfo, correspondent, baseFiles, totalCount);
     }
 }

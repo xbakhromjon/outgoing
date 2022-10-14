@@ -25,6 +25,6 @@ public class MissiveListDTO {
     private String shortInfo;
     private List<String> correspondent;
     private List<ContentFile> baseFiles;
-    private List<MissiveFile> missiveFiles;
+//    private MissiveFile missiveFile;
     private Integer totalCount;
 }
