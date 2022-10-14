@@ -33,7 +33,7 @@ public class OutReceiverMapper implements BaseMapper {
     }
 
     public OutReceiverGetDTO toGetDTO(OutReceiver outReceiver) {
-        if (outReceiver== null) {
+        if (outReceiver == null) {
             return null;
         }
         OrgShortInfo orgShortInfo = organizationFeignService.getShortInfo(outReceiver.getCorrespondentID());
@@ -46,5 +46,14 @@ public class OutReceiverMapper implements BaseMapper {
             res.add(toGetDTO(item));
         });
         return res;
+    }
+
+    public List<OutReceiverCreateDTO> toCreateDTO(List<OutReceiver> outReceivers) {
+        List<OutReceiverCreateDTO> outReceiverCreateDTOs = new ArrayList<>();
+        for (OutReceiver outReceiver : outReceivers) {
+            OutReceiverCreateDTO outReceiverCreateDTO = new OutReceiverCreateDTO(outReceiver.getCorrespondentID(), outReceiver.getCorrespondentEmail(), outReceiver.getCorrespondentExat());
+            outReceiverCreateDTOs.add(outReceiverCreateDTO);
+        }
+        return outReceiverCreateDTOs;
     }
 }

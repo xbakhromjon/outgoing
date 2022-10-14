@@ -46,4 +46,9 @@ public class InReceiverMapper implements BaseMapper {
         });
         return res;
     }
+
+    public List<InReceiverCreateDTO> toCreateDTO(List<InReceiver> inReceivers) {
+
+        return null;
+    }
 }
