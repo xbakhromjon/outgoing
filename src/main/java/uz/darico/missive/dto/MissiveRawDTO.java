@@ -21,7 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MissiveRawDTO {
-    private UUID ID;
+    private UUID rootID;
     private Long orgID;
     private Long workPlace;
     private Long signatoryWorkPlace;
