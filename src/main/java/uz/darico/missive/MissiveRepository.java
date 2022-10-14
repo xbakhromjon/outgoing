@@ -122,7 +122,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.short_info        shortInfo\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
-            "where not m.is_deleted and and m.is_last_version and m.id in (select missive_confirmatives.missive_id\n" +
+            "where not m.is_deleted and  m.is_last_version and m.id in (select missive_confirmatives.missive_id\n" +
             "                                    from missive_confirmatives\n" +
             "                                    where missive_confirmatives.confirmatives_id in (select id\n" +
             "                                                                                     from confirmative\n" +
@@ -206,7 +206,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
-            "where not m.is_deleted and and m.is_last_version and s2.work_placeid = :workPlaceID and m.is_ready and not s2.is_signed\n" +
+            "where not m.is_deleted and m.is_last_version and s2.work_placeid = :workPlaceID and m.is_ready and not s2.is_signed\n" +
             "  and case\n" +
             "          when :confirmativeWorkPlaceID is not null then :confirmativeWorkPlaceID in (select work_placeid\n" +
             "                                                                                      from confirmative\n" +
@@ -240,7 +240,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
-            "where not m.is_deleted and m.is_last_version and and s2.work_placeid = :workPlaceID and s2.is_signed\n" +
+            "where not m.is_deleted and m.is_last_version and s2.work_placeid = :workPlaceID and s2.is_signed\n" +
             "  and case\n" +
             "          when :confirmativeWorkPlaceID is not null then :confirmativeWorkPlaceID in (select work_placeid\n" +
             "                                                                                      from confirmative\n" +
