@@ -31,7 +31,7 @@ public class MissiveGetDTO {
     private List<OutReceiverGetDTO> outReceivers;
     private List<InReceiverGetDTO> inReceivers;
     private List<ContentFile> baseFiles;
-    private MissiveFileGetDTO missiveFiles;
+    private MissiveFileGetDTO missiveFile;
     private LocalDate createdAt;
     private List<MissiveVersionShortInfoDTO> versions;
 
@@ -46,7 +46,7 @@ public class MissiveGetDTO {
         this.outReceivers = outReceivers;
         this.inReceivers = inReceivers;
         this.baseFiles = baseFiles;
-        this.missiveFiles = missiveFiles;
+        this.missiveFile = missiveFiles;
         this.createdAt = createdAt;
     }
 }
