@@ -117,9 +117,10 @@ public class MissiveMapper implements BaseMapper {
             throw new UniversalException("%s missiveID Missive files is null".formatted(missive.getId()), HttpStatus.BAD_REQUEST);
         }
         List<OutReceiverCreateDTO> outReceiverCreateDTOs = outReceiverMapper.toCreateDTO(outReceivers);
+        List<InReceiverCreateDTO> inReceiverCreateDTOs = inReceiverMapper.toCreateDTO(inReceivers);
         return new MissiveRawDTO(missive.getId(), missive.getRootVersionID(), missive.getOrgID(), missive.getSender().getWorkPlaceID(), missive.getSignatory().getWorkPlaceID(),
                 confirmatives.stream().map(Confirmative::getWorkPlaceID).toList(), outReceiverCreateDTOs,
-                inReceivers.stream().map(InReceiver::getCorrespondentID).toList(), missive.getBaseFiles(), missiveFile.getId(), missiveFile.getContent());
+                inReceiverCreateDTOs, missive.getBaseFiles(), missiveFile.getId(), missiveFile.getContent());
     }
 
     public List<MissiveVersionShortInfoDTO> toMissiveShortInfoDTO(List<MissiveVersionShortInfoProjection> missiveVersionShortInfoProjections) {

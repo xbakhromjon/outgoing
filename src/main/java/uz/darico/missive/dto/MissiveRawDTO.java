@@ -30,7 +30,7 @@ public class MissiveRawDTO {
     private Long signatoryWorkPlace;
     private List<Long> confirmativeWorkPlaces;
     private List<OutReceiverCreateDTO> outReceivers;
-    private List<Long> inReceivers;
+    private List<InReceiverCreateDTO> inReceivers;
     private List<ContentFile> baseFiles;
     private UUID missiveFileID;
     private String missiveContent;

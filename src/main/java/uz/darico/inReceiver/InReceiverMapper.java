@@ -17,6 +17,7 @@ import java.util.List;
 public class InReceiverMapper implements BaseMapper {
     private final WorkPlaceFeignService workPlaceFeignService;
     private final OrganizationFeignService organizationFeignService;
+
     public InReceiverMapper(WorkPlaceFeignService workPlaceFeignService, OrganizationFeignService organizationFeignService) {
         this.workPlaceFeignService = workPlaceFeignService;
         this.organizationFeignService = organizationFeignService;
@@ -48,7 +49,11 @@ public class InReceiverMapper implements BaseMapper {
     }
 
     public List<InReceiverCreateDTO> toCreateDTO(List<InReceiver> inReceivers) {
-
-        return null;
+        List<InReceiverCreateDTO> inReceiverCreateDTOs = new ArrayList<>();
+        for (InReceiver inReceiver : inReceivers) {
+            InReceiverCreateDTO inReceiverCreateDTO = new InReceiverCreateDTO(inReceiver.getCorrespondentID());
+            inReceiverCreateDTOs.add(inReceiverCreateDTO);
+        }
+        return inReceiverCreateDTOs;
     }
 }
