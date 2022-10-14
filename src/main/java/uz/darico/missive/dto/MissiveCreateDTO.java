@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MissiveCreateDTO {
+    private UUID rootID;
     private Long orgID;
     private Long workPlaceID;
     private Long signatoryWorkPlaceID;

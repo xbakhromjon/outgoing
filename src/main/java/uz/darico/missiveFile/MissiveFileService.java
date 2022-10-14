@@ -27,7 +27,7 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
         this.baseUtils = baseUtils;
     }
 
-    public List<MissiveFile> refresh(UUID missiveFileID, String content, List<MissiveFile> trashMissiveFiles) throws IOException {
+    public List<MissiveFile> refresh(UUID missiveFileID, String content) throws IOException {
         MissiveFile missiveFile = getPersist(missiveFileID);
 //        missiveFile.setContent(content);
 //        String filePath = missiveFile.getFile().getPath();
@@ -80,5 +80,9 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
         return optional.orElseThrow(() -> {
             throw new UniversalException("MissiveFile last version not found", HttpStatus.BAD_REQUEST);
         });
+    }
+
+    public MissiveFile save(MissiveFile missiveFile) {
+        return repository.save(missiveFile);
     }
 }

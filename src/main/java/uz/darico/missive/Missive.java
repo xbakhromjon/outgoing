@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -39,16 +40,18 @@ public class Missive extends Auditable {
     private List<InReceiver> inReceivers;
     @OneToMany
     private List<ContentFile> baseFiles;
-    @OneToMany
-    private List<MissiveFile> missiveFiles;
+    @OneToOne
+    private MissiveFile missiveFile;
     private Boolean isReady = false;
     @Type(type = "text")
     private String shortInfo;
-
+    private Integer version = 1;
+    private Boolean isLastVersion = true;
+    private UUID rootVersionID;
 
     public Missive(Long orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,
                    Long departmentID, List<OutReceiver> outReceivers, List<InReceiver> inReceivers,
-                   List<ContentFile> baseFiles, List<MissiveFile> missiveFiles) {
+                   List<ContentFile> baseFiles, MissiveFile missiveFile) {
         this.orgID = orgID;
         this.sender = sender;
         this.signatory = signatory;
@@ -57,6 +60,6 @@ public class Missive extends Auditable {
         this.outReceivers = outReceivers;
         this.inReceivers = inReceivers;
         this.baseFiles = baseFiles;
-        this.missiveFiles = missiveFiles;
+        this.missiveFile = missiveFile;
     }
 }

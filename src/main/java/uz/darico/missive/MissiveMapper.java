@@ -17,6 +17,7 @@ import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.*;
 import uz.darico.missive.projections.MissiveListProjection;
+import uz.darico.missive.projections.MissiveVersionShortInfoProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileMapper;
 import uz.darico.outReceiver.OutReceiver;
@@ -75,14 +76,16 @@ public class MissiveMapper implements BaseMapper {
         List<InReceiver> inReceivers = inReceiverMapper.toEntity(inReceiverCreateDTOs);
         List<ContentFile> baseFiles = contentFileService.getContentFiles(createDTO.getBaseFileIDs());
         MissiveFile missiveFile = missiveFileMapper.toEntity(createDTO.getContent());
-        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(), outReceivers, inReceivers, baseFiles, Collections.singletonList(missiveFile));
+        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(), outReceivers, inReceivers, baseFiles, missiveFile);
     }
 
     public MissiveGetDTO toGetDTO(Missive missive) {
-        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
-        missiveFiles.sort(Comparator.comparing(MissiveFile::getVersion));
+        MissiveFile missiveFiles = missive.getMissiveFile();
         OrgShortInfo orgShortInfo = organizationFeignService.getShortInfo(missive.getOrgID());
-        return new MissiveGetDTO(missive.getId(), orgShortInfo.getName(), orgShortInfo.getEmail(), senderMapper.toGetDTO(missive.getSender()), signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()), departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()), inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFiles()), missive.getCreatedAt().toLocalDate());
+        return new MissiveGetDTO(missive.getId(), orgShortInfo.getName(), orgShortInfo.getEmail(), senderMapper.toGetDTO(missive.getSender()), signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()),
+                departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()),
+                inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFile()),
+                missive.getCreatedAt().toLocalDate());
     }
 
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {
@@ -109,13 +112,21 @@ public class MissiveMapper implements BaseMapper {
         if (inReceivers == null) {
             inReceivers = new ArrayList<>();
         }
-        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
-        if (missiveFiles == null) {
+        MissiveFile missiveFile = missive.getMissiveFile();
+        if (missiveFile == null) {
             throw new UniversalException("%s missiveID Missive files is null".formatted(missive.getId()), HttpStatus.BAD_REQUEST);
         }
-        MissiveFile missiveFile = missiveFiles.stream().filter(item -> item.getVersion().equals(1)).findFirst().get();
         return new MissiveRawDTO(missive.getId(), missive.getOrgID(), missive.getSender().getWorkPlaceID(), missive.getSignatory().getWorkPlaceID(),
                 confirmatives.stream().map(Confirmative::getWorkPlaceID).toList(), outReceivers.stream().map(OutReceiver::getCorrespondentID).toList(),
                 inReceivers.stream().map(InReceiver::getCorrespondentID).toList(), missive.getBaseFiles(), missiveFile.getId(), missiveFile.getContent());
+    }
+
+    public List<MissiveVersionShortInfoDTO> toMissiveShortInfoDTO(List<MissiveVersionShortInfoProjection> missiveVersionShortInfoProjections) {
+        List<MissiveVersionShortInfoDTO> missiveVersionShortInfoDTOs = new ArrayList<>();
+        for (MissiveVersionShortInfoProjection missiveVersionShortInfoProjection : missiveVersionShortInfoProjections) {
+            MissiveVersionShortInfoDTO missiveVersionShortInfoDTO = new MissiveVersionShortInfoDTO(baseUtils.convertBytesToUUID(missiveVersionShortInfoProjection.getID()), missiveVersionShortInfoProjection.getVersion());
+            missiveVersionShortInfoDTOs.add(missiveVersionShortInfoDTO);
+        }
+        return missiveVersionShortInfoDTOs;
     }
 }

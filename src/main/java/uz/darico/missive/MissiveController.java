@@ -70,13 +70,18 @@ public class MissiveController extends AbstractController<MissiveService> {
     }
 
     @PostMapping("/version")
-    public ResponseEntity<?> createNewVersion(@RequestBody MissiveFileCreateDTO createDTO) {
+    public ResponseEntity<?> createNewVersion(@RequestBody MissiveCreateDTO createDTO) throws IOException {
          return service.createNewVersion(createDTO);
     }
 
     @DeleteMapping("/version")
     public ResponseEntity<?> deleteVersion(@RequestParam UUID missiveFileID) {
          return service.deleteVersion(missiveFileID);
+    }
+
+    @GetMapping("/sketchy/{workPlaceID}/{id}")
+    public ResponseEntity<?> getSketchy(@PathVariable Long workPlaceID, @PathVariable(name = "id") String id) {
+        return service.getSketchy(workPlaceID, id);
     }
 
 }

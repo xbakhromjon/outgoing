@@ -20,6 +20,7 @@ import uz.darico.inReceiver.InReceiverService;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.*;
 import uz.darico.missive.projections.MissiveListProjection;
+import uz.darico.missive.projections.MissiveVersionShortInfoProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileService;
 import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
@@ -84,10 +85,11 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         missive.setOutReceivers(outReceiverService.saveAll(missive.getOutReceivers()));
         missive.setInReceivers(inReceiverService.saveAll(missive.getInReceivers()));
         missive.setBaseFiles(contentFileService.saveAll(missive.getBaseFiles()));
-        missive.setMissiveFiles(missiveFileService.saveAll(missive.getMissiveFiles()));
+        missive.setMissiveFile(missiveFileService.save(missive.getMissiveFile()));
         missive.setShortInfo(createDTO.getShortInfo());
         Missive saved = repository.save(missive);
-        return ResponseEntity.ok(true);
+        repository.setRootVersionID(saved.getId(), saved.getId());
+        return ResponseEntity.ok(saved);
     }
 
     public ResponseEntity<?> update(MissiveUpdateDTO updateDTO) throws IOException {
@@ -121,7 +123,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         List<ContentFile> newContentFiles = contentFileService.refresh(baseFileIDs, missive.getBaseFiles());
         missive.setBaseFiles(newContentFiles);
 
-        List<MissiveFile> newMissiveFiles = missiveFileService.refresh(updateDTO.getMissiveFileID(), updateDTO.getContent(), missive.getMissiveFiles());
+        List<MissiveFile> newMissiveFiles = missiveFileService.refresh(updateDTO.getMissiveFileID(), updateDTO.getContent());
 //        missive.setMissiveFiles(newMissiveFiles);
 
         repository.save(missive);
@@ -345,13 +347,24 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<?> createNewVersion(MissiveFileCreateDTO createDTO) {
-        Missive missive = getPersist(createDTO.getMissiveID());
-        validator.validForNewVersion(createDTO, missive);
-        MissiveFile newVersion = missiveFileService.createNewVersion(createDTO);
-        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
-        missiveFiles.add(newVersion);
-        repository.save(missive);
+    public ResponseEntity<?> createNewVersion(MissiveCreateDTO createDTO) throws IOException {
+        validator.validForNewVersion(createDTO);
+//        Missive oldVersion = getPersist(createDTO.getRootID());
+        Missive oldVersion = repository.getLastVersion(createDTO.getRootID());
+        ResponseEntity<?> response = create(createDTO);
+        UUID rootVersionID = oldVersion.getRootVersionID();
+        oldVersion.setIsLastVersion(false);
+        repository.save(oldVersion);
+        Missive newVersion = (Missive) response.getBody();
+        newVersion.setVersion(oldVersion.getVersion() + 1);
+        newVersion.setRootVersionID(rootVersionID);
+        repository.save(newVersion);
+//        validator.validForNewVersion(createDTO, missive);
+//        MissiveFile newVersion = missiveFileService.createNewVersion(createDTO);
+//        List<MissiveFile> missiveFiles = missive.getMissiveFiles();
+//        missiveFiles.add(newVersion);
+//        repository.save(missive);
+
         return ResponseEntity.ok(newVersion.getId());
     }
 
@@ -365,5 +378,17 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         // TODO: 10/10/22 implements here
         return 0;
     }
+
+    public ResponseEntity<?> getSketchy(Long workPlaceID, String id) {
+        UUID ID = baseUtils.strToUUID(id);
+        Missive missive = getPersist(ID);
+        MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);
+        List<MissiveVersionShortInfoProjection> missiveVersionShortInfoProjections = repository.getAllVersions(ID);
+        List<MissiveVersionShortInfoDTO> missiveVersionShortInfoDTOs = mapper.toMissiveShortInfoDTO(missiveVersionShortInfoProjections);
+        missiveGetDTO.setVersions(missiveVersionShortInfoDTOs);
+        setStatus(workPlaceID, ID);
+        return ResponseEntity.ok(missiveGetDTO);
+    }
+
 }
 

@@ -89,8 +89,8 @@ public class MissiveValidator implements BaseValidator {
         }
     }
 
-    public void validForNewVersion(MissiveFileCreateDTO createDTO, Missive missive) {
-        if (createDTO.getMissiveID() == null) {
+    public void validForNewVersion(MissiveCreateDTO createDTO) {
+        if (createDTO.getRootID() == null) {
             throw new ValidationException("Missive cannot be null");
         }
         if (createDTO.getContent() == null) {

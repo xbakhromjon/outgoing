@@ -1,6 +1,7 @@
 package uz.darico.missive;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 import uz.darico.base.repository.BaseRepository;
 import uz.darico.missive.projections.MissiveListProjection;
+import uz.darico.missive.projections.MissiveVersionShortInfoProjection;
 
 import javax.transaction.Transactional;
 
@@ -300,4 +302,24 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     @Query(nativeQuery = true, value = "update missive set is_ready = false where id = :ID")
     @Modifying
     void notReady(UUID ID);
+
+    @Query(nativeQuery = true, value = "update missive set root_versionid = :rootVersionId where id = :id")
+    @Modifying
+    void setRootVersionID(UUID id, UUID rootVersionId);
+
+    @Query(nativeQuery = true, value = """
+            select *
+            from missive
+            where root_versionid = :rootID
+              and version = (select max(version) from missive group by root_versionid)""")
+    Missive getLastVersion(UUID rootID);
+
+    @Query(nativeQuery = true, value = """
+            select id as ID, version
+            from missive
+            where root_versionid = (select root_versionid
+                                    from missive
+                                    where id = :id)
+           """)
+    List<MissiveVersionShortInfoProjection> getAllVersions(UUID id);
 }
