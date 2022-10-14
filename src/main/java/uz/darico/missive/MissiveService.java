@@ -257,8 +257,8 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
             List<ContentFile> baseFiles = contentFileService.getAll(ID);
             missiveListDTO.setBaseFiles(baseFiles);
             // missiveFile
-            List<MissiveFile> missiveFiles = missiveFileService.getAll(ID);
-            missiveListDTO.setMissiveFiles(missiveFiles);
+//            List<MissiveFile> missiveFiles = missiveFileService.getAll(ID);
+//            missiveListDTO.setMissiveFiles(missiveFiles);
 
             // correspondent
             List<OutReceiver> outReceivers = outReceiverService.getAllByMissiveID(ID);
