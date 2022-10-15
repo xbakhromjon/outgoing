@@ -311,7 +311,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             select *
             from missive
             where root_versionid = :rootID
-              and version = (select max(version) from missive group by root_versionid)""")
+              and version = (select max(t.version)
+                             from (select * from missive where root_versionid = :rootID) as t
+                             group by t.root_versionid)""")
     Missive getLastVersion(UUID rootID);
 
     @Query(nativeQuery = true, value = """
