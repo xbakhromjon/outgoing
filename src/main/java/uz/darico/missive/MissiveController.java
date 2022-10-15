@@ -88,6 +88,4 @@ public class MissiveController extends AbstractController<MissiveService> {
     public ResponseEntity<?> getCount(@PathVariable Long workPlaceID) {
         return service.getCount(workPlaceID);
     }
-
-
 }

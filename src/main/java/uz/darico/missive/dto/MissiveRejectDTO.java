@@ -19,6 +19,7 @@ public class MissiveRejectDTO {
     private String rejectedBy;
     // confID or signatoryID
     private String message;
+    private String content;
     @JsonIgnore
     private UUID rejectedByUUID;
 }

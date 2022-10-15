@@ -412,4 +412,12 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
                                      where id = :id)
             """)
     List<MissiveVersionShortInfoProjection> getAllVersions(UUID id);
+
+    @Query(nativeQuery = true, value = """
+            update missive_file
+            set content = :content
+            where id = (select missive_file_id from missive where missive.id = :ID)
+            """)
+    @Modifying
+    void setContent(UUID ID, String content);
 }
