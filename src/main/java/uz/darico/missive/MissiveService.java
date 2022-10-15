@@ -210,9 +210,9 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> sign(String id) {
         UUID ID = baseUtils.strToUUID(id);
         repository.sign(ID);
-        MissiveFile lastVersion = missiveFileService.getLastVersion(ID);
-        outReceiverService.send(ID, lastVersion);
-        inReceiverService.send(ID, lastVersion);
+//        Missive lastVersion = getPersist(ID);
+//        outReceiverService.send(ID, lastVersion.getMissiveFile());
+//        inReceiverService.send(ID, lastVersion.getMissiveFile());
         return ResponseEntity.ok(true);
     }
 
