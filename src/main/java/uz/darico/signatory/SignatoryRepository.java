@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 import uz.darico.base.repository.BaseRepository;
 import uz.darico.outReceiver.OutReceiver;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Repository
+@Transactional
 public interface SignatoryRepository extends JpaRepository<Signatory, UUID>, BaseRepository {
     @Query(nativeQuery = true, value = "update signatory set status_code = 2 where id = :rejectedByUUID")
     @Modifying
