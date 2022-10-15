@@ -101,16 +101,18 @@ public class BaseUtils {
     }
 
 
-    public void writeHtmlAsPdf(String path, String html) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream(path);
-        PdfWriter writer = new PdfWriter(fileOutputStream);
-        PdfDocument pdfDocument = new PdfDocument(writer);
-        PageSize pageSize = PageSize.A5;
-        pdfDocument.setDefaultPageSize(pageSize);
-        ConverterProperties properties = new ConverterProperties();
-        HtmlConverter.convertToPdf(html, pdfDocument, properties);
+    public void writeHtmlAsPdf(String path, String html) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
+            PdfWriter writer = new PdfWriter(fileOutputStream);
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            PageSize pageSize = PageSize.A5;
+            pdfDocument.setDefaultPageSize(pageSize);
+            ConverterProperties properties = new ConverterProperties();
+            HtmlConverter.convertToPdf(html, pdfDocument, properties);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
 
 
     public String getClientIPAddress(HttpServletRequest request) {

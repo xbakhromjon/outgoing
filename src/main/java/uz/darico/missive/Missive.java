@@ -12,6 +12,7 @@ import uz.darico.sender.Sender;
 import uz.darico.signatory.Signatory;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,10 +46,12 @@ public class Missive extends Auditable {
     private Integer version = 1;
     private Boolean isLastVersion = true;
     private UUID rootVersionID;
+    private UUID fishkaID;
+    private String number = "1613";
 
     public Missive(Long orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,
                    Long departmentID, List<OutReceiver> outReceivers, List<InReceiver> inReceivers,
-                   List<ContentFile> baseFiles, MissiveFile missiveFile) {
+                   List<ContentFile> baseFiles, MissiveFile missiveFile, UUID fishkaID) {
         this.orgID = orgID;
         this.sender = sender;
         this.signatory = signatory;
@@ -58,5 +61,6 @@ public class Missive extends Auditable {
         this.inReceivers = inReceivers;
         this.baseFiles = baseFiles;
         this.missiveFile = missiveFile;
+        this.fishkaID = fishkaID;
     }
 }

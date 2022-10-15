@@ -1,5 +1,7 @@
 package uz.darico.missive;
 
+import com.itextpdf.svg.css.impl.StyleResolverUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import uz.darico.confirmative.ConfStatus;
 import uz.darico.confirmative.Confirmative;
 import uz.darico.confirmative.ConfirmativeMapper;
 import uz.darico.confirmative.ConfirmativeService;
+import uz.darico.confirmative.dto.ConfirmativePDFDTO;
 import uz.darico.confirmative.dto.ConfirmativeShortInfoDTO;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
@@ -15,6 +18,7 @@ import uz.darico.exception.exception.UniversalException;
 import uz.darico.feedback.conf.ConfFeedBackService;
 import uz.darico.feedback.signatory.SignatoryFeedBackService;
 import uz.darico.feign.OrganizationFeignService;
+import uz.darico.fishka.FishkaService;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverService;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
@@ -29,18 +33,22 @@ import uz.darico.outReceiver.OutReceiverService;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
 import uz.darico.sender.Sender;
 import uz.darico.sender.SenderService;
+import uz.darico.sender.dto.SenderPDFDTO;
 import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryService;
 import uz.darico.signatory.SignatoryStatus;
+import uz.darico.signatory.dto.SignatoryPDFDTO;
 import uz.darico.utils.BaseUtils;
 import uz.darico.utils.ResponsePage;
 import uz.darico.utils.SearchDTO;
 import uz.darico.utils.Tab;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Slf4j
 public class MissiveService extends AbstractService<MissiveRepository, MissiveValidator, MissiveMapper> {
     private final ConfirmativeService confirmativeService;
     private final OutReceiverService outReceiverService;
@@ -55,12 +63,11 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     private final ConfFeedBackService confFeedBackService;
     private final ConfirmativeMapper confirmativeMapper;
     private final OrganizationFeignService organizationFeignService;
+    private final FishkaService fishkaService;
 
-    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService,
-                          MissiveFileService missiveFileService, SignatoryService signatoryService,
-                          ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils,
-                          SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService,
-                          ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService) {
+    private final String GENERATED_FILE_PATH = "/home/xbakhromjon/database/generated";
+
+    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, SignatoryService signatoryService, ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils, SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService, ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService, FishkaService fishkaService) {
         super(repository, validator, mapper);
         this.confirmativeService = confirmativeService;
         this.outReceiverService = outReceiverService;
@@ -74,6 +81,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         this.confFeedBackService = confFeedBackService;
         this.confirmativeMapper = confirmativeMapper;
         this.organizationFeignService = organizationFeignService;
+        this.fishkaService = fishkaService;
     }
 
     public ResponseEntity<?> create(MissiveCreateDTO createDTO) throws IOException {
@@ -210,10 +218,36 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> sign(String id) {
         UUID ID = baseUtils.strToUUID(id);
         repository.sign(ID);
+        // generate PDF
+//        PDFDTO pdfdto = makePDFDTO(ID);
+//        generatePDF(pdfdto);
 //        Missive lastVersion = getPersist(ID);
 //        outReceiverService.send(ID, lastVersion.getMissiveFile());
 //        inReceiverService.send(ID, lastVersion.getMissiveFile());
         return ResponseEntity.ok(true);
+    }
+
+    private PDFDTO makePDFDTO(UUID ID) {
+        Missive missive = getPersist(ID);
+        String fishkaPath = fishkaService.getPersist(missive
+                .getFishkaID()).getFile().getPath();
+        LocalDateTime signedAt = missive.getSignatory().getSignedAt();
+        SignatoryPDFDTO signatoryPDFDTO = signatoryService.makePDFDTO(missive.getSignatory());
+        SenderPDFDTO senderPDFDTO = senderService.makePDFDTO(missive.getSender());
+        List<ConfirmativePDFDTO> confirmativePDFDTOs = confirmativeService.makePDFDTO(missive.getConfirmatives());
+        PDFDTO pdfdto = new PDFDTO(fishkaPath, signedAt.toLocalDate(), missive.getNumber(), missive.getMissiveFile().getContent(), signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
+        return pdfdto;
+    }
+
+    public boolean generatePDF(PDFDTO pdfdto) {
+        String fishka = String.format("   <img src=%s", pdfdto.getFishkaPath())
+                + " width=\"100%\" height=\"140px\">";
+        String dateNumber = String.format("<strong style=\"float:left\">№ %s</strong>", pdfdto.getNumber()) +
+                String.format("<strong style=\"float:right\">%s</strong> </br>", pdfdto.getDate());
+        // TODO: 15/10/22 generate qr code ...
+        String html = fishka + dateNumber + pdfdto.getContent();
+        contentFileService.writeAsPDF(html);
+        return true;
     }
 
     public ResponseEntity<?> reject(MissiveRejectDTO rejectDTO) {
@@ -282,18 +316,14 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
                 shortInfo = "%" + searchDTO.getShortInfo() + "%";
             }
             searchDTO.setShortInfo(shortInfo);
-            return repository.getSketchies(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getSketchies(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
         return getInProcess(searchDTO);
     }
 
     public List<MissiveListProjection> getInProcess(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.JARAYONDA.getCode())) {
-            return repository.getInProcesses(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getInProcesses(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getForConfirm(searchDTO);
@@ -301,9 +331,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public List<MissiveListProjection> getForConfirm(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLASH_UCHUN.getCode())) {
-            return repository.getForConfirm(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getForConfirm(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getConfirmed(searchDTO);
@@ -311,9 +339,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public List<MissiveListProjection> getConfirmed(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLANGAN.getCode())) {
-            return repository.getConfirmed(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getConfirmed(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getForSign(searchDTO);
@@ -321,9 +347,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public List<MissiveListProjection> getForSign(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLASH_UCHUN.getCode())) {
-            return repository.getForSign(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getForSign(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getSigned(searchDTO);
@@ -331,9 +355,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public List<MissiveListProjection> getSigned(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLANGAN.getCode())) {
-            return repository.getSigned(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getSigned(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
 
         return getSent(searchDTO);
@@ -341,9 +363,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public List<MissiveListProjection> getSent(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.YUBORILGAN.getCode())) {
-            return repository.getSent(searchDTO.getWorkPlace(),
-                    searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(),
-                    searchDTO.getSize(), searchDTO.getOffset());
+            return repository.getSent(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
         throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);
     }

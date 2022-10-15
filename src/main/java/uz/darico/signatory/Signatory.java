@@ -20,6 +20,7 @@ public class Signatory extends AbstractEntity {
     private Integer statusCode;
     private LocalDateTime statusTime = LocalDateTime.now();
     private Boolean isSigned = false;
+    private LocalDateTime signedAt;
 
     public Signatory(Long workPlaceID, Long userID, Integer statusCode) {
         this.workPlaceID = workPlaceID;

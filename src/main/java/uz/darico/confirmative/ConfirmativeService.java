@@ -3,6 +3,7 @@ package uz.darico.confirmative;
 import org.springframework.stereotype.Service;
 import uz.darico.base.entity.AbstractEntity;
 import uz.darico.base.service.AbstractService;
+import uz.darico.confirmative.dto.ConfirmativePDFDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,5 +68,9 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
 
     public void setStatus(UUID ID, Integer code) {
         repository.setStatus(ID, code);
+    }
+
+    public List<ConfirmativePDFDTO> makePDFDTO(List<Confirmative> confirmatives) {
+        return null;
     }
 }

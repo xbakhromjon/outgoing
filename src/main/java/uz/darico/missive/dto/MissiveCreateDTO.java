@@ -26,4 +26,5 @@ public class MissiveCreateDTO {
     private List<UUID> baseFileIDs;
     private String content;
     private String shortInfo;
+    private UUID fishkaID;
 }

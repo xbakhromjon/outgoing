@@ -37,7 +37,13 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     @Modifying
     void readyForConf(UUID confID);
 
-    @Query(nativeQuery = true, value = "update signatory set is_signed = true, status_code = 1 where id = (select signatory_id from missive where id = :ID)")
+    @Query(nativeQuery = true, value = """
+            update signatory
+            set is_signed   = true,
+            status_code = 1,
+            signed_at = current_timestamp
+            where id = (select signatory_id from missive where id = :ID)
+            """)
     @Modifying
     void sign(UUID ID);
 

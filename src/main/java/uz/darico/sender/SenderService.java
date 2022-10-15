@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
 import uz.darico.exception.exception.UniversalException;
+import uz.darico.sender.dto.SenderPDFDTO;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,5 +28,9 @@ public class SenderService extends AbstractService<SenderRepository, SenderValid
 
     public void notReady(UUID id) {
 
+    }
+
+    public SenderPDFDTO makePDFDTO(Sender sender) {
+        return null;
     }
 }

@@ -3,6 +3,7 @@ package uz.darico.signatory;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
 import uz.darico.feign.WorkPlaceFeignService;
+import uz.darico.signatory.dto.SignatoryPDFDTO;
 
 import java.util.UUID;
 
@@ -43,5 +44,9 @@ public class SignatoryService extends AbstractService<SignatoryRepository, Signa
 
     public void setStatus(UUID ID, Integer code) {
         repository.setStatus(ID, code);
+    }
+
+    public SignatoryPDFDTO makePDFDTO(Signatory signatory) {
+        return null;
     }
 }

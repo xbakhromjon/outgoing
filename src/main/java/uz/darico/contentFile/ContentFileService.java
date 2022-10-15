@@ -160,17 +160,19 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         return repository.getAll(ID);
     }
 
-    public ContentFile writeAsPDF(String content) throws IOException {
+    public String writeAsPDF(String html) {
         String path = FILE_PATH_LINUX + GENERATED_FILES_PATH;
         Path pathObj = Path.of(path);
         if (!Files.exists(pathObj)) {
-            Files.createDirectories(pathObj);
+            try {
+                Files.createDirectories(pathObj);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         String generatedName = UUID.randomUUID().toString() + ".pdf";
         path = path + "/" + generatedName;
-//        String path = FILE_PATH_WINDOWS +  GENERATED_FILES_PATH;
-        baseUtils.writeHtmlAsPdf(path, content);
-        ContentFile contentFile = new ContentFile.ContentFileBuilder().path(path).generatedName(generatedName).contentType("application/pdf").build();
-        return repository.save(contentFile);
+        baseUtils.writeHtmlAsPdf(path, html);
+        return path;
     }
 }
