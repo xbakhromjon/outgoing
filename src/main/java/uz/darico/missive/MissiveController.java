@@ -66,22 +66,28 @@ public class MissiveController extends AbstractController<MissiveService> {
 
     @PostMapping("/list")
     public ResponseEntity<?> getList(@RequestBody SearchDTO searchDTO) {
-         return service.getList(searchDTO);
+        return service.getList(searchDTO);
     }
 
     @PostMapping("/version")
     public ResponseEntity<?> createNewVersion(@RequestBody MissiveCreateDTO createDTO) throws IOException {
-         return service.createNewVersion(createDTO);
+        return service.createNewVersion(createDTO);
     }
 
     @DeleteMapping("/version")
     public ResponseEntity<?> deleteVersion(@RequestParam UUID missiveFileID) {
-         return service.deleteVersion(missiveFileID);
+        return service.deleteVersion(missiveFileID);
     }
 
     @GetMapping("/sketchy/{workPlaceID}/{id}")
     public ResponseEntity<?> getSketchy(@PathVariable Long workPlaceID, @PathVariable(name = "id") String id) {
         return service.getSketchy(workPlaceID, id);
     }
+
+    @GetMapping("/count/{workPlaceID}")
+    public ResponseEntity<?> getCount(@PathVariable Long workPlaceID) {
+        return service.getCount(workPlaceID);
+    }
+
 
 }

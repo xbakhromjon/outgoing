@@ -390,5 +390,23 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(missiveGetDTO);
     }
 
+    public ResponseEntity<?> getCount(Long workPlaceID) {
+        List<CountDTO> countDTOs = new ArrayList<>();
+        Integer sketchyCount = repository.getSketchyCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.HOMAKI.getCode(), sketchyCount));
+        Integer inProcessCount = repository.getInProcessCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.JARAYONDA.getCode(), inProcessCount));
+        Integer forConfirmCount = repository.getForConfirmCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.TASDIQLASH_UCHUN.getCode(), forConfirmCount));
+        Integer confirmedCount = repository.getConfirmedCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.TASDIQLANGAN.getCode(), confirmedCount));
+        Integer forSignCount = repository.getForSignCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.IMZOLASH_UCHUN.getCode(), forSignCount));
+        Integer signedCount = repository.getSignedCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.IMZOLANGAN.getCode(), signedCount));
+        Integer sentCount = repository.getSentCount(workPlaceID);
+        countDTOs.add(new CountDTO(Tab.YUBORILGAN.getCode(), sentCount));
+        return ResponseEntity.ok(countDTOs);
+    }
 }
 

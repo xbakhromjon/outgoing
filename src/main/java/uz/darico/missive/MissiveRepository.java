@@ -78,6 +78,16 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getSketchies(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
 
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+            where not m.is_deleted  and m.is_last_version
+              and s.work_placeid = :workPlaceID
+              and not s.is_ready_to_send
+            """)
+    Integer getSketchyCount(Long workPlaceID);
+
     @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
             "       m.id             as ID,\n" +
             "       m.departmentid   as departmentID,\n" +
@@ -113,6 +123,19 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "          else true end\n" +
             "limit :limit offset :offset")
     List<MissiveListProjection> getInProcesses(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
+
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+            where not m.is_deleted
+              and m.is_last_version
+              and s.work_placeid = :workPlaceID
+              and s.is_ready_to_send
+              and not m.is_ready
+                       """)
+    Integer getInProcessCount(Long workPlaceID);
+
 
     @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
             "       m.id             as ID,\n" +
@@ -154,6 +177,25 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getForConfirm(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
 
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+            where not m.is_deleted
+              and m.is_last_version
+              and m.id in (select missive_confirmatives.missive_id
+                           from missive_confirmatives
+                           where missive_confirmatives.confirmatives_id in (select id
+                                                                            from confirmative
+                                                                            where confirmative.work_placeid = :workPlaceID
+                                                                              and not confirmative.is_ready_to_send
+                                                                              and (confirmative.order_number = 1 or prev_is_ready)))
+              and s.is_ready_to_send
+              and not m.is_ready
+                                  \s""")
+    Integer getForConfirmCount(Long workPlaceID);
+
+
     @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
             "       m.id             as ID,\n" +
             "       m.departmentid   as departmentID,\n" +
@@ -193,6 +235,23 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getConfirmed(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
 
+
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+            where not m.is_deleted
+              and m.is_last_version
+              and m.id in (select missive_confirmatives.missive_id
+                           from missive_confirmatives
+                           where missive_confirmatives.confirmatives_id in (select id
+                                                                            from confirmative
+                                                                            where confirmative.work_placeid = :workPlaceID
+                                                                              and confirmative.is_ready_to_send))
+                                              \s""")
+    Integer getConfirmedCount(Long workPlaceID);
+
+
     @Query(nativeQuery = true, value = "update  missive set is_ready = true where id = (select missive_id from missive_confirmatives where confirmatives_id = :confID)")
     @Modifying
     void readyByConfID(UUID confID);
@@ -231,6 +290,17 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getForSign(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
 
+
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+                     inner join signatory s2 on m.signatory_id = s2.id
+            where not m.is_deleted and m.is_last_version and s2.work_placeid = :workPlaceID and m.is_ready and not s2.is_signed
+                                              \s""")
+    Integer getForSignCount(Long workPlaceID);
+
+
     @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
             "       m.id             as ID,\n" +
             "       m.departmentid   as departmentID,\n" +
@@ -264,6 +334,15 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "          else true end\n" +
             "limit :limit offset :offset")
     List<MissiveListProjection> getSigned(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
+
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+                     inner join signatory s2 on m.signatory_id = s2.id
+            where not m.is_deleted and m.is_last_version and s2.work_placeid = :workPlaceID and s2.is_signed
+                                              \s""")
+    Integer getSignedCount(Long workPlaceID);
 
     @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
             "       m.id             as ID,\n" +
@@ -299,6 +378,15 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getSent(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
 
+    @Query(nativeQuery = true, value = """
+            select count(*)
+            from missive m
+                     inner join sender s on m.sender_id = s.id
+                     inner join signatory s2 on m.signatory_id = s2.id
+            where not m.is_deleted and m.is_last_version and s.work_placeid = :workPlaceID and s2.is_signed
+                                              \s""")
+    Integer getSentCount(Long workPlaceID);
+
     @Query(nativeQuery = true, value = "update missive set is_ready = false where id = :ID")
     @Modifying
     void notReady(UUID ID);
@@ -317,11 +405,11 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     Missive getLastVersion(UUID rootID);
 
     @Query(nativeQuery = true, value = """
-            select id as ID, version
-            from missive
-            where root_versionid = (select root_versionid
-                                    from missive
-                                    where id = :id)
-           """)
+             select id as ID, version
+             from missive
+             where root_versionid = (select root_versionid
+                                     from missive
+                                     where id = :id)
+            """)
     List<MissiveVersionShortInfoProjection> getAllVersions(UUID id);
 }
