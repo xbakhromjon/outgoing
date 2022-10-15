@@ -11,10 +11,7 @@ import uz.darico.outReceiver.OutReceiver;
 import uz.darico.sender.Sender;
 import uz.darico.signatory.Signatory;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +35,7 @@ public class Missive extends Auditable {
     private List<OutReceiver> outReceivers;
     @OneToMany
     private List<InReceiver> inReceivers;
-    @OneToMany
+    @ManyToMany
     private List<ContentFile> baseFiles;
     @OneToOne
     private MissiveFile missiveFile;
