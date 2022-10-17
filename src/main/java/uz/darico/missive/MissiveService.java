@@ -219,11 +219,14 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         UUID ID = baseUtils.strToUUID(id);
         repository.sign(ID);
         // generate PDF
-//        PDFDTO pdfdto = makePDFDTO(ID);
-//        generatePDF(pdfdto);
-//        Missive lastVersion = getPersist(ID);
-//        outReceiverService.send(ID, lastVersion.getMissiveFile());
-//        inReceiverService.send(ID, lastVersion.getMissiveFile());
+        PDFDTO pdfdto = makePDFDTO(ID);
+        String path = generatePDF(pdfdto);
+        Missive missive = getPersist(ID);
+        ContentFile contentFile = contentFileService.create(path);
+        missive.setReadyPDF(contentFile);
+        missive = repository.save(missive);
+//        outReceiverService.send(missive);
+//        inReceiverService.send(missive);
         return ResponseEntity.ok(true);
     }
 
@@ -235,19 +238,32 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         SignatoryPDFDTO signatoryPDFDTO = signatoryService.makePDFDTO(missive.getSignatory());
         SenderPDFDTO senderPDFDTO = senderService.makePDFDTO(missive.getSender());
         List<ConfirmativePDFDTO> confirmativePDFDTOs = confirmativeService.makePDFDTO(missive.getConfirmatives());
-        PDFDTO pdfdto = new PDFDTO(fishkaPath, signedAt.toLocalDate(), missive.getNumber(), missive.getMissiveFile().getContent(), signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
-        return pdfdto;
+        return new PDFDTO(fishkaPath, baseUtils.getDateWord(signedAt.toLocalDate()), missive.getNumber(), missive.getMissiveFile().getContent(),
+                signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
     }
 
-    public boolean generatePDF(PDFDTO pdfdto) {
+    public String generatePDF(PDFDTO pdfdto) {
         String fishka = String.format("   <img src=%s", pdfdto.getFishkaPath())
                 + " width=\"100%\" height=\"140px\">";
-        String dateNumber = String.format("<strong style=\"float:left\">№ %s</strong>", pdfdto.getNumber()) +
-                String.format("<strong style=\"float:right\">%s</strong> </br>", pdfdto.getDate());
-        // TODO: 15/10/22 generate qr code ...
-        String html = fishka + dateNumber + pdfdto.getContent();
-        contentFileService.writeAsPDF(html);
-        return true;
+        String dateNumber = String.format("<strong>%s</strong>", pdfdto.getDate()) +
+                String.format("<strong>№ %s</strong> <br> <br>", pdfdto.getNumber());
+        SignatoryPDFDTO signatoryPDFDTO = pdfdto.getSignatoryPDFDTO();
+        String signatory = String.format("<p style=\"float:left\">%s</p>", signatoryPDFDTO.getFullPosition()) +
+                String.format("   <img src=%s height=\"100px\" width=\"100\" >", signatoryPDFDTO.getQrCodePath()) +
+                String.format("<p style=\"float:right\">%s</p>", signatoryPDFDTO.getShortName());
+        SenderPDFDTO senderPDFDTO = pdfdto.getSenderPDFDTO();
+        String sender = "<h4 style=\"float:left\">Tayyorladi:</h4> <br>" + String.format("<p style=\"float:left\">%s</p>", senderPDFDTO.getFullPosition()) +
+                String.format("   <img src=%s height=\"100px\" width=\"100\" >", senderPDFDTO.getQrCodePath()) +
+                String.format("<p style=\"float:right\">%s</p>", senderPDFDTO.getShortName());
+        StringBuilder html = new StringBuilder(fishka + dateNumber + pdfdto.getContent() + signatory + sender);
+        html.append("<h4 style=\"float:left\">Kelishildi:</h4> <br>");
+        for (ConfirmativePDFDTO confirmativePDFDTO : pdfdto.getConfirmativePDFDTOs()) {
+            String confirmative = String.format("<p style=\"float:left\">%s</p>", confirmativePDFDTO.getFullPosition()) +
+                    String.format("   <img src=%s height=\"100px\" width=\"100\" >", confirmativePDFDTO.getQrCodePath()) +
+                    String.format("<p style=\"float:right\">%s</p>", confirmativePDFDTO.getShortName());
+            html.append(confirmative);
+        }
+        return contentFileService.writeAsPDF(html.toString());
     }
 
     public ResponseEntity<?> reject(MissiveRejectDTO rejectDTO) {

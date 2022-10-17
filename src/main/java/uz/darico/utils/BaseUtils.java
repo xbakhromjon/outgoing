@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -189,5 +190,60 @@ public class BaseUtils {
         return browser;
     }
 
+    public String getShortName(String firstName, String lastName) {
+        firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1).toLowerCase();
+        lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1).toLowerCase();
+        String shortName = "";
+        if (firstName.startsWith("Sh") || firstName.startsWith("Ch") || firstName.charAt(2) == '\'') {
+            shortName = firstName.substring(0, 2) + "." + lastName;
+        } else {
+            shortName = firstName.charAt(0) + "." + lastName;
+        }
+        return shortName;
+    }
 
+    public String getDateWord(LocalDate date) {
+        int dayOfMonth = date.getDayOfMonth();
+        int monthValue = date.getMonthValue();
+        int year = date.getYear();
+        String monthWord = "";
+        switch (monthValue) {
+            case 1:
+                monthWord = ".01.";
+                break;
+            case 2:
+                monthWord = ".02.";
+                break;
+            case 3:
+                monthWord = ".03.";
+                break;
+            case 4:
+                monthWord = ".04.";
+                break;
+            case 5:
+                monthWord = ".05.";
+                break;
+            case 6:
+                monthWord = ".06.";
+                break;
+            case 7:
+                monthWord = ".07.";
+                break;
+            case 8:
+                monthWord = ".08.";
+                break;
+            case 9:
+                monthWord = ".09.";
+                break;
+            case 10:
+                monthWord = ".10.";
+                break;
+            case 11:
+                monthWord = ".11.";
+                break;
+            case 12:
+                monthWord = ".12.";
+        }
+        return dayOfMonth + monthWord + year;
+    }
 }

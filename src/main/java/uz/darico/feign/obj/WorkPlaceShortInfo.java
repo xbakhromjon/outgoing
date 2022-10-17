@@ -1,4 +1,4 @@
-package uz.darico.feign;
+package uz.darico.feign.obj;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,5 @@
 package uz.darico.email;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import uz.darico.email.dto.EmailSenderDTO;
 
@@ -57,7 +56,7 @@ public class EmailSenderService {
                 try {
                     File f = new File(emailSenderDTO.getFilePath());
                     attachmentPart.attachFile(f);
-                    textPart.setText("This is text");
+                    textPart.setText(emailSenderDTO.getText());
                     multipart.addBodyPart(textPart);
                     multipart.addBodyPart(attachmentPart);
                 } catch (IOException e) {

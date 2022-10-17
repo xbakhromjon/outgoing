@@ -48,6 +48,8 @@ public class Missive extends Auditable {
     private UUID rootVersionID;
     private UUID fishkaID;
     private String number = "1613";
+    @OneToOne
+    private ContentFile readyPDF;
 
     public Missive(Long orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,
                    Long departmentID, List<OutReceiver> outReceivers, List<InReceiver> inReceivers,

@@ -38,15 +38,13 @@ public class Test {
                 "“Ахборот технологиялари ва коммуникациялари соҳасини янада такомиллаштириш чора-тадбирлари тўғрисида”ги ПФ-5349-сон Фармонига мувофиқ “Ахборот-коммуникация технологияларини ривожлантириш маркази” давлат унитар корхонасининг асосий вазифаси этиб, “Электрон ҳокимият” ахборот тизимини яратиш, жорий этиш белгиланган. “Давлат харидлари тўғрисида”ги Ўзбекистон Республикаси қонунинг 67-моддасига асосан вилоят ҳокимлиги ҳузуридаги “Ахборот-коммуникация технологияларини ривожлантириш маркази” давлат унитар корхонаси “Ягона етказиб берувчи” сифатида реестрга киритилган.\n" +
                 "вилоят ҳокимлиги ҳузуридаги “Ахборот-коммуникация технологияларини ривожлантириш маркази” ДУК туманлар ва шаҳарлар ҳокимликларида “Электрон ҳокимият” ахборот тизимларини жорий этишни мувофиқлаштириш мақсадида масофавий ҳамда доимий жойида хизмат кўрсатиш, шунингдек, ахборот хавфсизлигини таъминлаш борасидаги барча вазифаларни бажариб, хизматларни амалга ошириб келмоқда.\n" +
                 "Юқоридагиларни инобатга олиб, Сиздан, ҳокимликда ахборот технологиялари ва коммуникациялар соҳасини ривожлантириш ҳамда техник қўллаб-қувватлаш мақсадида вилоят ҳокимлиги ҳузуридаги “Ахборот-коммуникация технологияларини ривожлантириш маркази” давлат унитар корхонаси билан келишган ҳолда қилинган ҳисоб-китобларга асосан 2020 йилда кўрсатиладиган хизматлар учун жами\n" +
-                "84,0 млн.сўм тўловларни ажратишингиз сўралади.\n" +
-                "\n" +
-                "Амалга оширилган ҳамда амалга ошириладиган ишлар юзасидан тегишли ҳисоб-китоблар, ____ варақда илова қилинади.\n</p>";
+                "84,0 млн.сўм тўловларни ажратишингиз сўралади.</p>";
         SignatoryPDFDTO signatoryPDFDTO = new SignatoryPDFDTO("Вилоят ҳокими биринчи ўринбосари", "/home/xbakhromjon/Pictures/qrcode.png", "Ф.Умаров");
         SenderPDFDTO senderPDFDTO = new SenderPDFDTO("Вилоят ҳокими биринчи ўринбосари", "/home/xbakhromjon/Pictures/qrcode.png", "Ф.Умаров");
         ConfirmativePDFDTO confirmativePDFDTO1 = new ConfirmativePDFDTO("Вилоят ҳокими биринчи ўринбосари", "/home/xbakhromjon/Pictures/qrcode.png", "Ф.Умаров");
         ConfirmativePDFDTO confirmativePDFDTO2 = new ConfirmativePDFDTO("Вилоят ҳокими биринчи ўринбосари", "/home/xbakhromjon/Pictures/qrcode.png", "Ф.Умаров");
         List<ConfirmativePDFDTO> confirmativePDFDTOs = List.of(confirmativePDFDTO1, confirmativePDFDTO2);
-        PDFDTO pdfdto = new PDFDTO("/home/xbakhromjon/Pictures/fishka.jpg", LocalDate.now(), "1663", content, signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
+        PDFDTO pdfdto = new PDFDTO("/home/xbakhromjon/Pictures/fishka.jpg", "5 - may 2022 - yil", "1663", content, signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
         boolean result = generatePDF(pdfdto);
 
     }
@@ -57,11 +55,25 @@ public class Test {
         String dateNumber = String.format("<strong>%s</strong>", pdfdto.getDate()) +
                 String.format("<strong>№ %s</strong> <br> <br>", pdfdto.getNumber());
         SignatoryPDFDTO signatoryPDFDTO = pdfdto.getSignatoryPDFDTO();
-//        String signatory = String.format("<p style=\"float:left\">%s</p>", signatoryPDFDTO.getFullPosition()) + ;
-        String html = fishka + dateNumber + pdfdto.getContent();
-        writeAsPDF(html);
+        String signatory = String.format("<p style=\"float:left\">%s</p>", signatoryPDFDTO.getFullPosition()) +
+                String.format("   <img src=%s height=\"100px\" width=\"100\" >", signatoryPDFDTO.getQrCodePath()) +
+                String.format("<p style=\"float:right\">%s</p>", signatoryPDFDTO.getShortName());
+        SenderPDFDTO senderPDFDTO = pdfdto.getSenderPDFDTO();
+        String sender = "<h4 style=\"float:left\">Tayyorladi:</h4> <br>" + String.format("<p style=\"float:left\">%s</p>", senderPDFDTO.getFullPosition()) +
+                String.format("   <img src=%s height=\"100px\" width=\"100\" >", senderPDFDTO.getQrCodePath()) +
+                String.format("<p style=\"float:right\">%s</p>", senderPDFDTO.getShortName());
+        StringBuilder html = new StringBuilder(fishka + dateNumber + pdfdto.getContent() + signatory + sender);
+        html.append("<h4 style=\"float:left\">Kelishildi:</h4> <br>");
+        for (ConfirmativePDFDTO confirmativePDFDTO : pdfdto.getConfirmativePDFDTOs()) {
+            String confirmative = String.format("<p style=\"float:left\">%s</p>", confirmativePDFDTO.getFullPosition()) +
+                    String.format("   <img src=%s height=\"100px\" width=\"100\" >", confirmativePDFDTO.getQrCodePath()) +
+                    String.format("<p style=\"float:right\">%s</p>", confirmativePDFDTO.getShortName());
+            html.append(confirmative);
+        }
+        writeAsPDF(html.toString());
         return true;
     }
+
 
     public static String writeAsPDF(String html) {
         String path = FILE_PATH_LINUX + GENERATED_FILES_PATH;

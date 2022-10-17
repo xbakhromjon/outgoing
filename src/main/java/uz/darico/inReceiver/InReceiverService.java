@@ -12,6 +12,7 @@ import uz.darico.email.dto.EmailSenderDTO;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
+import uz.darico.missive.Missive;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.outReceiver.OutReceiver;
 
@@ -48,6 +49,7 @@ public class InReceiverService extends AbstractService<InReceiverRepository, InR
         return repository.getAllByMissiveID(ID);
     }
 
-    public void send(UUID ID, MissiveFile lastVersion) {
+    public void send(Missive missive) {
+
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uz.darico.exception.exception.UniversalException;
+import uz.darico.feign.obj.WorkPlaceShortInfo;
 
 @Service
 @RequiredArgsConstructor
@@ -43,4 +44,16 @@ public class WorkPlaceFeignService {
             throw new UniversalException("Remote server not work or %s workPlaceID workPlace not found".formatted(workPlaceID), HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    public WorkPlaceShortInfo getWorkPlaceInfoRemote(Long workPlaceID) {
+        try {
+            ResponseEntity<WorkPlaceShortInfo> response = restTemplate.getForEntity("http://192.168.30.112:8080/kiruvchi/api/user/info/" + workPlaceID, WorkPlaceShortInfo.class);
+//            ResponseEntity<WorkPlaceShortInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/info/" + workPlaceID, WorkPlaceShortInfo.class);
+            return response.getBody();
+        } catch (Exception e) {
+            throw new UniversalException("Remote server not work or %s ID workPlace not found".formatted(workPlaceID), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

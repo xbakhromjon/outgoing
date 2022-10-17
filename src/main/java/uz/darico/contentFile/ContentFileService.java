@@ -1,5 +1,7 @@
 package uz.darico.contentFile;
 
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,16 +22,15 @@ import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ContentFileService extends AbstractService<ContentFileRepository, InReceiverValidator, ContentFileMapper> {
 
     private final BaseUtils baseUtils;
     private final String FILE_PATH_LINUX = "/home/xbakhromjon/database";
-    private final String GENERATED_FILES_PATH = "/generated";
+    private final String GENERATED_FILES_PATH_LINUX = "/generated";
+    private final String GENERATED_FILES_PATH_WINDOWS = "\\generated";
     private final String FILE_PATH_WINDOWS = "";
     private final ServletContext servletContext;
 
@@ -161,18 +162,41 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
     }
 
     public String writeAsPDF(String html) {
-        String path = FILE_PATH_LINUX + GENERATED_FILES_PATH;
-        Path pathObj = Path.of(path);
-        if (!Files.exists(pathObj)) {
+        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX;
+        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS;
+        Path pathObj_linux = Path.of(path_linux);
+        Path pathObj_windows = Path.of(path_windows);
+        if (!Files.exists(pathObj_linux)) {
             try {
-                Files.createDirectories(pathObj);
+                Files.createDirectories(pathObj_linux);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         String generatedName = UUID.randomUUID().toString() + ".pdf";
-        path = path + "/" + generatedName;
-        baseUtils.writeHtmlAsPdf(path, html);
-        return path;
+        path_linux = path_linux + "/" + generatedName;
+        path_windows = path_windows + "\\" + generatedName;
+        baseUtils.writeHtmlAsPdf(path_linux, html);
+        return path_linux;
+    }
+
+    public String generateQRCode(String data, Integer width, Integer height) {
+        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX + "/qrcode" + UUID.randomUUID() + ".png";
+        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode" + UUID.randomUUID() + ".png";
+        Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+        hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+        try {
+            baseUtils.generateQRcode(data, path_linux, "UTF-8", hashMap, height, width);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return path_linux;
+    }
+
+    public ContentFile create(String path) {
+        ContentFile contentFile = new ContentFile();
+        contentFile.setPath(path);
+        ContentFile saved = repository.save(contentFile);
+        return saved;
     }
 }

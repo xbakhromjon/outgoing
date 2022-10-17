@@ -10,6 +10,7 @@ import uz.darico.confirmative.ConfirmativeRepository;
 import uz.darico.confirmative.ConfirmativeValidator;
 import uz.darico.email.EmailSenderService;
 import uz.darico.email.dto.EmailSenderDTO;
+import uz.darico.missive.Missive;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
 
@@ -56,11 +57,11 @@ public class OutReceiverService extends AbstractService<OutReceiverRepository, O
         return repository.getAllByMissiveID(ID);
     }
 
-    public void send(UUID ID, MissiveFile lastVersion) {
-        List<OutReceiver> outReceivers = getAllByMissiveID(ID);
+    public void send(Missive missive) {
+        List<OutReceiver> outReceivers = missive.getOutReceivers();
         for (OutReceiver outReceiver : outReceivers) {
             if (outReceiver.getCorrespondentEmail() != null) {
-                EmailSenderDTO emailSenderDTO = new EmailSenderDTO(outReceiver.getCorrespondentEmail(), from, subject, text, lastVersion.getFile().getPath());
+                EmailSenderDTO emailSenderDTO = new EmailSenderDTO(outReceiver.getCorrespondentEmail(), from, subject, missive.getShortInfo(), missive.getReadyPDF().getPath());
                 emailSenderService.send(emailSenderDTO);
             }
         }

@@ -22,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PDFDTO {
     private String fishkaPath;
-    private LocalDate date;
+    private String date;
     private String number;
     private String content;
     private SignatoryPDFDTO signatoryPDFDTO;
