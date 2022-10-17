@@ -18,5 +18,5 @@ public class TemplateCreateDTO {
     private String content;
     private String name;
     private UUID fileID;
-    private Boolean isGlobal = false;
+    private Boolean isGlobal;
 }
