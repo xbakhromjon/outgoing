@@ -34,8 +34,8 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
         if (createDTO.getFileID() != null) {
             template.setImage(contentFileService.getPersist(createDTO.getFileID()));
         }
-        repository.save(template);
-        return ResponseEntity.ok(true);
+        Template saved = repository.save(template);
+        return ResponseEntity.ok(mapper.toGetDTO(saved));
     }
 
     public ResponseEntity<?> update(TemplateUpdateDTO updateDTO) {
@@ -45,8 +45,8 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
         template.setName(updateDTO.getName());
         template.setIsGlobal(updateDTO.getIsGlobal());
         template.setImage(contentFileService.getPersist(updateDTO.getFileID()));
-        repository.save(template);
-        return ResponseEntity.ok(true);
+        Template saved = repository.save(template);
+        return ResponseEntity.ok(mapper.toGetDTO(saved));
     }
 
 
