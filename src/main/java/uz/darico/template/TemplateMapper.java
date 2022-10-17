@@ -29,7 +29,7 @@ public class TemplateMapper implements BaseMapper {
     }
 
     public TemplateGetDTO toGetDTO(Template template) {
-        return new TemplateGetDTO(template.getWorkPlaceID(), template.getContent(), template.getName(), template.getImage(), template.getIsGlobal(), template.getCreatedAt());
+        return new TemplateGetDTO(template.getId(), template.getWorkPlaceID(), template.getContent(), template.getName(), template.getImage(), template.getIsGlobal(), template.getCreatedAt());
     }
 
 

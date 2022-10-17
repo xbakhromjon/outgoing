@@ -12,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TemplateGetDTO {
+    private UUID ID;
     private Long workPlaceID;
     private String content;
     private String name;
