@@ -22,6 +22,6 @@ public interface TemplateRepository extends JpaRepository<Template, UUID>, BaseR
     @Modifying
     void delete(UUID ID);
 
-    @Query(nativeQuery = true, value = "select * from template where work_placeid = :workPlaceID or (is_global and orgid = :orgID)")
+    @Query(nativeQuery = true, value = "select * from template where not is_deleted and work_placeid = :workPlaceID or (is_global and orgid = :orgID)")
     List<Template> findAll(Long workPlaceID, Long orgID);
 }
