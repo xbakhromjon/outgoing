@@ -44,7 +44,9 @@ public class TemplateService extends AbstractService<TemplateRepository, Templat
         template.setContent(updateDTO.getContent());
         template.setName(updateDTO.getName());
         template.setIsGlobal(updateDTO.getIsGlobal());
-        template.setImage(contentFileService.getPersist(updateDTO.getFileID()));
+        if (updateDTO.getFileID() != null) {
+            template.setImage(contentFileService.getPersist(updateDTO.getFileID()));
+        }
         Template saved = repository.save(template);
         return ResponseEntity.ok(mapper.toGetDTO(saved));
     }
