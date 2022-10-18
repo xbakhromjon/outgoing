@@ -34,8 +34,11 @@ public class MissiveGetDTO {
     private MissiveFileGetDTO missiveFile;
     private LocalDate createdAt;
     private List<MissiveVersionShortInfoDTO> versions;
+    private ContentFile readyPDF;
 
-    public MissiveGetDTO(UUID ID, String orgName, String email, SenderGetDTO sender, SignatoryGetDTO signatory, List<ConfirmativeGetDTO> confirmatives, String departmentName, List<OutReceiverGetDTO> outReceivers, List<InReceiverGetDTO> inReceivers, List<ContentFile> baseFiles, MissiveFileGetDTO missiveFiles, LocalDate createdAt) {
+    public MissiveGetDTO(UUID ID, String orgName, String email, SenderGetDTO sender, SignatoryGetDTO signatory, List<ConfirmativeGetDTO> confirmatives, String departmentName, List<OutReceiverGetDTO> outReceivers,
+                         List<InReceiverGetDTO> inReceivers, List<ContentFile> baseFiles, MissiveFileGetDTO missiveFiles, LocalDate createdAt,
+                         ContentFile readyPDF) {
         this.ID = ID;
         this.orgName = orgName;
         this.email = email;
@@ -48,5 +51,6 @@ public class MissiveGetDTO {
         this.baseFiles = baseFiles;
         this.missiveFile = missiveFiles;
         this.createdAt = createdAt;
+        this.readyPDF = readyPDF;
     }
 }
