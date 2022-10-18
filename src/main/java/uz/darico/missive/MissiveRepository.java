@@ -411,11 +411,12 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
     Missive getLastVersion(UUID rootID);
 
     @Query(nativeQuery = true, value = """
-             select id as ID, version
-             from missive
-             where root_versionid = (select root_versionid
-                                     from missive
-                                     where id = :id)
+            select id as ID, version
+            from missive
+            where root_versionid = (select root_versionid
+                                    from missive
+                                    where id = :id)
+            order by version
             """)
     List<MissiveVersionShortInfoProjection> getAllVersions(UUID id);
 
