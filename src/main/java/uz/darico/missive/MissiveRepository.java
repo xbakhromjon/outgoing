@@ -427,4 +427,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             """)
     @Modifying
     void setContent(UUID ID, String content);
+
+    @Query(nativeQuery = true, value = "update missive_file set content = :content where id = (select missive_file_id from missive where id = :missiveID)")
+    @Modifying
+    void updateContent(UUID missiveID, String content);
 }

@@ -3,6 +3,7 @@ package uz.darico.missive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.darico.base.controller.AbstractController;
+import uz.darico.missive.dto.ContentUpdateDTO;
 import uz.darico.missive.dto.MissiveCreateDTO;
 import uz.darico.missive.dto.MissiveRejectDTO;
 import uz.darico.missive.dto.MissiveUpdateDTO;
@@ -88,4 +89,10 @@ public class MissiveController extends AbstractController<MissiveService> {
     public ResponseEntity<?> getCount(@PathVariable Long workPlaceID) {
         return service.getCount(workPlaceID);
     }
+
+    @PatchMapping("/content")
+    public ResponseEntity<?> updateContent(@RequestBody ContentUpdateDTO contentUpdateDTO) {
+        return service.updateContent(contentUpdateDTO);
+    }
+
 }

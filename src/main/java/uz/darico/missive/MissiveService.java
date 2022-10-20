@@ -445,5 +445,10 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         countDTOs.add(new CountDTO(Tab.YUBORILGAN.getCode(), sentCount));
         return ResponseEntity.ok(countDTOs);
     }
+
+    public ResponseEntity<?> updateContent(ContentUpdateDTO contentUpdateDTO) {
+        repository.updateContent(contentUpdateDTO.getMissiveID(), contentUpdateDTO.getContent());
+        return ResponseEntity.ok(true);
+    }
 }
 
