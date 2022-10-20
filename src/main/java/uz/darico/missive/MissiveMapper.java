@@ -12,6 +12,8 @@ import uz.darico.feign.DepartmentFeignService;
 import uz.darico.feign.OrganizationFeignService;
 import uz.darico.feign.UserFeignService;
 import uz.darico.feign.obj.UserInfo;
+import uz.darico.fishka.Fishka;
+import uz.darico.fishka.FishkaService;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverMapper;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
@@ -48,8 +50,9 @@ public class MissiveMapper implements BaseMapper {
     private final UserFeignService userFeignService;
     private final BaseUtils baseUtils;
     private final OrganizationFeignService organizationFeignService;
+    private final FishkaService fishkaService;
 
-    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper, DepartmentFeignService departmentFeignService, UserFeignService userFeignService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService) {
+    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper, DepartmentFeignService departmentFeignService, UserFeignService userFeignService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService, FishkaService fishkaService) {
         this.senderMapper = senderMapper;
         this.signatoryMapper = signatoryMapper;
         this.confirmativeMapper = confirmativeMapper;
@@ -61,6 +64,7 @@ public class MissiveMapper implements BaseMapper {
         this.userFeignService = userFeignService;
         this.baseUtils = baseUtils;
         this.organizationFeignService = organizationFeignService;
+        this.fishkaService = fishkaService;
     }
 
     public Missive toEntity(MissiveCreateDTO createDTO) throws IOException {
@@ -76,7 +80,13 @@ public class MissiveMapper implements BaseMapper {
         List<InReceiver> inReceivers = inReceiverMapper.toEntity(inReceiverCreateDTOs);
         List<ContentFile> baseFiles = contentFileService.getContentFiles(createDTO.getBaseFileIDs());
         MissiveFile missiveFile = missiveFileMapper.toEntity(createDTO.getContent());
-        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(), outReceivers, inReceivers, baseFiles, missiveFile, createDTO.getFishkaID());
+        // TODO: 20/10/22 keyin olib tashlash kerak
+        Fishka fishka = fishkaService.getDefault(createDTO.getOrgID());
+        UUID fishkaID = createDTO.getFishkaID();
+        if (fishka != null) {
+            fishkaID = fishka.getId();
+        }
+        return new Missive(createDTO.getOrgID(), sender, signatory, confirmatives, createDTO.getDepartmentID(), outReceivers, inReceivers, baseFiles, missiveFile, fishkaID);
     }
 
     public MissiveGetDTO toGetDTO(Missive missive) {
