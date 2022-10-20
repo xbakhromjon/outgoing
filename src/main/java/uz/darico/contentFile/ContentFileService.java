@@ -126,6 +126,9 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         UUID ID = baseUtils.strToUUID(id);
         ContentFile fileEntity = getContentFile(ID);
         boolean exists = Files.exists(Path.of(fileEntity.getPath()));
+        if (!exists) {
+            throw new UniversalException(String.format("File not found with ID %s", id), HttpStatus.NOT_FOUND);
+        }
         File send = new File(fileEntity.getPath());
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-disposition", "inline;filename=" + fileEntity.getOriginalName());
@@ -166,9 +169,9 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS;
         Path pathObj_linux = Path.of(path_linux);
         Path pathObj_windows = Path.of(path_windows);
-        if (!Files.exists(pathObj_linux)) {
+        if (!Files.exists(pathObj_windows)) {
             try {
-                Files.createDirectories(pathObj_linux);
+                Files.createDirectories(pathObj_windows);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -176,21 +179,21 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String generatedName = UUID.randomUUID().toString() + ".pdf";
         path_linux = path_linux + "/" + generatedName;
         path_windows = path_windows + "\\" + generatedName;
-        baseUtils.writeHtmlAsPdf(path_linux, html);
-        return path_linux;
+        baseUtils.writeHtmlAsPdf(path_windows, html);
+        return path_windows;
     }
 
     public String generateQRCode(String data, Integer width, Integer height) {
-        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX + "/qrcode" + UUID.randomUUID() + ".png";
-        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode" + UUID.randomUUID() + ".png";
+        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX + "/qrcode/" + UUID.randomUUID() + ".png";
+        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode\\" + UUID.randomUUID() + ".png";
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         try {
-            baseUtils.generateQRcode(data, path_linux, "UTF-8", hashMap, height, width);
+            baseUtils.generateQRcode(data, path_windows, "UTF-8", hashMap, height, width);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return path_linux;
+        return path_windows;
     }
 
     public ContentFile create(String path) {
