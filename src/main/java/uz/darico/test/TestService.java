@@ -9,8 +9,10 @@ import uz.darico.feign.obj.WorkPlaceShortInfo;
 import uz.darico.missive.Missive;
 import uz.darico.outReceiver.OutReceiver;
 import uz.darico.outReceiver.OutReceiverService;
+import uz.darico.signatory.Signatory;
 import uz.darico.signatory.SignatoryService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,17 +31,8 @@ public class TestService {
     private OutReceiverService outReceiverService;
 
     public ResponseEntity<?> test() {
-        List<OutReceiver> outReceivers = List.of(new OutReceiver(220L, "xbakhromjontest@gmail.com", "xbakhromjontest@gmail.com"),
-                new OutReceiver(220L, "xbakhromjontest@gmail.com", "xbakhromjontest@gmail.com"),
-                new OutReceiver(220L, "xbakhromjontest@gmail.com", "xbakhromjontest@gmail.com"));
-        Missive missive = new Missive();
-        missive.setOutReceivers(outReceivers);
-        ContentFile contentFile = new ContentFile();
-        contentFile.setPath("/home/xbakhromjon/database/generated/87f5e254-f999-459a-8b54-bec9dc71c659.pdf");
-        missive.setReadyPDF(contentFile);
-        missive.setShortInfo("Ўзбекистон Республикаси Президентининг 2018 йил 19 февралдаги\n" +
-                "“Ахборот технологиялари ва коммуникациялари соҳасини янада такомиллаштириш чора-тадбирлари тўғрисида”ги ПФ-5349-сон Фармонига мувофиқ “Ахборот-коммуникация технологияларини");
-        outReceiverService.send(missive);
+        Signatory signatory = new Signatory(220L, 5L, 1);
+        signatoryService.makePDFDTO(signatory);
         return ResponseEntity.ok(true);
     }
 }

@@ -184,8 +184,19 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
     }
 
     public String generateQRCode(String data, Integer width, Integer height) {
-        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX + "/qrcode/" + UUID.randomUUID() + ".png";
-        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode\\" + UUID.randomUUID() + ".png";
+        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX + "/qrcode";
+        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode";
+        Path pathObj_linux = Path.of(path_linux);
+        Path pathObj_windows = Path.of(path_windows);
+        if (!Files.exists(pathObj_windows)) {
+            try {
+                Files.createDirectories(pathObj_windows);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        path_linux = path_linux + "/" + UUID.randomUUID() + ".png";
+        path_windows = path_windows + "\\" + UUID.randomUUID() + ".png";
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         try {
