@@ -199,6 +199,7 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
     public ContentFile create(String path) {
         ContentFile contentFile = new ContentFile();
         contentFile.setPath(path);
+        contentFile.setContentType("application/pdf");
         ContentFile saved = repository.save(contentFile);
         return saved;
     }
