@@ -40,9 +40,6 @@ public interface MissiveFileRepository extends JpaRepository<MissiveFile, UUID>,
     @Modifying
     void updateContent(UUID ID, String content);
 
-    @Query(nativeQuery = true, value = """ 
-            select *
-            from missive_file
-            where id in (select missive_files_id from missive_missive_files where missive_id = :missiveID) order by version desc limit 1""")
+    @Query(nativeQuery = true, value = "select * from missive_file where id in (select missive_files_id from missive_missive_files where missive_id = :missiveID) order by version desc limit 1")
     Optional<MissiveFile> findLastVersion(UUID missiveID);
 }
