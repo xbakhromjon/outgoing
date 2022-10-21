@@ -30,7 +30,7 @@ public enum FishkaType {
         EnumSet<FishkaType> fishkaTypes = EnumSet.allOf(FishkaType.class);
         Optional<FishkaType> optional = fishkaTypes.stream().filter(item -> item.getCode().equals(code)).findFirst();
         return optional.orElseThrow(() -> {
-            throw new UniversalException("%s Fishka Type Code incorrect".formatted(code), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("%s Fishka Type Code incorrect", code), HttpStatus.BAD_REQUEST);
         }).getName();
     }
 

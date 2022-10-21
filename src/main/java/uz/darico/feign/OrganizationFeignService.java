@@ -33,7 +33,7 @@ public class OrganizationFeignService {
             }
             return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work or %s ID organization not found".formatted(ID), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("Remote server not work or %s ID organization not found", ID), HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ContentFileService extends AbstractService<ContentFileRepository, InReceiverValidator, ContentFileMapper> {
@@ -50,7 +51,7 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
 
 
     public void deleteAll(List<ContentFile> contentFiles) {
-        List<UUID> IDs = contentFiles.stream().map(ContentFile::getId).toList();
+        List<UUID> IDs = contentFiles.stream().map(ContentFile::getId).collect(Collectors.toList());
         repository.deleteFromRelatedTable(IDs);
         repository.deleteAll(IDs);
     }

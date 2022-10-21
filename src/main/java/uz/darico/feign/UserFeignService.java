@@ -28,7 +28,7 @@ public class UserFeignService {
 //            ResponseEntity<UserInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/user/info/" + ID, UserInfo.class);
             return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work or %s ID user not found".formatted(ID), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("Remote server not work or %s ID user not found", ID), HttpStatus.BAD_REQUEST);
         }
     }
 }

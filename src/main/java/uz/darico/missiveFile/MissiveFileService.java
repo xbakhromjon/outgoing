@@ -14,6 +14,7 @@ import uz.darico.utils.BaseUtils;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MissiveFileService extends AbstractService<MissiveFileRepository, OutReceiverValidator, MissiveFileMapper> {
@@ -44,7 +45,7 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
     }
 
     public void deleteAll(List<MissiveFile> missiveFiles) {
-        List<UUID> IDs = missiveFiles.stream().map(MissiveFile::getId).toList();
+        List<UUID> IDs = missiveFiles.stream().map(MissiveFile::getId).collect(Collectors.toList());
         repository.deleteAll(IDs);
     }
 

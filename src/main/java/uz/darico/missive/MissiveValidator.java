@@ -27,11 +27,11 @@ public class MissiveValidator implements BaseValidator {
         if (createDTO.getConfirmativeWorkPlaceIDs() != null) {
             List<Long> confirmativeWorkPlaceIDs = createDTO.getConfirmativeWorkPlaceIDs();
             if (confirmativeWorkPlaceIDs.contains(workPlaceID)) {
-                throw new ValidationException("%s workPlace cannot be confirmative".formatted(workPlaceID));
+                throw new ValidationException(String.format("%s workPlace cannot be confirmative", workPlaceID));
             }
             HashSet<Long> confirmativesSet = new HashSet<>(confirmativeWorkPlaceIDs);
             if (confirmativeWorkPlaceIDs.size() != confirmativesSet.size()) {
-                throw new ValidationException("%s invalid confirmatives. Duplicate workPlaceID".formatted(confirmativeWorkPlaceIDs));
+                throw new ValidationException(String.format("%s invalid confirmatives. Duplicate workPlaceID", confirmativeWorkPlaceIDs));
             }
         }
         if (createDTO.getOutReceivers() != null) {
@@ -39,7 +39,7 @@ public class MissiveValidator implements BaseValidator {
             List<Long> outReceiverList = outReceivers.stream().map(OutReceiverCreateDTO::getCorrespondentID).collect(Collectors.toList());
             HashSet<Long> outReceiverSet = new HashSet<>(outReceiverList);
             if (outReceiverSet.size() != outReceivers.size()) {
-                throw new ValidationException("%s invalid outReceivers. Duplicate correspondent".formatted(outReceiverList));
+                throw new ValidationException(String.format("%s invalid outReceivers. Duplicate correspondent", outReceiverList));
             }
         }
         if (createDTO.getInReceivers() != null) {
@@ -47,7 +47,7 @@ public class MissiveValidator implements BaseValidator {
             List<Long> inReceiverList = inReceivers.stream().map(InReceiverCreateDTO::getCorrespondentID).collect(Collectors.toList());
             HashSet<Long> inReceiverSet = new HashSet<>(inReceiverList);
             if (inReceiverSet.size() != inReceivers.size()) {
-                throw new ValidationException("%s invalid inReceivers. Duplicate correspondent".formatted(inReceiverList));
+                throw new ValidationException(String.format("%s invalid inReceivers. Duplicate correspondent", inReceiverList));
             }
         }
     }
@@ -64,11 +64,11 @@ public class MissiveValidator implements BaseValidator {
         if (updateDTO.getConfirmativeWorkPlaceIDs() != null) {
             List<Long> confirmativeWorkPlaceIDs = updateDTO.getConfirmativeWorkPlaceIDs();
             if (confirmativeWorkPlaceIDs.contains(workPlaceID)) {
-                throw new ValidationException("%s workPlace cannot be confirmative".formatted(workPlaceID));
+                throw new ValidationException(String.format("%s workPlace cannot be confirmative", workPlaceID));
             }
             HashSet<Long> confirmativesSet = new HashSet<>(confirmativeWorkPlaceIDs);
             if (confirmativeWorkPlaceIDs.size() != confirmativesSet.size()) {
-                throw new ValidationException("%s invalid confirmatives. Duplicate workPlaceID".formatted(confirmativeWorkPlaceIDs));
+                throw new ValidationException(String.format("%s invalid confirmatives. Duplicate workPlaceID", confirmativeWorkPlaceIDs));
             }
         }
         if (updateDTO.getOutReceivers() != null) {
@@ -76,7 +76,7 @@ public class MissiveValidator implements BaseValidator {
             List<Long> outReceiverList = outReceivers.stream().map(OutReceiverCreateDTO::getCorrespondentID).collect(Collectors.toList());
             HashSet<Long> outReceiverSet = new HashSet<>(outReceiverList);
             if (outReceiverSet.size() != outReceivers.size()) {
-                throw new ValidationException("%s invalid outReceivers. Duplicate correspondent".formatted(outReceiverList));
+                throw new ValidationException(String.format("%s invalid outReceivers. Duplicate correspondent", outReceiverList));
             }
         }
         if (updateDTO.getInReceivers() != null) {
@@ -84,7 +84,7 @@ public class MissiveValidator implements BaseValidator {
             List<Long> inReceiverList = inReceivers.stream().map(InReceiverCreateDTO::getCorrespondentID).collect(Collectors.toList());
             HashSet<Long> inReceiverSet = new HashSet<>(inReceiverList);
             if (inReceiverSet.size() != inReceivers.size()) {
-                throw new ValidationException("%s invalid inReceivers. Duplicate correspondent".formatted(inReceiverList));
+                throw new ValidationException(String.format("%s invalid inReceivers. Duplicate correspondent", inReceiverList));
             }
         }
     }

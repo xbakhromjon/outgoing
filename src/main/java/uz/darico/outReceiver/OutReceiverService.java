@@ -16,6 +16,7 @@ import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OutReceiverService extends AbstractService<OutReceiverRepository, OutReceiverValidator, OutReceiverMapper> {
@@ -44,7 +45,7 @@ public class OutReceiverService extends AbstractService<OutReceiverRepository, O
     }
 
     public void deleteAll(List<OutReceiver> outReceivers) {
-        List<UUID> IDs = outReceivers.stream().map(AbstractEntity::getId).toList();
+        List<UUID> IDs = outReceivers.stream().map(AbstractEntity::getId).collect(Collectors.toList());
         repository.deleteFromRelatedTable(IDs);
         repository.deleteAll(IDs);
     }

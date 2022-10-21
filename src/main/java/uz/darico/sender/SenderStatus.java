@@ -22,7 +22,7 @@ public enum SenderStatus {
         EnumSet<SenderStatus> senderStatuses = EnumSet.allOf(SenderStatus.class);
         Optional<SenderStatus> optional = senderStatuses.stream().filter(item -> item.getCode().equals(code)).findFirst();
         return optional.orElseThrow(() -> {
-            throw new UniversalException("%s Sender Status Code incorrect".formatted(code), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("%s Sender Status Code incorrect", code), HttpStatus.BAD_REQUEST);
         }).getName();
     }
 }

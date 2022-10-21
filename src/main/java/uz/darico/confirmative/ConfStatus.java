@@ -25,7 +25,7 @@ public enum ConfStatus {
         EnumSet<ConfStatus> statuses = EnumSet.allOf(ConfStatus.class);
         Optional<ConfStatus> optional = statuses.stream().filter(item -> item.getCode().equals(code)).findFirst();
         return optional.orElseThrow(() -> {
-            throw new UniversalException("%s Conf Status Code incorrect".formatted(code), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("%s Conf Status Code incorrect", code), HttpStatus.BAD_REQUEST);
         }).getName();
     }
 

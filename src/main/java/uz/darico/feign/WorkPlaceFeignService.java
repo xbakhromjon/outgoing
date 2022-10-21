@@ -28,7 +28,7 @@ public class WorkPlaceFeignService {
             }
             return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work or %s ID workPlace not found".formatted(ID), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("Remote server not work or %s ID workPlace not found", ID), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -41,7 +41,7 @@ public class WorkPlaceFeignService {
             }
             return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work or %s workPlaceID workPlace not found".formatted(workPlaceID), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("Remote server not work or %s workPlaceID workPlace not found", workPlaceID), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -52,7 +52,7 @@ public class WorkPlaceFeignService {
 //            ResponseEntity<WorkPlaceShortInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/info/" + workPlaceID, WorkPlaceShortInfo.class);
             return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work or %s ID workPlace not found".formatted(workPlaceID), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("Remote server not work or %s ID workPlace not found", workPlaceID), HttpStatus.BAD_REQUEST);
         }
     }
 

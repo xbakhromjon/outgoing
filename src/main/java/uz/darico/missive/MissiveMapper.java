@@ -35,6 +35,7 @@ import uz.darico.utils.OrgShortInfo;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -124,12 +125,12 @@ public class MissiveMapper implements BaseMapper {
         }
         MissiveFile missiveFile = missive.getMissiveFile();
         if (missiveFile == null) {
-            throw new UniversalException("%s missiveID Missive files is null".formatted(missive.getId()), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("%s missiveID Missive files is null", missive.getId()), HttpStatus.BAD_REQUEST);
         }
         List<OutReceiverCreateDTO> outReceiverCreateDTOs = outReceiverMapper.toCreateDTO(outReceivers);
         List<InReceiverCreateDTO> inReceiverCreateDTOs = inReceiverMapper.toCreateDTO(inReceivers);
         return new MissiveRawDTO(missive.getId(), missive.getRootVersionID(), missive.getOrgID(), missive.getSender().getWorkPlaceID(), missive.getSignatory().getWorkPlaceID(),
-                confirmatives.stream().map(Confirmative::getWorkPlaceID).toList(), outReceiverCreateDTOs,
+                confirmatives.stream().map(Confirmative::getWorkPlaceID).collect(Collectors.toList()), outReceiverCreateDTOs,
                 inReceiverCreateDTOs, missive.getBaseFiles(), missiveFile.getId(), missiveFile.getContent());
     }
 

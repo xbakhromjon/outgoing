@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ConfirmativeService extends AbstractService<ConfirmativeRepository, ConfirmativeValidator, ConfirmativeMapper> {
@@ -42,7 +43,7 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
     }
 
     public void deleteAll(List<Confirmative> confirmatives) {
-        List<UUID> IDs = confirmatives.stream().map(AbstractEntity::getId).toList();
+        List<UUID> IDs = confirmatives.stream().map(AbstractEntity::getId).collect(Collectors.toList());
         repository.deleteFromRelatedTable(IDs);
         repository.deleteAll(IDs);
     }

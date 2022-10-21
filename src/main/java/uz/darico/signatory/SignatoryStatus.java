@@ -24,7 +24,7 @@ public enum SignatoryStatus {
         EnumSet<SignatoryStatus> statuses = EnumSet.allOf(SignatoryStatus.class);
         Optional<SignatoryStatus> optional = statuses.stream().filter(item -> item.getCode().equals(code)).findFirst();
         return optional.orElseThrow(() -> {
-            throw new UniversalException("%s Signatory Status Code incorrect".formatted(code), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("%s Signatory Status Code incorrect", code), HttpStatus.BAD_REQUEST);
         }).getName();
     }
 }

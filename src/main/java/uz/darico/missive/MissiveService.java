@@ -46,6 +46,7 @@ import uz.darico.utils.Tab;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -170,7 +171,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
             }
         }
         // confirmative
-        else if (missive.getConfirmatives().stream().map(Confirmative::getWorkPlaceID).toList().contains(workPlaceID)) {
+        else if (missive.getConfirmatives().stream().map(Confirmative::getWorkPlaceID).collect(Collectors.toList()).contains(workPlaceID)) {
             for (Confirmative confirmative : missive.getConfirmatives()) {
                 if (confirmative.getWorkPlaceID().equals(workPlaceID)) {
                     if (confirmative.getStatusCode().equals(ConfStatus.NOT_VIEWED.getCode())) {
@@ -315,8 +316,8 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
             List<OutReceiver> outReceivers = outReceiverService.getAllByMissiveID(ID);
             List<InReceiver> inReceivers = inReceiverService.getAllByMissiveID(ID);
 
-            List<String> correspondents = new ArrayList<>(outReceivers.stream().map(item -> organizationFeignService.getShortInfo(item.getCorrespondentID()).getName()).toList());
-            correspondents.addAll(inReceivers.stream().map(item -> organizationFeignService.getShortInfo(item.getCorrespondentID()).getName()).toList());
+            List<String> correspondents = new ArrayList<>(outReceivers.stream().map(item -> organizationFeignService.getShortInfo(item.getCorrespondentID()).getName()).collect(Collectors.toList()));
+            correspondents.addAll(inReceivers.stream().map(item -> organizationFeignService.getShortInfo(item.getCorrespondentID()).getName()).collect(Collectors.toList()));
             missiveListDTO.setCorrespondent(correspondents);
         }
 
@@ -381,7 +382,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         if (Objects.equals(searchDTO.getTab(), Tab.YUBORILGAN.getCode())) {
             return repository.getSent(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
-        throw new UniversalException("%s tab code incorrect".formatted(searchDTO.getTab()), HttpStatus.BAD_REQUEST);
+        throw new UniversalException(String.format("%s tab code incorrect", searchDTO.getTab()), HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<?> createNewVersion(MissiveCreateDTO createDTO) throws IOException {

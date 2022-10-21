@@ -26,7 +26,7 @@ public class DepartmentFeignService {
             }
             return response.getBody();
         } catch (Exception e) {
-            throw new UniversalException("Remote server not work or %s ID department not found".formatted(ID), HttpStatus.BAD_REQUEST);
+            throw new UniversalException(String.format("Remote server not work or %s ID department not found", ID), HttpStatus.BAD_REQUEST);
         }
     }
 }

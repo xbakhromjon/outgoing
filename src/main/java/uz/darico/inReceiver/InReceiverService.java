@@ -5,6 +5,7 @@ import uz.darico.base.entity.AbstractEntity;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import uz.darico.base.service.AbstractService;
 import uz.darico.confirmative.Confirmative;
@@ -36,7 +37,7 @@ public class InReceiverService extends AbstractService<InReceiverRepository, InR
     }
 
     public void deleteAll(List<InReceiver> inReceivers) {
-        List<UUID> IDs = inReceivers.stream().map(AbstractEntity::getId).toList();
+        List<UUID> IDs = inReceivers.stream().map(AbstractEntity::getId).collect(Collectors.toList());
         repository.deleteFromRelatedTable(IDs);
         repository.deleteAll(IDs);
     }

@@ -37,7 +37,7 @@ public class BaseUtils {
         try {
             return UUID.fromString(id);
         } catch (Exception e) {
-            throw new UniversalException("%s ID UUID formatda bo'lishi kerak.".formatted(id),
+            throw new UniversalException(String.format("%s ID UUID formatda bo'lishi kerak.", id),
                     HttpStatus.BAD_REQUEST
             );
         }
@@ -72,7 +72,7 @@ public class BaseUtils {
                 return confStatus.getName();
             }
         }
-        throw new UniversalException("%s confStatus code incorrect".formatted(code), HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new UniversalException(String.format("%s confStatus code incorrect", code), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public <E, D> ResponsePage<D> toResponsePage(Page<E> page, List<D> content) {
