@@ -356,7 +356,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
             "where not m.is_deleted\n" +
             "  and m.is_last_version\n" +
-            "  and m.orgid = :orgID\n" +
+            "  and m.orgid = :orgID and not m.is_confirm_office_manager \n" +
             "  and s2.is_signed\n" +
             "  and case\n" +
             "          when :confirmativeWorkPlaceID is not null then :confirmativeWorkPlaceID in (select work_placeid\n" +
