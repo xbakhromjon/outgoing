@@ -8,6 +8,7 @@ import uz.darico.confirmative.dto.ConfirmativeShortInfoDTO;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.missiveFile.MissiveFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,8 @@ public class MissiveListDTO {
     private String shortInfo;
     private List<String> correspondent;
     private List<ContentFile> baseFiles;
-//    private MissiveFile missiveFile;
+    //    private MissiveFile missiveFile;
     private Integer totalCount;
+    private String number;
+    private LocalDate registeredAt;
 }

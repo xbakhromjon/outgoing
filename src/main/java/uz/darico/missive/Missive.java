@@ -12,6 +12,7 @@ import uz.darico.sender.Sender;
 import uz.darico.signatory.Signatory;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -41,15 +42,18 @@ public class Missive extends Auditable {
     @OneToOne
     private MissiveFile missiveFile;
     private Boolean isReady = false;
+    private Boolean isConfirmOfficeManager = false;
     @Type(type = "text")
     private String shortInfo;
     private Integer version = 1;
     private Boolean isLastVersion = true;
     private UUID rootVersionID;
     private UUID fishkaID;
-    private String number = "1613";
     @OneToOne
     private ContentFile readyPDF;
+    private UUID journalID;
+    private String number;
+    private LocalDate registeredAt;
 
     public Missive(Long orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,
                    Long departmentID, List<OutReceiver> outReceivers, List<InReceiver> inReceivers,

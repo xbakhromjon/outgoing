@@ -18,6 +18,8 @@ import uz.darico.exception.exception.UniversalException;
 import uz.darico.feedback.conf.ConfFeedBackService;
 import uz.darico.feedback.signatory.SignatoryFeedBackService;
 import uz.darico.feign.OrganizationFeignService;
+import uz.darico.feign.WorkPlaceFeignService;
+import uz.darico.feign.obj.WorkPlaceShortInfo;
 import uz.darico.fishka.FishkaService;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverService;
@@ -66,9 +68,10 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     private final OrganizationFeignService organizationFeignService;
     private final FishkaService fishkaService;
 
-    private final String GENERATED_FILE_PATH = "/home/xbakhromjon/database/generated";
+    private final WorkPlaceFeignService workPlaceFeignService;
 
-    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, SignatoryService signatoryService, ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils, SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService, ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService, FishkaService fishkaService) {
+    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, SignatoryService signatoryService, ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils, SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService, ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService, FishkaService fishkaService,
+                          WorkPlaceFeignService workPlaceFeignService) {
         super(repository, validator, mapper);
         this.confirmativeService = confirmativeService;
         this.outReceiverService = outReceiverService;
@@ -83,6 +86,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         this.confirmativeMapper = confirmativeMapper;
         this.organizationFeignService = organizationFeignService;
         this.fishkaService = fishkaService;
+        this.workPlaceFeignService = workPlaceFeignService;
     }
 
     public ResponseEntity<?> create(MissiveCreateDTO createDTO) throws IOException {
@@ -372,6 +376,9 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public List<MissiveListProjection> getSigned(SearchDTO searchDTO) {
         if (Objects.equals(searchDTO.getTab(), Tab.IMZOLANGAN.getCode())) {
+            if (workPlaceFeignService.isOfficeManager(searchDTO.getWorkPlace())) {
+                return repository.getSignedForOfficeManager(searchDTO.getOrgID(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
+            }
             return repository.getSigned(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
 
@@ -449,6 +456,16 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public ResponseEntity<?> updateContent(ContentUpdateDTO contentUpdateDTO) {
         repository.updateContent(contentUpdateDTO.getMissiveID(), contentUpdateDTO.getContent());
+        return ResponseEntity.ok(true);
+    }
+
+    public ResponseEntity<?> register(MissiveRegisteDTO missiveRegisteDTO) {
+        validator.validForRegister(missiveRegisteDTO);
+        Missive missive = getPersist(missiveRegisteDTO.getId());
+        missive.setJournalID(missiveRegisteDTO.getJournalID());
+        missive.setRegisteredAt(missiveRegisteDTO.getRegisteredAt());
+        missive.setNumber(missiveRegisteDTO.getNumber());
+        repository.save(missive);
         return ResponseEntity.ok(true);
     }
 }

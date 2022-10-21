@@ -79,6 +79,9 @@ public class FishkaService extends AbstractService<FishkaRepository, FishkaValid
 
     public Fishka getDefault(Long orgID) {
         List<Fishka> list = repository.findAll(orgID);
+        if (list.isEmpty()) {
+            return null;
+        }
         return list.get(0);
     }
 }

@@ -15,6 +15,7 @@ public class SearchDTO {
     private Long correspondent;
     private String shortInfo;
     private Long workPlace;
+    private Long orgID;
     private Integer page;
     private Integer size = 20;
     private Integer tab;

@@ -8,6 +8,7 @@ import uz.darico.confirmative.dto.ConfirmativeShortInfoDTO;
 import uz.darico.contentFile.ContentFile;
 import uz.darico.missiveFile.MissiveFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public class MissiveListDTOBuilder {
     private List<ContentFile> baseFiles;
     private List<MissiveFile> missiveFiles;
     private Integer totalCount;
+    private String number;
+    private LocalDate registeredAt;
 
     public MissiveListDTOBuilder setID(UUID ID) {
         this.ID = ID;
@@ -80,7 +83,17 @@ public class MissiveListDTOBuilder {
         return this;
     }
 
+    public MissiveListDTOBuilder setNumber(String number) {
+        this.number = number;
+        return this;
+    }
+
+    public MissiveListDTOBuilder setRegisteredAt(LocalDate registeredAt) {
+        this.registeredAt = registeredAt;
+        return this;
+    }
+
     public MissiveListDTO create() {
-        return new MissiveListDTO(ID, orgID, departmentName, senderFirstName, senderLastName, confirmatives, shortInfo, correspondent, baseFiles, totalCount);
+        return new MissiveListDTO(ID, orgID, departmentName, senderFirstName, senderLastName, confirmatives, shortInfo, correspondent, baseFiles, totalCount, number, registeredAt);
     }
 }

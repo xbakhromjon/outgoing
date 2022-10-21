@@ -55,7 +55,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted  and m.is_last_version \n" +
@@ -96,7 +98,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and m.is_last_version \n" +
@@ -143,7 +147,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and  m.is_last_version and m.id in (select missive_confirmatives.missive_id\n" +
@@ -200,7 +206,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted  and m.is_last_version \n" +
@@ -258,7 +266,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -301,7 +311,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -330,6 +342,46 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "limit :limit offset :offset")
     List<MissiveListProjection> getSigned(Long workPlaceID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
 
+
+    @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
+            "       m.id             as ID,\n" +
+            "       m.departmentid   as departmentID,\n" +
+            "       m.orgid          as orgID,\n" +
+            "       s.userid            senderUserID,\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
+            "from missive m\n" +
+            "         inner join sender s on m.sender_id = s.id\n" +
+            "         inner join signatory s2 on m.signatory_id = s2.id\n" +
+            "where not m.is_deleted\n" +
+            "  and m.is_last_version\n" +
+            "  and m.orgid = :orgID\n" +
+            "  and s2.is_signed\n" +
+            "  and case\n" +
+            "          when :confirmativeWorkPlaceID is not null then :confirmativeWorkPlaceID in (select work_placeid\n" +
+            "                                                                                      from confirmative\n" +
+            "                                                                                      where id in\n" +
+            "                                                                                            (select confirmatives_id\n" +
+            "                                                                                             from missive_confirmatives\n" +
+            "                                                                                             where missive_id = m.id))\n" +
+            "          else true end\n" +
+            "  and case when :shortInfo is not null then m.short_info ilike :shortInfo else true end\n" +
+            "  and case\n" +
+            "          when :correspondentID is not null then (:correspondentID in (select correspondentid\n" +
+            "                                                                       from out_receiver\n" +
+            "                                                                       where id in (select out_receivers_id\n" +
+            "                                                                                    from missive_out_receivers\n" +
+            "                                                                                    where missive_id = m.id))\n" +
+            "              or :correspondentID in (select correspondentid\n" +
+            "                                      from in_receiver\n" +
+            "                                      where id in (select in_receivers_id\n" +
+            "                                                   from missive_in_receivers\n" +
+            "                                                   where missive_in_receivers.missive_id = m.id)))\n" +
+            "          else true end\n" +
+            "limit :limit offset :offset")
+    List<MissiveListProjection> getSignedForOfficeManager(Long orgID, Long confirmativeWorkPlaceID, String shortInfo, Long correspondentID, Integer limit, Integer offset);
+
     @Query(nativeQuery = true, value = "select count(*)\n" +
             "            from missive m\n" +
             "                     inner join sender s on m.sender_id = s.id\n" +
@@ -342,11 +394,17 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.departmentid   as departmentID,\n" +
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
-            "       m.short_info        shortInfo\n" +
+            "       m.short_info        shortInfo ,\n" +
+            "       m.registered_at,\n" +
+            "       m.number " +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
-            "where not m.is_deleted and m.is_last_version and s.work_placeid = :workPlaceID and s2.is_signed\n" +
+            "where m.is_confirm_office_manager\n" +
+            "  and not m.is_deleted\n" +
+            "  and m.is_last_version\n" +
+            "  and s.work_placeid = :workPlaceID\n" +
+            "  and s2.is_signed\n" +
             "  and case\n" +
             "          when :confirmativeWorkPlaceID is not null then :confirmativeWorkPlaceID in (select work_placeid\n" +
             "                                                                                      from confirmative\n" +

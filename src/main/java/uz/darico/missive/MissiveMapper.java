@@ -104,7 +104,10 @@ public class MissiveMapper implements BaseMapper {
         for (MissiveListProjection missiveListProjection : missiveListProjections) {
             UserInfo userInfo = userFeignService.getUserInfo(missiveListProjection.getSenderUserID());
             String departmentName = departmentFeignService.getName(missiveListProjection.getDepartmentID());
-            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).setDepartmentName(departmentName).setSenderFirstName(userInfo.getFirstName()).setSenderLastName(userInfo.getLastName()).setShortInfo(missiveListProjection.getShortInfo()).setOrgID(missiveListProjection.getOrgID()).setTotalCount(missiveListProjection.getTotalCount()).create();
+            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).setDepartmentName(departmentName).setSenderFirstName(userInfo.getFirstName()).setSenderLastName(userInfo.getLastName()).setShortInfo(missiveListProjection.getShortInfo()).setOrgID(missiveListProjection.getOrgID()).setTotalCount(missiveListProjection.getTotalCount())
+                    .setNumber(missiveListProjection.getNumber())
+                    .setRegisteredAt(missiveListProjection.getRegisteredAt())
+                    .create();
             missiveListDTOs.add(missiveListDTO);
         }
         return missiveListDTOs;

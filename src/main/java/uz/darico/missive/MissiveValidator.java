@@ -6,6 +6,7 @@ import uz.darico.contentFile.ContentFile;
 import uz.darico.exception.exception.ValidationException;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.missive.dto.MissiveCreateDTO;
+import uz.darico.missive.dto.MissiveRegisteDTO;
 import uz.darico.missive.dto.MissiveUpdateDTO;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
@@ -99,5 +100,9 @@ public class MissiveValidator implements BaseValidator {
         if (createDTO.getWorkPlaceID() == null) {
             throw new ValidationException("WorkPlace cannot be null");
         }
+    }
+
+    public void validForRegister(MissiveRegisteDTO missiveRegisteDTO) {
+
     }
 }
