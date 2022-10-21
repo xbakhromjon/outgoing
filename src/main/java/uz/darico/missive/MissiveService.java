@@ -465,6 +465,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         missive.setJournalID(missiveRegisteDTO.getJournalID());
         missive.setRegisteredAt(missiveRegisteDTO.getRegisteredAt());
         missive.setNumber(missiveRegisteDTO.getNumber());
+        missive.setIsConfirmOfficeManager(true);
         repository.save(missive);
         return ResponseEntity.ok(true);
     }
