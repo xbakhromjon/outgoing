@@ -469,5 +469,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         repository.save(missive);
         return ResponseEntity.ok(true);
     }
+
+
 }
 
