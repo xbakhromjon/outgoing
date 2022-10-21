@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uz.darico.exception.exception.UniversalException;
+import uz.darico.feign.obj.UserRole;
 import uz.darico.feign.obj.WorkPlaceShortInfo;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +57,17 @@ public class WorkPlaceFeignService {
         } catch (Exception e) {
             throw new UniversalException(String.format("Remote server not work or %s ID workPlace not found", workPlaceID), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public boolean isOfficeManager(Long workPlaceID) {
+        WorkPlaceShortInfo workPlaceInfoRemote = getWorkPlaceInfoRemote(workPlaceID);
+        List<UserRole> roles = workPlaceInfoRemote.getRoles();
+        for (UserRole role : roles) {
+            if (role.getRank() == 8) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
