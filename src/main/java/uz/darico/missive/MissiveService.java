@@ -435,7 +435,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(missiveGetDTO);
     }
 
-    public ResponseEntity<?> getCount(Long workPlaceID) {
+    public ResponseEntity<?> getCount(Long workPlaceID, Long orgID) {
         List<CountDTO> countDTOs = new ArrayList<>();
         Integer sketchyCount = repository.getSketchyCount(workPlaceID);
         countDTOs.add(new CountDTO(Tab.HOMAKI.getCode(), sketchyCount));
@@ -447,7 +447,12 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         countDTOs.add(new CountDTO(Tab.TASDIQLANGAN.getCode(), confirmedCount));
         Integer forSignCount = repository.getForSignCount(workPlaceID);
         countDTOs.add(new CountDTO(Tab.IMZOLASH_UCHUN.getCode(), forSignCount));
-        Integer signedCount = repository.getSignedCount(workPlaceID);
+        Integer signedCount = null;
+        if (workPlaceFeignService.isOfficeManager(workPlaceID)) {
+            signedCount = repository.getSignedForOfficeManagerCount(orgID);
+        } else {
+            signedCount = repository.getSignedCount(workPlaceID);
+        }
         countDTOs.add(new CountDTO(Tab.IMZOLANGAN.getCode(), signedCount));
         Integer sentCount = repository.getSentCount(workPlaceID);
         countDTOs.add(new CountDTO(Tab.YUBORILGAN.getCode(), sentCount));

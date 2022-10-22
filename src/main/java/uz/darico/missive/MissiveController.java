@@ -82,9 +82,9 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.getSketchy(workPlaceID, id);
     }
 
-    @GetMapping("/count/{workPlaceID}")
-    public ResponseEntity<?> getCount(@PathVariable Long workPlaceID) {
-        return service.getCount(workPlaceID);
+    @GetMapping("/count/{workPlaceID}/{orgID}")
+    public ResponseEntity<?> getCount(@PathVariable Long workPlaceID, @PathVariable Long orgID) {
+        return service.getCount(workPlaceID, orgID);
     }
 
     @PatchMapping("/content")
