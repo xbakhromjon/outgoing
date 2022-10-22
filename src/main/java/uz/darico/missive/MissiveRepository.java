@@ -393,8 +393,9 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "            from missive m\n" +
             "                     inner join sender s on m.sender_id = s.id\n" +
             "                     inner join signatory s2 on m.signatory_id = s2.id\n" +
-            "            where not m.is_deleted and m.is_last_version and m.orgid = :orgID and s2.is_signed")
+            "            where not m.is_deleted and m.is_last_version and m.orgid = :orgID and not m.is_confirm_office_manager  and s2.is_signed")
     Integer getSignedForOfficeManagerCount(Long orgID);
+
     @Query(nativeQuery = true, value = "select count(*) over () as totalCount,\n" +
             "       m.id             as ID,\n" +
             "       m.departmentid   as departmentID,\n" +
