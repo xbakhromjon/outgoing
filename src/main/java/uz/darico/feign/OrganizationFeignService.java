@@ -26,8 +26,8 @@ public class OrganizationFeignService {
 
     public OrgShortInfo getNameRemote(Long ID) {
         try {
-            ResponseEntity<OrgShortInfo> response = restTemplate.getForEntity("http://192.168.30.112:8080/kiruvchi/api/orgType/shortInfo/" + ID, OrgShortInfo.class);
-//            ResponseEntity<OrgShortInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/orgType/shortInfo/" + ID, OrgShortInfo.class);
+//            ResponseEntity<OrgShortInfo> response = restTemplate.getForEntity("http://192.168.30.112:8080/kiruvchi/api/orgType/shortInfo/" + ID, OrgShortInfo.class);
+            ResponseEntity<OrgShortInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/orgType/shortInfo/" + ID, OrgShortInfo.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }
