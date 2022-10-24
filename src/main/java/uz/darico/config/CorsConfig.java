@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @username: @xbakhromjon
  * @since : 03/10/22, Mon, 11:39
  **/
+
 //@Configuration
 //public class CorsConfig implements WebMvcConfigurer {
 //    // origin IP olmaydi.

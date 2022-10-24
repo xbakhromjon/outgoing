@@ -25,7 +25,7 @@ public class WorkPlaceFeignService {
     public Long getUserIDRemote(Long ID) {
         try {
 //            ResponseEntity<Long> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/workplace/getUserID/" + ID, Long.class);
-            ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/getUserID/" + ID, Long.class);
+            ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8081/kiruvchi/api/workplace/getUserID/" + ID, Long.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }
@@ -38,7 +38,7 @@ public class WorkPlaceFeignService {
     public Long getOrgID(Long workPlaceID) {
         try {
 //            ResponseEntity<Long> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
-            ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
+            ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8081/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
             if (response.getBody() == null) {
                 throw new UniversalException("", HttpStatus.BAD_REQUEST);
             }
@@ -52,7 +52,7 @@ public class WorkPlaceFeignService {
     public WorkPlaceShortInfo getWorkPlaceInfoRemote(Long workPlaceID) {
         try {
 //            ResponseEntity<WorkPlaceShortInfo> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/workplace/info/" + workPlaceID, WorkPlaceShortInfo.class);
-            ResponseEntity<WorkPlaceShortInfo> response = restTemplate.getForEntity("http://localhost:8080/kiruvchi/api/workplace/info/" + workPlaceID, WorkPlaceShortInfo.class);
+            ResponseEntity<WorkPlaceShortInfo> response = restTemplate.getForEntity("http://localhost:8081/kiruvchi/api/workplace/info/" + workPlaceID, WorkPlaceShortInfo.class);
             return response.getBody();
         } catch (Exception e) {
             throw new UniversalException(String.format("Remote server not work or %s ID workPlace not found", workPlaceID), HttpStatus.BAD_REQUEST);
