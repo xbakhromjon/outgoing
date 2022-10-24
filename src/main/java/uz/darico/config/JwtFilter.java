@@ -36,16 +36,13 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
         if (token != null) {
             if (token.startsWith("Bearer")) {
-                token = token.substring(7);
-                if (validationToken(token)) {
-                    Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+//                token = token.substring(7);
+//                if (validationToken(token)) {
+//                    Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
 //                    Long sessionID = claims.get("id", Long.class);
-//                    SessionUser sessionUser = utilsService.getUserInfo(sessionID);
-//                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(sessionUser, null, sessionUser.getAuthorities());
-//                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                } else {
-                    throw new UniversalException("Access Denied", HttpStatus.FORBIDDEN);
-                }
+//                } else {
+//                    throw new UniversalException("Access Denied", HttpStatus.FORBIDDEN);
+//                }
             }
         }
         filterChain.doFilter(request, response);
