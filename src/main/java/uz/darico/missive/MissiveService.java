@@ -46,6 +46,7 @@ import uz.darico.utils.SearchDTO;
 import uz.darico.utils.Tab;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -248,26 +249,51 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     }
 
     public String generatePDF(PDFDTO pdfdto) {
+        String content = String.format("<div style=\"font-size: 12px; line-height: 15px\">%s</div>", pdfdto.getContent());
         String fishka = String.format("   <img src=%s", pdfdto.getFishkaPath())
-                + " width=\"100%\" height=\"140px\">";
-        String dateNumber = String.format("<strong>%s</strong>", pdfdto.getDate()) +
-                String.format("<strong>№ %s</strong> <br> <br>", pdfdto.getNumber());
+                + " width=\"100%\" height=\"100%\"> <br> <br>";
+        String dateNumber = String.format("<strong style=\"color: blue\">%s</strong>", pdfdto.getDate()) +
+                String.format("<a> <strong>№ %s</strong> </a><br> <br>", pdfdto.getNumber());
         SignatoryPDFDTO signatoryPDFDTO = pdfdto.getSignatoryPDFDTO();
-        String signatory = String.format("<p style=\"float:left\">%s</p>", signatoryPDFDTO.getFullPosition()) +
-                String.format("   <img src=%s height=\"100px\" width=\"100\" >", signatoryPDFDTO.getQrCodePath()) +
-                String.format("<p style=\"float:right\">%s</p>", signatoryPDFDTO.getShortName());
+        String signatory = "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+                + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
+                        " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ",
+                signatoryPDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + signatoryPDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
+                + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", signatoryPDFDTO.getShortName()) + "</td>" + "        </tr>\n"
+                + "    </table>\n";
+        StringBuilder html = new StringBuilder(fishka + dateNumber + content + signatory);
         SenderPDFDTO senderPDFDTO = pdfdto.getSenderPDFDTO();
-        String sender = "<h4 style=\"float:left\">Tayyorladi:</h4> <br>" + String.format("<p style=\"float:left\">%s</p>", senderPDFDTO.getFullPosition()) +
-                String.format("   <img src=%s height=\"100px\" width=\"100\" >", senderPDFDTO.getQrCodePath()) +
-                String.format("<p style=\"float:right\">%s</p>", senderPDFDTO.getShortName());
-        StringBuilder html = new StringBuilder(fishka + dateNumber + pdfdto.getContent() + signatory + sender);
-        html.append("<h4 style=\"float:left\">Kelishildi:</h4> <br>");
-        for (ConfirmativePDFDTO confirmativePDFDTO : pdfdto.getConfirmativePDFDTOs()) {
-            String confirmative = String.format("<p style=\"float:left\">%s</p>", confirmativePDFDTO.getFullPosition()) +
-                    String.format("   <img src=%s height=\"100px\" width=\"100\" >", confirmativePDFDTO.getQrCodePath()) +
-                    String.format("<p style=\"float:right\">%s</p>", confirmativePDFDTO.getShortName());
+        String sender = "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+                + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
+                        " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ",
+                senderPDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + senderPDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
+                + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", senderPDFDTO.getShortName()) + "</td>" + "        </tr>\n"
+                + "    </table>\n";
+        html.append(sender);
+
+        List<ConfirmativePDFDTO> confirmativePDFDTOs = pdfdto.getConfirmativePDFDTOs();
+        for (int i = 0, confirmativePDFDTOsSize = confirmativePDFDTOs.size(); i < confirmativePDFDTOsSize; i++) {
+
+            ConfirmativePDFDTO confirmativePDFDTO = confirmativePDFDTOs.get(i);
+            StringBuilder confirmative = new StringBuilder("");
+            if (i == 0) {
+                confirmative.append("    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+                        + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
+                                "<p style=\"font-size: 14px;\"><strong> Kelishildi: </strong>  <br> {0}:</p> </span> </td> ",
+                        confirmativePDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + confirmativePDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
+                        + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", confirmativePDFDTO.getShortName()) + "</td>" + "        </tr>\n"
+                        + "    </table>\n");
+            } else {
+                confirmative.append("    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+                        + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
+                                " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ",
+                        confirmativePDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + confirmativePDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
+                        + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", confirmativePDFDTO.getShortName()) + "</td>" + "        </tr>\n"
+                        + "    </table>\n");
+            }
             html.append(confirmative);
         }
+
         return contentFileService.writeAsPDF(html.toString());
     }
 
