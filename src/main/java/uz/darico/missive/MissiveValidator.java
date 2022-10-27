@@ -51,6 +51,9 @@ public class MissiveValidator implements BaseValidator {
                 throw new ValidationException(String.format("%s invalid inReceivers. Duplicate correspondent", inReceiverList));
             }
         }
+        if (createDTO.getFishkaID() == null) {
+            throw new ValidationException("Fishka cannot be null");
+        }
     }
 
     public void validForUpdate(MissiveUpdateDTO updateDTO) {
