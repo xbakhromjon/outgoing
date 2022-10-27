@@ -79,7 +79,6 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String folder_linux = FILE_PATH_LINUX + "/" + orgID;
         String folder_windows = FILE_PATH_WINDOWS + "\\" + orgID;
         Path path = Path.of(folder_windows);
-        File file2 = new File(folder_windows);
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
@@ -106,12 +105,12 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
             String generatedName = UUID.randomUUID() + extention;
             String url_linux = folder_linux + "/" + generatedName;
             String url_windows = folder_windows + "\\" + generatedName;
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(url_linux));
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(url_windows));
             fileOutputStream.write(file.getBytes());
             fileOutputStream.close();
             fileOutputStream.flush();
             ContentFile fileEntity = new ContentFile();
-            fileEntity.setPath(url_linux);
+            fileEntity.setPath(url_windows);
             fileEntity.setContentType(contentType);
             fileEntity.setSize(size);
             fileEntity.setOriginalName(originalFilename);
@@ -170,9 +169,9 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS;
         Path pathObj_linux = Path.of(path_linux);
         Path pathObj_windows = Path.of(path_windows);
-        if (!Files.exists(pathObj_linux)) {
+        if (!Files.exists(pathObj_windows)) {
             try {
-                Files.createDirectories(pathObj_linux);
+                Files.createDirectories(pathObj_windows);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -180,8 +179,8 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String generatedName = UUID.randomUUID().toString() + ".pdf";
         path_linux = path_linux + "/" + generatedName;
         path_windows = path_windows + "\\" + generatedName;
-        baseUtils.writeHtmlAsPdf(path_linux, html);
-        return path_linux;
+        baseUtils.writeHtmlAsPdf(path_windows, html);
+        return path_windows;
     }
 
     public String generateQRCode(String data, Integer width, Integer height) {
@@ -189,9 +188,9 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode";
         Path pathObj_linux = Path.of(path_linux);
         Path pathObj_windows = Path.of(path_windows);
-        if (!Files.exists(pathObj_linux)) {
+        if (!Files.exists(pathObj_windows)) {
             try {
-                Files.createDirectories(pathObj_linux);
+                Files.createDirectories(pathObj_windows);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -201,11 +200,11 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         try {
-            baseUtils.generateQRcode(data, path_linux, "UTF-8", hashMap, height, width);
+            baseUtils.generateQRcode(data, path_windows, "UTF-8", hashMap, height, width);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return path_linux;
+        return path_windows;
     }
 
     public ContentFile create(String path) {
