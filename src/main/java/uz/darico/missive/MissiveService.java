@@ -213,10 +213,10 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> readyForConf(String confId) {
         UUID confID = baseUtils.strToUUID(confId);
         repository.readyForConf(confID);
-        boolean canPrevReady = confirmativeService.nextPrevReady(confID);
-        if (!canPrevReady) {
-            repository.readyByConfID(confID);
-        }
+//        boolean canPrevReady = confirmativeService.nextPrevReady(confID);
+//        if (!canPrevReady) {
+        repository.readyByConfID(confID);
+//        }
         return ResponseEntity.ok(true);
     }
 

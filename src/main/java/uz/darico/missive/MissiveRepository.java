@@ -157,7 +157,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "                                    where missive_confirmatives.confirmatives_id in (select id\n" +
             "                                                                                     from confirmative\n" +
             "                                                                                     where confirmative.work_placeid = :workPlaceID\n" +
-            "                                                                                       and not confirmative.is_ready_to_send and (confirmative.order_number = 1 or prev_is_ready)))\n" +
+            "                                                                                       and not confirmative.is_ready_to_send ))\n" +
             "  and s.is_ready_to_send\n" +
             "  and not m.is_ready\n" +
             "  and case\n" +
