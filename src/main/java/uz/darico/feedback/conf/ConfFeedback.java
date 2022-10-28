@@ -14,7 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 public class ConfFeedback extends AbstractEntity {
-    private UUID confID;
+    private UUID missiveID;
+    private Long workPlaceID;
     private LocalDateTime rejectedAt;
     private String content;
 }

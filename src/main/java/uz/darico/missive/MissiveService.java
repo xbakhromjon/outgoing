@@ -16,6 +16,8 @@ import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
 import uz.darico.feedback.conf.ConfFeedBackService;
+import uz.darico.feedback.feedback.FeedBackService;
+import uz.darico.feedback.feedback.dto.FeedbackGetDTO;
 import uz.darico.feedback.signatory.SignatoryFeedBackService;
 import uz.darico.feign.OrganizationFeignService;
 import uz.darico.feign.WorkPlaceFeignService;
@@ -63,16 +65,15 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     private final ContentFileService contentFileService;
     private final SenderService senderService;
     private final BaseUtils baseUtils;
-    private final SignatoryFeedBackService signatoryFeedBackService;
     private final ConfFeedBackService confFeedBackService;
+    private final FeedBackService feedBackService;
     private final ConfirmativeMapper confirmativeMapper;
     private final OrganizationFeignService organizationFeignService;
     private final FishkaService fishkaService;
 
     private final WorkPlaceFeignService workPlaceFeignService;
 
-    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, SignatoryService signatoryService, ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils, SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService, ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService, FishkaService fishkaService,
-                          WorkPlaceFeignService workPlaceFeignService) {
+    public MissiveService(MissiveRepository repository, MissiveValidator validator, MissiveMapper mapper, ConfirmativeService confirmativeService, OutReceiverService outReceiverService, InReceiverService inReceiverService, MissiveFileService missiveFileService, SignatoryService signatoryService, ContentFileService contentFileService, SenderService senderService, BaseUtils baseUtils, SignatoryFeedBackService signatoryFeedBackService, ConfFeedBackService confFeedBackService, ConfirmativeMapper confirmativeMapper, OrganizationFeignService organizationFeignService, FishkaService fishkaService, WorkPlaceFeignService workPlaceFeignService, FeedBackService feedBackService) {
         super(repository, validator, mapper);
         this.confirmativeService = confirmativeService;
         this.outReceiverService = outReceiverService;
@@ -82,12 +83,12 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         this.contentFileService = contentFileService;
         this.senderService = senderService;
         this.baseUtils = baseUtils;
-        this.signatoryFeedBackService = signatoryFeedBackService;
         this.confFeedBackService = confFeedBackService;
         this.confirmativeMapper = confirmativeMapper;
         this.organizationFeignService = organizationFeignService;
         this.fishkaService = fishkaService;
         this.workPlaceFeignService = workPlaceFeignService;
+        this.feedBackService = feedBackService;
     }
 
     public ResponseEntity<?> create(MissiveCreateDTO createDTO) throws IOException {
@@ -238,37 +239,23 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     private PDFDTO makePDFDTO(UUID ID) {
         Missive missive = getPersist(ID);
-        String fishkaPath = fishkaService.getPersist(missive
-                .getFishkaID()).getFile().getPath();
+        String fishkaPath = fishkaService.getPersist(missive.getFishkaID()).getFile().getPath();
         LocalDateTime signedAt = missive.getSignatory().getSignedAt();
         SignatoryPDFDTO signatoryPDFDTO = signatoryService.makePDFDTO(missive.getSignatory());
         SenderPDFDTO senderPDFDTO = senderService.makePDFDTO(missive.getSender());
         List<ConfirmativePDFDTO> confirmativePDFDTOs = confirmativeService.makePDFDTO(missive.getConfirmatives());
-        return new PDFDTO(fishkaPath, baseUtils.getDateWord(signedAt.toLocalDate()), missive.getNumber(), missive.getMissiveFile().getContent(),
-                signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
+        return new PDFDTO(fishkaPath, baseUtils.getDateWord(signedAt.toLocalDate()), missive.getNumber(), missive.getMissiveFile().getContent(), signatoryPDFDTO, senderPDFDTO, confirmativePDFDTOs);
     }
 
     public String generatePDF(PDFDTO pdfdto) {
         String content = String.format("<div style=\"font-size: 12px; line-height: 15px\">%s</div>", pdfdto.getContent());
-        String fishka = String.format("   <img src=%s", pdfdto.getFishkaPath())
-                + " width=\"100%\" height=\"100%\"> <br> <br>";
-        String dateNumber = String.format("<strong style=\"color: blue\">%s</strong>", pdfdto.getDate()) +
-                String.format("<a> <strong>№ %s</strong> </a><br> <br>", pdfdto.getNumber());
+        String fishka = String.format("   <img src=%s", pdfdto.getFishkaPath()) + " width=\"100%\" height=\"100%\"> <br> <br>";
+        String dateNumber = String.format("<strong style=\"color: blue\">%s</strong>", pdfdto.getDate()) + String.format("<a> <strong>№ %s</strong> </a><br> <br>", pdfdto.getNumber());
         SignatoryPDFDTO signatoryPDFDTO = pdfdto.getSignatoryPDFDTO();
-        String signatory = "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-                + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
-                        " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ",
-                signatoryPDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + signatoryPDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
-                + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", signatoryPDFDTO.getShortName()) + "</td>" + "        </tr>\n"
-                + "    </table>\n";
+        String signatory = "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" + " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ", signatoryPDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + signatoryPDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>" + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", signatoryPDFDTO.getShortName()) + "</td>" + "        </tr>\n" + "    </table>\n";
         StringBuilder html = new StringBuilder(fishka + dateNumber + content + signatory);
         SenderPDFDTO senderPDFDTO = pdfdto.getSenderPDFDTO();
-        String sender = "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-                + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
-                        " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ",
-                senderPDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + senderPDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
-                + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", senderPDFDTO.getShortName()) + "</td>" + "        </tr>\n"
-                + "    </table>\n";
+        String sender = "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" + " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ", senderPDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + senderPDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>" + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", senderPDFDTO.getShortName()) + "</td>" + "        </tr>\n" + "    </table>\n";
         html.append(sender);
 
         List<ConfirmativePDFDTO> confirmativePDFDTOs = pdfdto.getConfirmativePDFDTOs();
@@ -277,19 +264,9 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
             ConfirmativePDFDTO confirmativePDFDTO = confirmativePDFDTOs.get(i);
             StringBuilder confirmative = new StringBuilder("");
             if (i == 0) {
-                confirmative.append("    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-                        + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
-                                "<p style=\"font-size: 14px;\"><strong> Kelishildi: </strong>  <br> {0}:</p> </span> </td> ",
-                        confirmativePDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + confirmativePDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
-                        + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", confirmativePDFDTO.getShortName()) + "</td>" + "        </tr>\n"
-                        + "    </table>\n");
+                confirmative.append("    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" + "<p style=\"font-size: 14px;\"><strong> Kelishildi: </strong>  <br> {0}:</p> </span> </td> ", confirmativePDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + confirmativePDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>" + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", confirmativePDFDTO.getShortName()) + "</td>" + "        </tr>\n" + "    </table>\n");
             } else {
-                confirmative.append("    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-                        + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" +
-                                " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ",
-                        confirmativePDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + confirmativePDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>"
-                        + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", confirmativePDFDTO.getShortName()) + "</td>" + "        </tr>\n"
-                        + "    </table>\n");
+                confirmative.append("    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" + "        <tr>\n" + MessageFormat.format("<td style=\"max-width: 200px; padding-left: 20px\"> <span>" + " <p style=\"font-size: 14px;\">{0}:</p> </span> </td> ", confirmativePDFDTO.getFullPosition()) + "<td> <img  style=\"\" src=\"" + confirmativePDFDTO.getQrCodePath() + "\" height=\"120px\" width=\"120px\" > </td>" + "<td> " + MessageFormat.format("<span style=\"flex: 1\">  <p>{0}</p> </span>  </div>", confirmativePDFDTO.getShortName()) + "</td>" + "        </tr>\n" + "    </table>\n");
             }
             html.append(confirmative);
         }
@@ -298,17 +275,9 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     }
 
     public ResponseEntity<?> reject(MissiveRejectDTO rejectDTO) {
-        UUID ID = baseUtils.strToUUID(rejectDTO.getMissive());
-        UUID rejectedByUUID = baseUtils.strToUUID(rejectDTO.getRejectedBy());
-        rejectDTO.setRejectedByUUID(rejectedByUUID);
+        UUID ID = baseUtils.strToUUID(rejectDTO.getRootMissiveID());
         Sender sender = senderService.getPersistByMissiveID(ID);
-        if (signatoryService.existsByID(rejectedByUUID)) {
-            signatoryFeedBackService.add(rejectDTO, sender);
-            signatoryService.reject(rejectedByUUID);
-        } else {
-            confFeedBackService.add(rejectDTO, sender);
-            confirmativeService.reject(rejectedByUUID);
-        }
+        feedBackService.add(rejectDTO, sender.getWorkPlaceID());
         sender.setIsReadyToSend(false);
         senderService.save(sender);
         repository.setContent(ID, rejectDTO.getContent());
@@ -458,6 +427,8 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         List<MissiveVersionShortInfoDTO> missiveVersionShortInfoDTOs = mapper.toMissiveShortInfoDTO(missiveVersionShortInfoProjections);
         missiveGetDTO.setVersions(missiveVersionShortInfoDTOs);
         setStatus(workPlaceID, ID);
+        FeedbackGetDTO feedbackGetDTO = feedBackService.getFeedbackDTO(missive.getRootVersionID(), workPlaceID, ID);
+        missiveGetDTO.setFeedback(feedbackGetDTO);
         return ResponseEntity.ok(missiveGetDTO);
     }
 

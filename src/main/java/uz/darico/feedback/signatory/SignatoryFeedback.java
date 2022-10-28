@@ -14,7 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 public class SignatoryFeedback extends AbstractEntity {
-    private UUID signatoryID;
+    private UUID missiveID;
+    private Long workPlaceID;
     private LocalDateTime rejectedAt;
     private String content;
 }

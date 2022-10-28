@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.darico.confirmative.dto.ConfirmativeGetDTO;
 import uz.darico.contentFile.ContentFile;
+import uz.darico.feedback.feedback.dto.FeedbackGetDTO;
 import uz.darico.inReceiver.dto.InReceiverGetDTO;
 import uz.darico.missiveFile.dto.MissiveFileGetDTO;
 import uz.darico.outReceiver.dto.OutReceiverGetDTO;
@@ -35,7 +36,7 @@ public class MissiveGetDTO {
     private LocalDate createdAt;
     private List<MissiveVersionShortInfoDTO> versions;
     private ContentFile readyPDF;
-
+    private FeedbackGetDTO feedback;
     public MissiveGetDTO(UUID ID, String orgName, String email, SenderGetDTO sender, SignatoryGetDTO signatory, List<ConfirmativeGetDTO> confirmatives, String departmentName, List<OutReceiverGetDTO> outReceivers,
                          List<InReceiverGetDTO> inReceivers, List<ContentFile> baseFiles, MissiveFileGetDTO missiveFiles, LocalDate createdAt,
                          ContentFile readyPDF) {

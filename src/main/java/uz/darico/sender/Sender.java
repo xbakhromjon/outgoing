@@ -24,11 +24,7 @@ public class Sender extends AbstractEntity {
     private Integer statusCode;
     private LocalDateTime statusTime = LocalDateTime.now();
     private Boolean isReadyToSend = false;
-    @OneToMany
-    private List<ConfFeedback> confFeedbacks;
 
-    @OneToMany
-    private List<SignatoryFeedback> signatoryFeedbacks;
 
     public Sender(Long workPlaceID, Long userID, Integer statusCode) {
         this.workPlaceID = workPlaceID;

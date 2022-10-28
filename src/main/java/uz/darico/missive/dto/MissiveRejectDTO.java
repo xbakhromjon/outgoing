@@ -14,12 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MissiveRejectDTO {
-    private String missive;
-
-    private String rejectedBy;
-    // confID or signatoryID
+    private String rootMissiveID;
+    private String missiveID;
+    private Long workPlaceID;
+    private Long rejectedWorkPlaceID;
     private String message;
     private String content;
-    @JsonIgnore
-    private UUID rejectedByUUID;
+    private Integer rejectType;
 }
