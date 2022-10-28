@@ -195,7 +195,7 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "                                                                            from confirmative\n" +
             "                                                                            where confirmative.work_placeid = :workPlaceID\n" +
             "                                                                              and not confirmative.is_ready_to_send\n" +
-            "                                                                              and (confirmative.order_number = 1 or prev_is_ready)))\n" +
+            "                                                                             ))\n" +
             "              and s.is_ready_to_send\n" +
             "              and not m.is_ready")
     Integer getForConfirmCount(Long workPlaceID);
