@@ -33,4 +33,5 @@ public class MissiveUpdateDTO {
     private List<UUID> baseFileIDs;
     private UUID missiveFileID;
     private String content;
+    private String shortInfo;
 }

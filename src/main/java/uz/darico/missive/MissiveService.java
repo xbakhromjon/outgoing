@@ -138,6 +138,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         List<MissiveFile> newMissiveFiles = missiveFileService.refresh(updateDTO.getMissiveFileID(), updateDTO.getContent());
 //        missive.setMissiveFiles(newMissiveFiles);
 
+        missive.setShortInfo(updateDTO.getShortInfo());
         repository.save(missive);
         return ResponseEntity.ok(true);
     }
