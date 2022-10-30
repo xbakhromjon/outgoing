@@ -19,6 +19,5 @@ public class MissiveRejectDTO {
     private Long workPlaceID;
     private Long rejectedWorkPlaceID;
     private String message;
-    private String content;
     private Integer rejectType;
 }

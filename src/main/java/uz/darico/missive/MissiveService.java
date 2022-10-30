@@ -278,7 +278,6 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         feedBackService.add(rejectDTO, sender.getWorkPlaceID());
         sender.setIsReadyToSend(false);
         senderService.save(sender);
-        repository.setContent(ID, rejectDTO.getContent());
         confirmativeService.notReadyByMissiveID(ID);
         repository.notReady(ID);
         return ResponseEntity.ok(true);
