@@ -29,7 +29,7 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
     }
 
     public List<MissiveFile> refresh(UUID missiveFileID, String content) throws IOException {
-        MissiveFile missiveFile = getPersist(missiveFileID);
+//        MissiveFile missiveFile = getPersist(missiveFileID);
 //        missiveFile.setContent(content);
 //        String filePath = missiveFile.getFile().getPath();
 //        baseUtils.writeHtmlAsPdf(filePath, content);
