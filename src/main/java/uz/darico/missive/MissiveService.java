@@ -1,6 +1,5 @@
 package uz.darico.missive;
 
-import com.itextpdf.svg.css.impl.StyleResolverUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import uz.darico.feedback.feedback.dto.FeedbackGetDTO;
 import uz.darico.feedback.signatory.SignatoryFeedBackService;
 import uz.darico.feign.OrganizationFeignService;
 import uz.darico.feign.WorkPlaceFeignService;
-import uz.darico.feign.obj.WorkPlaceShortInfo;
 import uz.darico.fishka.FishkaService;
 import uz.darico.inReceiver.InReceiver;
 import uz.darico.inReceiver.InReceiverService;
@@ -31,7 +29,6 @@ import uz.darico.missive.projections.MissiveListProjection;
 import uz.darico.missive.projections.MissiveVersionShortInfoProjection;
 import uz.darico.missiveFile.MissiveFile;
 import uz.darico.missiveFile.MissiveFileService;
-import uz.darico.missiveFile.dto.MissiveFileCreateDTO;
 import uz.darico.outReceiver.OutReceiver;
 import uz.darico.outReceiver.OutReceiverService;
 import uz.darico.outReceiver.dto.OutReceiverCreateDTO;
@@ -215,8 +212,8 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     public ResponseEntity<?> readyForConf(String confId) {
         UUID confID = baseUtils.strToUUID(confId);
         repository.readyForConf(confID);
-        boolean canPrevReady = confirmativeService.nextPrevReady(confID);
-        if (!canPrevReady) {
+        boolean readyToSign = confirmativeService.isReadyToSign(confID);
+        if (readyToSign) {
             repository.readyByConfID(confID);
         }
         return ResponseEntity.ok(true);

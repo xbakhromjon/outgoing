@@ -11,7 +11,6 @@ import uz.darico.utils.BaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -62,7 +61,7 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
         return repository.getAllSiblings(confID);
     }
 
-    public boolean nextPrevReady(UUID confID) {
+    public boolean isReadyToSign(UUID confID) {
         List<Confirmative> allSiblings = getAllSiblings(confID);
 //        Confirmative current = allSiblings.stream().filter(item -> item.getId().equals(confID)).findFirst().get();
 //        Integer orderNumber = current.getOrderNumber();
