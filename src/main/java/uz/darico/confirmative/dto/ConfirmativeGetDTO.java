@@ -25,4 +25,5 @@ public class ConfirmativeGetDTO {
     private String middleName;
     private String status;
     private LocalDate statusTime;
+    private Integer orderNumber;
 }

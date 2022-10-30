@@ -12,6 +12,7 @@ import uz.darico.sender.dto.SenderGetDTO;
 import uz.darico.utils.BaseUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -45,9 +46,10 @@ public class ConfirmativeMapper implements BaseMapper {
         for (Confirmative confirmative : confirmatives) {
             UserInfo userInfo = userFeignService.getUserInfo(confirmative.getUserID());
             ConfirmativeShortInfoDTO confirmativeShortInfoDTO = new ConfirmativeShortInfoDTO(userInfo.getFirstName(), userInfo.getLastName(), baseUtils.convertConfStatusCodeToStr(confirmative
-                    .getStatusCode()));
+                    .getStatusCode()), confirmative.getOrderNumber());
             confirmativeShortInfoDTOs.add(confirmativeShortInfoDTO);
         }
+        confirmativeShortInfoDTOs.sort(Comparator.comparing(ConfirmativeShortInfoDTO::getOrderNumber));
         return confirmativeShortInfoDTOs;
     }
 
@@ -57,7 +59,7 @@ public class ConfirmativeMapper implements BaseMapper {
         }
         UserInfo userInfo = userFeignService.getUserInfo(confirmative.getUserID());
         return new ConfirmativeGetDTO(confirmative.getId(), confirmative.getWorkPlaceID(), userInfo.getFirstName(), userInfo.getLastName(), userInfo.getMiddleName(),
-                ConfStatus.toConfStatus(confirmative.getStatusCode()), confirmative.getStatusTime().toLocalDate());
+                ConfStatus.toConfStatus(confirmative.getStatusCode()), confirmative.getStatusTime().toLocalDate(), confirmative.getOrderNumber());
     }
 
     public List<ConfirmativeGetDTO> toGetDTO(List<Confirmative> confirmatives) {
@@ -65,6 +67,7 @@ public class ConfirmativeMapper implements BaseMapper {
         confirmatives.forEach(item -> {
             res.add(toGetDTO(item));
         });
+        res.sort(Comparator.comparing(ConfirmativeGetDTO::getOrderNumber));
         return res;
     }
 }

@@ -165,6 +165,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         Missive missive = getPersist(ID);
         MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);
         setStatus(workPlaceID, ID);
+        FeedbackGetDTO feedbackGetDTO = feedBackService.getFeedbackDTO(missive.getRootVersionID(), missive.getSender().getWorkPlaceID(), workPlaceID);
         return ResponseEntity.ok(missiveGetDTO);
     }
 
@@ -308,8 +309,6 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
             List<ContentFile> baseFiles = contentFileService.getAll(ID);
             missiveListDTO.setBaseFiles(baseFiles);
             // missiveFile
-//            List<MissiveFile> missiveFiles = missiveFileService.getAll(ID);
-//            missiveListDTO.setMissiveFiles(missiveFiles);
 
             // correspondent
             List<OutReceiver> outReceivers = outReceiverService.getAllByMissiveID(ID);

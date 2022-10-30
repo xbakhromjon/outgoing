@@ -31,4 +31,12 @@ public class FeedbackMapper implements BaseMapper {
         List<SignatoryFeedbackGetDTO> signatoryFeedbackGetDTOs = signatoryFeedbackMapper.toGetDTO(signatoryFeedbacks);
         return new FeedbackGetDTO(feedback.getRootMissiveID(), feedback.getWorkPlaceID(), confFeedbackGetDTOs, signatoryFeedbackGetDTOs);
     }
+
+    public FeedbackGetDTO toGetDTO(Feedback feedback, Long filterWorkPlaceID) {
+        List<ConfFeedback> confFeedbacks = feedback.getConfFeedbacks().stream().filter(item -> item.getWorkPlaceID().equals(filterWorkPlaceID)).collect(Collectors.toList());
+        List<ConfFeedbackGetDTO> confFeedbackGetDTOs = confFeedbackMapper.toGetDTO(confFeedbacks);
+        List<SignatoryFeedback> signatoryFeedbacks = feedback.getSignatoryFeedbacks().stream().filter(item -> item.getWorkPlaceID().equals(filterWorkPlaceID)).collect(Collectors.toList());
+        List<SignatoryFeedbackGetDTO> signatoryFeedbackGetDTOs = signatoryFeedbackMapper.toGetDTO(signatoryFeedbacks);
+        return new FeedbackGetDTO(feedback.getRootMissiveID(), feedback.getWorkPlaceID(), confFeedbackGetDTOs, signatoryFeedbackGetDTOs);
+    }
 }

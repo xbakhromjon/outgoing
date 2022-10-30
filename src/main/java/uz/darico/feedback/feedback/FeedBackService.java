@@ -75,4 +75,12 @@ public class FeedBackService extends AbstractService<FeedbackRepository, Feedbac
         }
         return mapper.toGetDTO(persist, missiveID);
     }
+
+    public FeedbackGetDTO getFeedbackDTO(UUID rootVersionID, Long workPlaceID, Long filterWorkPlaceID) {
+        Feedback persist = getPersist(rootVersionID, workPlaceID);
+        if (persist == null) {
+            return null;
+        }
+        return mapper.toGetDTO(persist, filterWorkPlaceID);
+    }
 }
