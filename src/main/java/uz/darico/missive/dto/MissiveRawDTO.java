@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.darico.confirmative.dto.ConfirmativeGetDTO;
 import uz.darico.contentFile.ContentFile;
+import uz.darico.fishka.dto.FishkaGetDTO;
 import uz.darico.inReceiver.dto.InReceiverCreateDTO;
 import uz.darico.inReceiver.dto.InReceiverGetDTO;
 import uz.darico.missiveFile.dto.MissiveFileGetDTO;
@@ -34,4 +35,5 @@ public class MissiveRawDTO {
     private List<ContentFile> baseFiles;
     private UUID missiveFileID;
     private String missiveContent;
+    private FishkaGetDTO fishkaGetDTO;
 }

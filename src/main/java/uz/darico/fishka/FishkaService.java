@@ -8,6 +8,7 @@ import uz.darico.contentFile.ContentFile;
 import uz.darico.contentFile.ContentFileService;
 import uz.darico.exception.exception.UniversalException;
 import uz.darico.fishka.dto.FishkaCreateDTO;
+import uz.darico.fishka.dto.FishkaGetDTO;
 import uz.darico.fishka.dto.FishkaUpdateDTO;
 
 import java.util.List;
@@ -83,5 +84,10 @@ public class FishkaService extends AbstractService<FishkaRepository, FishkaValid
             return null;
         }
         return list.get(0);
+    }
+
+    public FishkaGetDTO getFishkaGetDTO(UUID fishkaID) {
+        Fishka fishka = getPersist(fishkaID);
+        return mapper.toGetDTO(fishka);
     }
 }
