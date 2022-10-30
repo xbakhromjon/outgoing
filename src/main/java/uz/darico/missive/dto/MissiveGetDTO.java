@@ -23,6 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MissiveGetDTO {
     private UUID ID;
+    private UUID rootMissiveID;
     private String orgName;
     private String email;
     private SenderGetDTO sender;
@@ -37,10 +38,12 @@ public class MissiveGetDTO {
     private List<MissiveVersionShortInfoDTO> versions;
     private ContentFile readyPDF;
     private FeedbackGetDTO feedback;
-    public MissiveGetDTO(UUID ID, String orgName, String email, SenderGetDTO sender, SignatoryGetDTO signatory, List<ConfirmativeGetDTO> confirmatives, String departmentName, List<OutReceiverGetDTO> outReceivers,
+
+    public MissiveGetDTO(UUID ID, UUID rootMissiveID, String orgName, String email, SenderGetDTO sender, SignatoryGetDTO signatory, List<ConfirmativeGetDTO> confirmatives, String departmentName, List<OutReceiverGetDTO> outReceivers,
                          List<InReceiverGetDTO> inReceivers, List<ContentFile> baseFiles, MissiveFileGetDTO missiveFiles, LocalDate createdAt,
                          ContentFile readyPDF) {
         this.ID = ID;
+        this.rootMissiveID = rootMissiveID;
         this.orgName = orgName;
         this.email = email;
         this.sender = sender;
