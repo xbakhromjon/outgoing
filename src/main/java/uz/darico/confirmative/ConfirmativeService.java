@@ -21,9 +21,7 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
     private final ContentFileService contentFileService;
     private final BaseUtils baseUtils;
 
-    public ConfirmativeService(ConfirmativeRepository repository, ConfirmativeValidator validator, ConfirmativeMapper mapper,
-                               WorkPlaceFeignService workPlaceFeignService, ContentFileService contentFileService,
-                               BaseUtils baseUtils) {
+    public ConfirmativeService(ConfirmativeRepository repository, ConfirmativeValidator validator, ConfirmativeMapper mapper, WorkPlaceFeignService workPlaceFeignService, ContentFileService contentFileService, BaseUtils baseUtils) {
         super(repository, validator, mapper);
         this.workPlaceFeignService = workPlaceFeignService;
         this.contentFileService = contentFileService;
@@ -66,14 +64,16 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
 
     public boolean nextPrevReady(UUID confID) {
         List<Confirmative> allSiblings = getAllSiblings(confID);
-        Confirmative current = allSiblings.stream().filter(item -> item.getId().equals(confID)).findFirst().get();
-        Integer orderNumber = current.getOrderNumber();
-        Optional<Confirmative> nextOptional = allSiblings.stream().filter(item -> item.getOrderNumber() == orderNumber + 1).findFirst();
-        if (nextOptional.isPresent()) {
-            Confirmative next = nextOptional.get();
-            repository.prevReady(next.getId());
-            return true;
-        }
+//        Confirmative current = allSiblings.stream().filter(item -> item.getId().equals(confID)).findFirst().get();
+//        Integer orderNumber = current.getOrderNumber();
+//        Optional<Confirmative> nextOptional = allSiblings.stream().filter(item -> item.getOrderNumber() == orderNumber + 1).findFirst();
+//        if (nextOptional.isPresent()) {
+//            Confirmative next = nextOptional.get();
+//            repository.prevReady(next.getId());
+//            return true;
+//        }
+
+        if (allSiblings.stream().allMatch(Confirmative::getIsReadyToSend)) return true;
         return false;
     }
 
