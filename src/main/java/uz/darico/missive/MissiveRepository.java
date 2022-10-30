@@ -56,8 +56,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number\n" +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted  and m.is_last_version \n" +
@@ -99,8 +99,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and m.is_last_version \n" +
@@ -148,8 +148,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted and  m.is_last_version and m.id in (select missive_confirmatives.missive_id\n" +
@@ -207,8 +207,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "where not m.is_deleted  and m.is_last_version \n" +
@@ -267,8 +267,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -312,8 +312,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -349,8 +349,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
@@ -402,8 +402,8 @@ public interface MissiveRepository extends JpaRepository<Missive, UUID>, BaseRep
             "       m.orgid          as orgID,\n" +
             "       s.userid            senderUserID,\n" +
             "       m.short_info        shortInfo ,\n" +
-            "       m.registered_at,\n" +
-            "       m.number " +
+            "       m.registered_at as registeredAt,\n" +
+            "       m.number as number\n" +
             "from missive m\n" +
             "         inner join sender s on m.sender_id = s.id\n" +
             "         inner join signatory s2 on m.signatory_id = s2.id\n" +
