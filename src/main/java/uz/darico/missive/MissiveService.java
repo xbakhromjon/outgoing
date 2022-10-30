@@ -164,6 +164,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);
         setStatus(workPlaceID, ID);
         FeedbackGetDTO feedbackGetDTO = feedBackService.getFeedbackDTO(missive.getRootVersionID(), missive.getSender().getWorkPlaceID(), workPlaceID);
+        missiveGetDTO.setFeedback(feedbackGetDTO);
         return ResponseEntity.ok(missiveGetDTO);
     }
 
