@@ -275,7 +275,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
     }
 
     public ResponseEntity<?> reject(MissiveRejectDTO rejectDTO) {
-        UUID ID = baseUtils.strToUUID(rejectDTO.getRootMissiveID());
+        UUID ID = baseUtils.strToUUID(rejectDTO.getMissiveID());
         Sender sender = senderService.getPersistByMissiveID(ID);
         feedBackService.add(rejectDTO, sender.getWorkPlaceID());
         sender.setIsReadyToSend(false);
