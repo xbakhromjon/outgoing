@@ -87,10 +87,10 @@ public class MissiveController extends AbstractController<MissiveService> {
         return service.getCount(workPlaceID, orgID);
     }
 
-    @PatchMapping("/content")
-    public ResponseEntity<?> updateContent(@RequestBody ContentUpdateDTO contentUpdateDTO) {
-        return service.updateContent(contentUpdateDTO);
-    }
+//    @PatchMapping("/content")
+//    public ResponseEntity<?> updateContent(@RequestBody ContentUpdateDTO contentUpdateDTO) {
+//        return service.updateContent(contentUpdateDTO);
+//    }
 
     @PatchMapping("/register")
     public ResponseEntity<?> register(@RequestBody MissiveRegisteDTO missiveRegisteDTO) {
