@@ -20,7 +20,7 @@ public class SignatoryFeedBackService extends AbstractService<SignatoryFeedbackR
     }
 
     public SignatoryFeedback create(MissiveRejectDTO rejectDTO) {
-        SignatoryFeedback signatoryFeedback = new SignatoryFeedback(baseUtils.strToUUID(rejectDTO.getMissiveID()), rejectDTO.getWorkPlaceID(), LocalDateTime.now(), rejectDTO.getMessage());
+        SignatoryFeedback signatoryFeedback = new SignatoryFeedback(baseUtils.strToUUID(rejectDTO.getMissiveID()), rejectDTO.getRejectedWorkPlaceID(), LocalDateTime.now(), rejectDTO.getMessage());
         return repository.save(signatoryFeedback);
     }
 

@@ -34,7 +34,7 @@ public interface ConfirmativeRepository extends JpaRepository<Confirmative, UUID
     @Modifying
     void prevReady(UUID ID);
 
-    @Query(nativeQuery = true, value = "update confirmative set is_ready_to_send = false, prev_is_ready = false where id in (select confirmatives_id from missive_confirmatives where missive_id = :missiveID)")
+    @Query(nativeQuery = true, value = "update confirmative set is_ready_to_send = false where id in (select confirmatives_id from missive_confirmatives where missive_id = :missiveID)")
     @Modifying
     void notReadyByMissiveID(UUID missiveID);
 

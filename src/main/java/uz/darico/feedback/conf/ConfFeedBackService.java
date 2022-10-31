@@ -25,7 +25,7 @@ public class ConfFeedBackService extends AbstractService<ConfFeedbackRepository,
     }
 
     public ConfFeedback create(MissiveRejectDTO rejectDTO) {
-        ConfFeedback confFeedback = new ConfFeedback(baseUtils.strToUUID(rejectDTO.getMissiveID()), rejectDTO.getWorkPlaceID(), LocalDateTime.now(), rejectDTO.getMessage());
+        ConfFeedback confFeedback = new ConfFeedback(baseUtils.strToUUID(rejectDTO.getMissiveID()), rejectDTO.getRejectedWorkPlaceID(), LocalDateTime.now(), rejectDTO.getMessage());
         return repository.save(confFeedback);
     }
 }

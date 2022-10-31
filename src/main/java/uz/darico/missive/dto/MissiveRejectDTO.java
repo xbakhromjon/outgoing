@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MissiveRejectDTO {
     private String rootMissiveID;
     private String missiveID;
-    private Long workPlaceID;
+//    private Long workPlaceID;
     private Long rejectedWorkPlaceID;
     private String message;
     private Integer rejectType;

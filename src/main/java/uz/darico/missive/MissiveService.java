@@ -346,7 +346,6 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         if (Objects.equals(searchDTO.getTab(), Tab.TASDIQLASH_UCHUN.getCode())) {
             return repository.getForConfirm(searchDTO.getWorkPlace(), searchDTO.getConfirmativeWorkPlace(), searchDTO.getShortInfo(), searchDTO.getCorrespondent(), searchDTO.getSize(), searchDTO.getOffset());
         }
-
         return getConfirmed(searchDTO);
     }
 
