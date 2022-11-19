@@ -17,6 +17,7 @@ import uz.darico.auth.AuthTokenFilter;
 import uz.darico.auth.AuthenticationEntryPointImpl;
 import uz.darico.user.UserDetailsServiceImpl;
 
+
 /**
  * @author : Bakhromjon Khasanboyev
  **/
@@ -25,7 +26,7 @@ import uz.darico.user.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(
         prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final String[] WHITE_LIST = {"/auth/signin", "/auth/signup", "/auth/test"};
+    private final String[] WHITE_LIST = {"/auth/signin", "/auth/signup", "/auth/test", "/swagger-ui/index.html"};
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
