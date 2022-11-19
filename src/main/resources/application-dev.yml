@@ -9,9 +9,15 @@ spring:
     properties:
       hibernate:
       dialect: org.hibernate.dialect.PostgreSQL81Dialect
+    show-sql: true
   servlet:
     multipart:
       max-file-size: 10MB
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+      time-to-live: 600000
 server:
   port: 8080
   servlet:

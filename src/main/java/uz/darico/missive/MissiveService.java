@@ -1,10 +1,15 @@
 package uz.darico.missive;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.darico.base.service.AbstractService;
+import uz.darico.config.CacheStore;
 import uz.darico.confirmative.ConfStatus;
 import uz.darico.confirmative.Confirmative;
 import uz.darico.confirmative.ConfirmativeMapper;
@@ -53,6 +58,8 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class MissiveService extends AbstractService<MissiveRepository, MissiveValidator, MissiveMapper> {
+    @Autowired
+    private CacheStore<Missive> cacheStore;
     private final ConfirmativeService confirmativeService;
     private final OutReceiverService outReceiverService;
     private final InReceiverService inReceiverService;
@@ -135,11 +142,10 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         List<ContentFile> newContentFiles = contentFileService.refresh(baseFileIDs, missive.getBaseFiles());
         missive.setBaseFiles(newContentFiles);
 
-        List<MissiveFile> newMissiveFiles = missiveFileService.refresh(updateDTO.getMissiveFileID(), updateDTO.getContent());
-//        missive.setMissiveFiles(newMissiveFiles);
-
         missive.setShortInfo(updateDTO.getShortInfo());
-        repository.save(missive);
+        missive = repository.save(missive);
+        // update cache
+        cacheStore.add(missive.getId(), missive);
         return ResponseEntity.ok(true);
     }
 
@@ -154,17 +160,28 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
 
     public ResponseEntity<?> delete(String id) {
         UUID ID = baseUtils.strToUUID(id);
+        // remove from cache
+        cacheStore.remove(ID);
         repository.delete(ID);
         return ResponseEntity.ok(true);
     }
 
     public ResponseEntity<?> get(Long workPlaceID, String id) {
         UUID ID = baseUtils.strToUUID(id);
-        Missive missive = getPersist(ID);
+        // search in cache
+        Missive missive = cacheStore.get(ID);
+        if (missive != null) {
+            return ResponseEntity.ok(missive);
+        }
+        // search in DB
+        missive = getPersist(ID);
         MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);
         setStatus(workPlaceID, ID);
         FeedbackGetDTO feedbackGetDTO = feedBackService.getFeedbackDTO(missive.getRootVersionID(), missive.getSender().getWorkPlaceID(), workPlaceID);
         missiveGetDTO.setFeedback(feedbackGetDTO);
+
+        // save to cache
+        cacheStore.add(missive.getId(), missive);
         return ResponseEntity.ok(missiveGetDTO);
     }
 
@@ -185,14 +202,6 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
                     }
                 }
             }
-        }
-        // sender
-        else if (missive.getSender().getWorkPlaceID().equals(workPlaceID)) {
-
-        }
-        // other
-        else {
-
         }
 
     }

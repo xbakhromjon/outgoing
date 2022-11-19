@@ -13,8 +13,8 @@ public class DepartmentFeignService {
     private final RestTemplate restTemplate;
 
     public String getName(Long ID) {
-        return getNameRemote(ID);
-//        return "Soliq";
+//        return getNameRemote(ID);
+        return "Soliq";
     }
 
     public String getNameRemote(Long ID) {

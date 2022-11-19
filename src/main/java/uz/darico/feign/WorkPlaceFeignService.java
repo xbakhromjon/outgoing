@@ -18,8 +18,8 @@ public class WorkPlaceFeignService {
     private final RestTemplate restTemplate;
 
     public Long getUserID(Long workPlaceID) {
-        return getUserIDRemote(workPlaceID);
-//        return 100L;
+//        return getUserIDRemote(workPlaceID);
+        return 100L;
     }
 
     public Long getUserIDRemote(Long ID) {
@@ -35,7 +35,13 @@ public class WorkPlaceFeignService {
         }
     }
 
+
     public Long getOrgID(Long workPlaceID) {
+//        return getOrgIDRemote(workPlaceID);
+        return 1L;
+    }
+
+    public Long getOrgIDRemote(Long workPlaceID) {
         try {
 //            ResponseEntity<Long> response = restTemplate.getForEntity("http://192.168.30.151:8080/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
             ResponseEntity<Long> response = restTemplate.getForEntity("http://localhost:8081/kiruvchi/api/workplace/getUserID/" + workPlaceID, Long.class);
@@ -48,6 +54,11 @@ public class WorkPlaceFeignService {
         }
     }
 
+    public WorkPlaceShortInfo getWorkPlaceInfo(Long workPlaceID) {
+//        return getWorkPlaceInfoRemote(workPlaceID);
+        return new WorkPlaceShortInfo(1L, "Soliq", "Rahbar", "Bakromjon", "Khasanboyev", "Soxibjon o'g'li",
+                List.of(new UserRole("office_manager", 8, "Office Manager")));
+    }
 
     public WorkPlaceShortInfo getWorkPlaceInfoRemote(Long workPlaceID) {
         try {

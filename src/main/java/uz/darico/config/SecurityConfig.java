@@ -26,7 +26,7 @@ import uz.darico.user.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(
         prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final String[] WHITE_LIST = {"/auth/signin", "/auth/signup", "/auth/test", "/swagger-ui/index.html"};
+    private final String[] WHITE_LIST = {"/auth/signin", "/auth/signup", "/auth/test"};
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers(WHITE_LIST).permitAll()
+                .authorizeRequests().antMatchers("**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

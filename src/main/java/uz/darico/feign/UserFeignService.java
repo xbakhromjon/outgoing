@@ -18,8 +18,8 @@ public class UserFeignService {
         if (ID == null) {
             return null;
         }
-        return getUserInfoRemote(ID);
-//        return new UserInfo("Bakhromjon", "Khasanboyev", "Soxibjon o'g'li");
+//        return getUserInfoRemote(ID);
+        return new UserInfo("Bakhromjon", "Khasanboyev", "Soxibjon o'g'li");
     }
 
     public UserInfo getUserInfoRemote(Long ID) {

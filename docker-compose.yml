@@ -1,33 +1,33 @@
 version: '3.1'
 services:
-  dbpostgresql:
+  postgreSQL:
     image: "postgres:14"
     container_name: dbpostgresql
     networks:
       - order-pgsql
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - /home/xbakhromjon/docker/postgres/docker-pg-vol/data:/var/lib/postgresql/data
-#      - /Users/rajeshp/docker/postgres/init/initData.sql:/docker-entrypoint-initdb.d/initData.sql
     environment:
-      POSTGRES_DB: northwind
-      POSTGRES_PASSWORD: changeme
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
   app:
     container_name: outgoing
     image: outgoing
     networks:
       - order-pgsql
-    build: ./
+    build: .
     ports:
       - "8080:8080"
     depends_on:
-      - dbpostgresql
+      - postgreSQL
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbpostgresql:5433/northwind
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbpostgresql:5432/outgoing
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=changeme
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+      - SPRING_JPA_SHOW_SQL=true
 
 networks:
   order-pgsql:

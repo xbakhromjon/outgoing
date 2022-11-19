@@ -17,10 +17,12 @@ public class MissiveController extends AbstractController<MissiveService> {
         super(service);
     }
 
+
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody MissiveCreateDTO createDTO) throws IOException {
         return service.create(createDTO);
     }
+
 
     @PatchMapping()
     public ResponseEntity<?> update(@RequestBody MissiveUpdateDTO updateDTO) throws IOException {

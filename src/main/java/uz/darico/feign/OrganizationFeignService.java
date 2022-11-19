@@ -20,8 +20,8 @@ public class OrganizationFeignService {
     private final RestTemplate restTemplate;
 
     public OrgShortInfo getShortInfo(Long ID) {
-        return getNameRemote(ID);
-//        return "Soliq";
+//        return getNameRemote(ID);
+        return new OrgShortInfo("Soliq", "soliq@gmail.com");
     }
 
     public OrgShortInfo getNameRemote(Long ID) {
