@@ -2,6 +2,7 @@ package uz.darico.contentFile;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,11 @@ import java.util.stream.Collectors;
 public class ContentFileService extends AbstractService<ContentFileRepository, InReceiverValidator, ContentFileMapper> {
 
     private final BaseUtils baseUtils;
-    private final String FILE_PATH_LINUX = "/home/database/files";
-    private final String GENERATED_FILES_PATH_LINUX = "/generated";
-    private final String GENERATED_FILES_PATH_WINDOWS = "\\generated";
-    private final String FILE_PATH_WINDOWS = "";
+    @Value("${app.file.upload.path}")
+    private String FILE_UPLOAD_PATH;
+
+    @Value("${app.file.generated.path}")
+    private String GENERATED_FILE_PATH;
     private final ServletContext servletContext;
 
     public ContentFileService(ContentFileRepository repository, InReceiverValidator validator, ContentFileMapper mapper,
@@ -76,50 +78,45 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
 
     public ResponseEntity<UUID> upload(String orgId, MultipartHttpServletRequest request) throws IOException {
         Long orgID = baseUtils.strToLong(orgId);
-        String folder_linux = FILE_PATH_LINUX + "/" + orgID;
-        String folder_windows = FILE_PATH_WINDOWS + "\\" + orgID;
-        Path path = Path.of(folder_windows);
+        String folder = FILE_UPLOAD_PATH + "/" + orgID;
+        Path path = Path.of(folder);
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
         MultipartFile file = request.getFile("file");
-        if (file != null) {
-            if (file.getSize() > 100 * 1024 * 1024) {
-                throw new UniversalException("File hajmi 100 mb dan kichik bo'lishi kerak", HttpStatus.BAD_REQUEST);
-            }
-            String contentType = file.getContentType();
-            String originalFilename = file.getOriginalFilename();
-            long size = file.getSize();
-            String extention = "";
-            if (contentType.contains("pdf")) {
-                extention = ".pdf";
-            } else if (contentType.contains("png")) {
-                extention = ".png";
-            } else if (contentType.contains("jpg")) {
-                extention = ".jpg";
-            } else if (contentType.contains("jpeg")) {
-                extention = ".jpeg";
-            } else if (contentType.contains("word")) {
-                extention = ".docx";
-            }
-            String generatedName = UUID.randomUUID() + extention;
-            String url_linux = folder_linux + "/" + generatedName;
-            String url_windows = folder_windows + "\\" + generatedName;
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(url_windows));
-            fileOutputStream.write(file.getBytes());
-            fileOutputStream.close();
-            fileOutputStream.flush();
-            ContentFile fileEntity = new ContentFile();
-            fileEntity.setPath(url_windows);
-            fileEntity.setContentType(contentType);
-            fileEntity.setSize(size);
-            fileEntity.setOriginalName(originalFilename);
-            fileEntity.setGeneratedName(generatedName);
-            ContentFile saved = repository.save(fileEntity);
-            return ResponseEntity.ok(saved.getId());
-        } else {
-            throw new UniversalException("File null bo'lishi mumkin emas", HttpStatus.BAD_REQUEST);
+        if (file == null) {
+            throw new UniversalException("File cannot be null", HttpStatus.BAD_REQUEST);
         }
+
+        String contentType = file.getContentType();
+        String originalFilename = file.getOriginalFilename();
+        long size = file.getSize();
+        String extention = "";
+        if (contentType.contains("pdf")) {
+            extention = ".pdf";
+        } else if (contentType.contains("png")) {
+            extention = ".png";
+        } else if (contentType.contains("jpg")) {
+            extention = ".jpg";
+        } else if (contentType.contains("jpeg")) {
+            extention = ".jpeg";
+        } else if (contentType.contains("word")) {
+            extention = ".docx";
+        }
+        String generatedName = UUID.randomUUID() + extention;
+        String url = folder + "/" + generatedName;
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(url));
+        fileOutputStream.write(file.getBytes());
+        fileOutputStream.close();
+        fileOutputStream.flush();
+        ContentFile fileEntity = new ContentFile();
+        fileEntity.setPath(url);
+        fileEntity.setContentType(contentType);
+        fileEntity.setSize(size);
+        fileEntity.setOriginalName(originalFilename);
+        fileEntity.setGeneratedName(generatedName);
+        ContentFile saved = repository.save(fileEntity);
+        return ResponseEntity.ok(saved.getId());
     }
 
     public ResponseEntity<InputStreamResource> view(String id) throws FileNotFoundException {
@@ -165,53 +162,45 @@ public class ContentFileService extends AbstractService<ContentFileRepository, I
     }
 
     public String writeAsPDF(String html) {
-        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX;
-        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS;
-        Path pathObj_linux = Path.of(path_linux);
-        Path pathObj_windows = Path.of(path_windows);
-        if (!Files.exists(pathObj_windows)) {
+        Path path = Path.of(GENERATED_FILE_PATH);
+        if (!Files.exists(path)) {
             try {
-                Files.createDirectories(pathObj_windows);
+                Files.createDirectories(path);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         String generatedName = UUID.randomUUID().toString() + ".pdf";
-        path_linux = path_linux + "/" + generatedName;
-        path_windows = path_windows + "\\" + generatedName;
-        baseUtils.writeHtmlAsPdf(path_windows, html);
-        return path_windows;
+        String gen_file_path = GENERATED_FILE_PATH + "/" + generatedName;
+        baseUtils.writeHtmlAsPdf(gen_file_path, html);
+        return gen_file_path;
     }
 
     public String generateQRCode(String data, Integer width, Integer height) {
-        String path_linux = FILE_PATH_LINUX + GENERATED_FILES_PATH_LINUX + "/qrcode";
-        String path_windows = FILE_PATH_WINDOWS + GENERATED_FILES_PATH_WINDOWS + "\\qrcode";
-        Path pathObj_linux = Path.of(path_linux);
-        Path pathObj_windows = Path.of(path_windows);
-        if (!Files.exists(pathObj_windows)) {
+        String qrCodePath =  GENERATED_FILE_PATH + "/qrcode";
+        Path path = Path.of(qrCodePath);
+        if (!Files.exists(path)) {
             try {
-                Files.createDirectories(pathObj_windows);
+                Files.createDirectories(path);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        path_linux = path_linux + "/" + UUID.randomUUID() + ".png";
-        path_windows = path_windows + "\\" + UUID.randomUUID() + ".png";
+        qrCodePath = qrCodePath + "/" + UUID.randomUUID() + ".png";
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         try {
-            baseUtils.generateQRcode(data, path_windows, "UTF-8", hashMap, height, width);
+            baseUtils.generateQRcode(data, qrCodePath, "UTF-8", hashMap, height, width);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return path_windows;
+        return qrCodePath;
     }
 
     public ContentFile create(String path) {
         ContentFile contentFile = new ContentFile();
         contentFile.setPath(path);
         contentFile.setContentType("application/pdf");
-        ContentFile saved = repository.save(contentFile);
-        return saved;
+        return repository.save(contentFile);
     }
 }
