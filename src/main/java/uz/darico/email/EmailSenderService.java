@@ -30,7 +30,7 @@ public class EmailSenderService {
 
         Session session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("xbakhromjon@gmail.com", "pgtqttrbaalmufnd");
+                return new PasswordAuthentication("xbakhromjontest@gmail.com", "pgtqttrbaalmufnd");
             }
         });
         session.setDebug(true);

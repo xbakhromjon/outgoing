@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/outgoing
+    username: postgres
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQL81Dialect
+  servlet:
+    multipart:
+      max-file-size: 10MB
+server:
+  port: 8080
+  servlet:
+    context-path: '/outgoing/api'
+
+
+app:
+  jwtCookieName: 'outgoingCookie'
+  jwtSecret: '24d1693e64844f57bf137f58d6113e61'
+  jwtExpirationMs: 3600000

@@ -21,7 +21,6 @@ public class Confirmative extends AbstractEntity {
     private LocalDateTime statusTime = LocalDateTime.now();
     private Integer orderNumber;
     private Boolean isReadyToSend = false;
-//    private Boolean prevIsReady = false;
 
     public Confirmative(Long workPlaceID, Long userID, Integer statusCode, Integer orderNumber) {
         this.workPlaceID = workPlaceID;

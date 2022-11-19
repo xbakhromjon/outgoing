@@ -10,16 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @since : 03/10/22, Mon, 11:39
  **/
 
-//@Configuration
-//public class CorsConfig implements WebMvcConfigurer {
-//    // origin IP olmaydi.
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**").
-//                allowCredentials(true).
-////                allowedOrigins("http://localhost:3000/").
-//                allowedOrigins("http://www.new.d-doc.uz/").
-//                allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH").
-//                allowedHeaders("*");
-//    }
-//}
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").
+                allowCredentials(true).
+                allowedOrigins("http://localhost:3000/").
+                allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH").
+                allowedHeaders("*");
+    }
+}
