@@ -16,11 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MissiveCreateDTO {
     private UUID rootID;
-    private Long orgID;
-    private Long workPlaceID;
-    private Long signatoryWorkPlaceID;
-    private List<Long> confirmativeWorkPlaceIDs;
-    private Long departmentID;
+    private UUID orgID;
+    private UUID workPlaceID;
+    private UUID signatoryWorkPlaceID;
+    private List<UUID> confirmativeWorkPlaceIDs;
+    private UUID departmentID;
     private List<OutReceiverCreateDTO> outReceivers;
     private List<InReceiverCreateDTO> inReceivers;
     private List<UUID> baseFileIDs;

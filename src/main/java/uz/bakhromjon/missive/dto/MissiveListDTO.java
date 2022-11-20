@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MissiveListDTO {
     private UUID ID;
-    private Long orgID;
+    private UUID orgID;
     private String departmentName;
     private String senderFirstName;
     private String senderLastName;

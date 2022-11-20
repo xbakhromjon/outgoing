@@ -2,11 +2,13 @@ package uz.bakhromjon.inReceiver.dto;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class InReceiverCreateDTO {
-    private Long correspondentID;
+    private UUID correspondentID;
 }

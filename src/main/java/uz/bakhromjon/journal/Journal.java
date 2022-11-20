@@ -7,6 +7,7 @@ import lombok.Setter;
 import uz.bakhromjon.base.entity.Auditable;
 
 import javax.persistence.Entity;
+import java.util.UUID;
 
 /**
  * @author Bakhromjon Fri, 6:11 PM 3/4/2022
@@ -30,6 +31,6 @@ public class Journal extends Auditable {
     private String createdIPAddress;
     private String createdDevice;
     private String createdBrowser;
-    private Long orgId;
-    private Long userID;
+    private UUID orgId;
+    private UUID userID;
 }

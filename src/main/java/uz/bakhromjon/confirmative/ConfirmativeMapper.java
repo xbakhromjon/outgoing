@@ -12,6 +12,7 @@ import uz.bakhromjon.utils.BaseUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 
 @Component
@@ -27,10 +28,10 @@ public class ConfirmativeMapper implements BaseMapper {
         this.baseUtils = baseUtils;
     }
 
-    public List<Confirmative> toEntity(List<Long> confirmativeWorkPlaceIDs) {
+    public List<Confirmative> toEntity(List<UUID> confirmativeWorkPlaceIDs) {
         List<Confirmative> confirmatives = new ArrayList<>();
         for (int i = 0, confirmativeWorkPlaceIDsSize = confirmativeWorkPlaceIDs.size(); i < confirmativeWorkPlaceIDsSize; i++) {
-            Long confirmativeWorkPlaceID = confirmativeWorkPlaceIDs.get(i);
+            UUID confirmativeWorkPlaceID = confirmativeWorkPlaceIDs.get(i);
             Confirmative confirmative = new Confirmative(confirmativeWorkPlaceID,
                     workPlaceFeignService.getUserID(confirmativeWorkPlaceID),
                     ConfStatus.NOT_VIEWED.getCode(), i + 1);

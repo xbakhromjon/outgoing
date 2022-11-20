@@ -1,17 +1,18 @@
 package uz.bakhromjon.missive.projections;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public interface MissiveListProjection {
     byte[] getID();
 
     Integer getTotalCount();
 
-    Long getOrgID();
+    UUID getOrgID();
 
-    Long getDepartmentID();
+    UUID getDepartmentID();
 
-    Long getSenderUserID();
+    UUID getSenderUserID();
 
     String getShortInfo();
 

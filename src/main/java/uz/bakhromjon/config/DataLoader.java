@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import uz.bakhromjon.permission.Permission;
+import uz.bakhromjon.permission.PermissionRepository;
 import uz.bakhromjon.role.ERole;
 import uz.bakhromjon.role.Role;
 import uz.bakhromjon.role.RoleRepository;
@@ -17,6 +19,8 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PermissionRepository permissionRepository;
 
     @Value(value = "${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -24,6 +28,7 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (ddl.equalsIgnoreCase("create") || ddl.equalsIgnoreCase("create-drop")) {
+            // role
             roleRepository.save(new Role(ERole.BASE_ADMIN, ERole.BASE_ADMIN.getRank()));
             roleRepository.save(new Role(ERole.ADMIN, ERole.ADMIN.getRank()));
             roleRepository.save(new Role(ERole.BOSS_1, ERole.BOSS_1.getRank()));
@@ -36,6 +41,10 @@ public class DataLoader implements CommandLineRunner {
             roleRepository.save(new Role(ERole.OFFICE_MANAGER, ERole.OFFICE_MANAGER.getRank()));
             roleRepository.save(new Role(ERole.EMPLOYEE, ERole.EMPLOYEE.getRank()));
             roleRepository.save(new Role(ERole.SECURITY, ERole.SECURITY.getRank()));
+
+            // permission
+            permissionRepository.save(new Permission("RESOLUTION"));
+            permissionRepository.save(new Permission("WIDE_SEARCH"));
         }
     }
 }

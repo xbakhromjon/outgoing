@@ -28,9 +28,9 @@ public class SignatoryService extends AbstractService<SignatoryRepository, Signa
         return repository.save(signatory);
     }
 
-    public void edit(Signatory signatory, Long newWorkPlaceID) {
+    public void edit(Signatory signatory, UUID newWorkPlaceID) {
         if (!newWorkPlaceID.equals(signatory.getWorkPlaceID())) {
-            Long signatoryUserID = workPlaceFeignService.getUserID(newWorkPlaceID);
+            UUID signatoryUserID = workPlaceFeignService.getUserID(newWorkPlaceID);
             signatory.setWorkPlaceID(newWorkPlaceID);
             signatory.setUserID(signatoryUserID);
             repository.save(signatory);
@@ -54,7 +54,7 @@ public class SignatoryService extends AbstractService<SignatoryRepository, Signa
     }
 
     public SignatoryPDFDTO makePDFDTO(Signatory signatory) {
-        WorkPlaceShortInfo workPlaceInfoRemote = workPlaceFeignService.getWorkPlaceInfoRemote(signatory.getWorkPlaceID());
+        WorkPlaceShortInfo workPlaceInfoRemote = workPlaceFeignService.getWorkPlaceInfo(signatory.getWorkPlaceID());
         String data = "" + signatory.getWorkPlaceID();
         String path = contentFileService.generateQRCode(data, 200, 200);
         String fullPosition = workPlaceInfoRemote.getDepartmentName() + " " + workPlaceInfoRemote.getPositionName();

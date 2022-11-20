@@ -41,7 +41,7 @@ public class JournalService extends AbstractService<JournalRepository, JournalVa
     }
 
     public HttpEntity<?> create(JournalCreateDto createDto, HttpServletRequest request) throws JsonProcessingException {
-        Long orgId = createDto.getOrgId();
+        UUID orgId = createDto.getOrgId();
         String name = createDto.getUzName();
         boolean journalExists = repository.existsByOrgIdAndUzNameIgnoreCaseAndIsDeleted(orgId, name, false);
         if (journalExists) {
@@ -157,7 +157,7 @@ public class JournalService extends AbstractService<JournalRepository, JournalVa
     public HttpEntity<?> getLogs(String id) {
         UUID ID = validator.validOnKey(id);
         Journal journal = getPersist(ID);
-        Long userID = journal.getUserID();
+        UUID userID = journal.getUserID();
         UserInfo userInfo = userFeignService.getUserInfo(userID);
         JournalLogDto journalLogDto = new JournalLogDto();
         if (userInfo != null) {

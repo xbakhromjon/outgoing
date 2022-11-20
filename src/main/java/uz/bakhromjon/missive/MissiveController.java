@@ -34,7 +34,7 @@ public class MissiveController extends AbstractController<MissiveService> {
     }
 
     @GetMapping("/{workPlaceID}/{id}")
-    public ResponseEntity<?> get(@PathVariable Long workPlaceID, @PathVariable(name = "id") String id) {
+    public ResponseEntity<?> get(@PathVariable UUID workPlaceID, @PathVariable(name = "id") String id) {
         return service.get(workPlaceID, id);
     }
 
@@ -79,7 +79,7 @@ public class MissiveController extends AbstractController<MissiveService> {
     }
 
     @GetMapping("/sketchy/{workPlaceID}/{id}")
-    public ResponseEntity<?> getSketchy(@PathVariable Long workPlaceID, @PathVariable(name = "id") String id) {
+    public ResponseEntity<?> getSketchy(@PathVariable UUID workPlaceID, @PathVariable(name = "id") String id) {
         return service.getSketchy(workPlaceID, id);
     }
 
@@ -87,11 +87,6 @@ public class MissiveController extends AbstractController<MissiveService> {
     public ResponseEntity<?> getCount(@PathVariable Long workPlaceID, @PathVariable Long orgID) {
         return service.getCount(workPlaceID, orgID);
     }
-
-//    @PatchMapping("/content")
-//    public ResponseEntity<?> updateContent(@RequestBody ContentUpdateDTO contentUpdateDTO) {
-//        return service.updateContent(contentUpdateDTO);
-//    }
 
     @PatchMapping("/register")
     public ResponseEntity<?> register(@RequestBody MissiveRegisteDTO missiveRegisteDTO) {

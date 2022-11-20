@@ -17,9 +17,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 public class Template extends Auditable {
-    private Long orgID;
-    private Long workPlaceID;
-    private Long userID;
+    private UUID orgID;
+    private UUID workPlaceID;
+    private UUID userID;
     @Type(type = "text")
     private String content;
     private String name;
@@ -29,7 +29,7 @@ public class Template extends Auditable {
 
     @Builder
 
-    public Template(UUID id, boolean isDeleted, LocalDateTime createdAt, Long createdBy, LocalDateTime updatedAt, Long updatedBy, Long orgID, Long workPlaceID, Long userID, String content, String name, ContentFile image, Boolean isGlobal) {
+    public Template(UUID id, boolean isDeleted, LocalDateTime createdAt, UUID createdBy, LocalDateTime updatedAt, UUID updatedBy, UUID orgID, UUID workPlaceID, UUID userID, String content, String name, ContentFile image, Boolean isGlobal) {
         super(id, isDeleted, createdAt, createdBy, updatedAt, updatedBy);
         this.orgID = orgID;
         this.workPlaceID = workPlaceID;

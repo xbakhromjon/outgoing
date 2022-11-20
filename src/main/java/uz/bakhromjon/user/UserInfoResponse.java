@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author : Bakhromjon Khasanboyev
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoResponse {
-    private Long id;
+    private UUID id;
     private String username;
     private String email;
     private List<String> roles;

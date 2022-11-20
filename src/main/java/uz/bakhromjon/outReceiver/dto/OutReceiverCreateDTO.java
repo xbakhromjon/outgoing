@@ -1,6 +1,9 @@
 package uz.bakhromjon.outReceiver.dto;
 
 import lombok.*;
+import org.checkerframework.checker.units.qual.UnknownUnits;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -8,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OutReceiverCreateDTO {
-    private Long correspondentID;
+    private UUID correspondentID;
     private String correspondentEmail;
     private String correspondentExat;
 }

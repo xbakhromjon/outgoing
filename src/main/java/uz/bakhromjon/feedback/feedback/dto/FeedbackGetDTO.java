@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FeedbackGetDTO {
     private UUID rootMissiveID;
-    private Long workPlaceID;
+    private UUID workPlaceID;
     private List<ConfFeedbackGetDTO> confFeedbacks;
     private List<SignatoryFeedbackGetDTO> signatoryFeedbacks;
 }

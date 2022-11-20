@@ -26,7 +26,7 @@ public interface JournalRepository extends JpaRepository<Journal, UUID>, BaseRep
 
     List<Journal> findAllByArchivedAndIsDeletedAndClosedAndOrgId(Boolean archived, Boolean deleted, Boolean closed, Long id);
 
-    boolean existsByOrgIdAndUzNameIgnoreCaseAndIsDeleted(Long orgId, String name, Boolean deleted);
+    boolean existsByOrgIdAndUzNameIgnoreCaseAndIsDeleted(UUID orgId, String name, Boolean deleted);
 
     Optional<Journal> findByIdAndIsDeleted(UUID id, Boolean deleted);
 
@@ -41,7 +41,7 @@ public interface JournalRepository extends JpaRepository<Journal, UUID>, BaseRep
     List<Journal> findAllByClosedAndIsDeleted(boolean b, boolean b1);
 
     @Query(nativeQuery = true, value = "select count(*) from journal where org_id = ?1 and not is_deleted")
-    Integer findOrderNumber(Long orgId);
+    Integer findOrderNumber(UUID orgId);
 
     @Modifying
     @Query(nativeQuery = true, value = "update journal set order_number = ?2 where id = ?1 returning *")

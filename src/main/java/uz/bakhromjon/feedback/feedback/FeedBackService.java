@@ -31,13 +31,13 @@ public class FeedBackService extends AbstractService<FeedbackRepository, Feedbac
         this.signatoryFeedBackService = signatoryFeedBackService;
     }
 
-    public Feedback create(MissiveRejectDTO rejectDTO, Long workPlaceID) {
+    public Feedback create(MissiveRejectDTO rejectDTO, UUID workPlaceID) {
         UUID rootMissiveID = baseUtils.strToUUID(rejectDTO.getRootMissiveID());
         Feedback feedback = new Feedback(rootMissiveID, workPlaceID);
         return repository.save(feedback);
     }
 
-    public void add(MissiveRejectDTO rejectDTO, Long workPlaceID) {
+    public void add(MissiveRejectDTO rejectDTO, UUID workPlaceID) {
         UUID rootMissiveID = baseUtils.strToUUID(rejectDTO.getRootMissiveID());
         Feedback feedback = getPersist(rootMissiveID, workPlaceID);
         if (feedback == null) {
@@ -57,13 +57,13 @@ public class FeedBackService extends AbstractService<FeedbackRepository, Feedbac
         repository.save(feedback);
     }
 
-    public Feedback getPersist(UUID rootMissiveID, Long workPlaceID) {
+    public Feedback getPersist(UUID rootMissiveID, UUID workPlaceID) {
         Optional<Feedback> optional = repository.find(rootMissiveID, workPlaceID);
         return optional.orElse(null);
     }
 
 
-    public FeedbackGetDTO getFeedbackDTO(UUID rootVersionID, Long workPlaceID, UUID missiveID) {
+    public FeedbackGetDTO getFeedbackDTO(UUID rootVersionID, UUID workPlaceID, UUID missiveID) {
         Feedback persist = getPersist(rootVersionID, workPlaceID);
         if (persist == null) {
             return null;
@@ -71,7 +71,7 @@ public class FeedBackService extends AbstractService<FeedbackRepository, Feedbac
         return mapper.toGetDTO(persist, missiveID);
     }
 
-    public FeedbackGetDTO getFeedbackDTO(UUID rootVersionID, Long workPlaceID, Long filterWorkPlaceID) {
+    public FeedbackGetDTO getFeedbackDTO(UUID rootVersionID, UUID workPlaceID, Long filterWorkPlaceID) {
         Feedback persist = getPersist(rootVersionID, workPlaceID);
         if (persist == null) {
             return null;

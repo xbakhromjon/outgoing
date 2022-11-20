@@ -7,6 +7,8 @@ import uz.bakhromjon.base.mapper.BaseMapper;
 import uz.bakhromjon.feign.obj.UserInfo;
 import uz.bakhromjon.sender.dto.SenderGetDTO;
 
+import java.util.UUID;
+
 @Component
 public class SenderMapper implements BaseMapper {
     private final WorkPlaceFeignService workPlaceFeignService;
@@ -17,7 +19,7 @@ public class SenderMapper implements BaseMapper {
         this.userFeignService = userFeignService;
     }
 
-    public Sender toEntity(Long workPlaceID) {
+    public Sender toEntity(UUID workPlaceID) {
         return new Sender(workPlaceID,
                 workPlaceFeignService.getUserID(workPlaceID),
                 SenderStatus.PREPARING.getCode());

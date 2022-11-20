@@ -11,15 +11,16 @@ import uz.bakhromjon.feign.obj.UserRole;
 import uz.bakhromjon.feign.obj.WorkPlaceShortInfo;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class WorkPlaceFeignService {
     private final RestTemplate restTemplate;
 
-    public Long getUserID(Long workPlaceID) {
+    public UUID getUserID(UUID workPlaceID) {
 //        return getUserIDRemote(workPlaceID);
-        return 100L;
+        return null;
     }
 
     public Long getUserIDRemote(Long ID) {
@@ -54,7 +55,7 @@ public class WorkPlaceFeignService {
         }
     }
 
-    public WorkPlaceShortInfo getWorkPlaceInfo(Long workPlaceID) {
+    public WorkPlaceShortInfo getWorkPlaceInfo(UUID workPlaceID) {
 //        return getWorkPlaceInfoRemote(workPlaceID);
         return new WorkPlaceShortInfo(1L, "Soliq", "Rahbar", "Bakromjon", "Khasanboyev", "Soxibjon o'g'li",
                 List.of(new UserRole("office_manager", 8, "Office Manager")));

@@ -19,10 +19,10 @@ import java.util.UUID;
 public class MissiveRawDTO {
     private UUID ID;
     private UUID rootID;
-    private Long orgID;
-    private Long workPlace;
-    private Long signatoryWorkPlace;
-    private List<Long> confirmativeWorkPlaces;
+    private UUID orgID;
+    private UUID workPlace;
+    private UUID signatoryWorkPlace;
+    private List<UUID> confirmativeWorkPlaces;
     private List<OutReceiverCreateDTO> outReceivers;
     private List<InReceiverCreateDTO> inReceivers;
     private List<ContentFile> baseFiles;

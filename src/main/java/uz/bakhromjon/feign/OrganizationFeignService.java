@@ -8,6 +8,8 @@ import org.springframework.web.client.RestTemplate;
 import uz.bakhromjon.exception.exception.UniversalException;
 import uz.bakhromjon.utils.OrgShortInfo;
 
+import java.util.UUID;
+
 /**
  * @author : Bakhromjon Khasanboyev
  * @username: @xbakhromjon
@@ -19,7 +21,7 @@ public class OrganizationFeignService {
 
     private final RestTemplate restTemplate;
 
-    public OrgShortInfo getShortInfo(Long ID) {
+    public OrgShortInfo getShortInfo(UUID ID) {
 //        return getNameRemote(ID);
         return new OrgShortInfo("Soliq", "soliq@gmail.com");
     }

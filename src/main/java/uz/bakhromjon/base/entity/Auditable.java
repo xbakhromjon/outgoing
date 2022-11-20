@@ -47,7 +47,7 @@ public abstract class Auditable implements BaseEntity {
 
     @CreatedBy
     @Column(name = "created_by", updatable = false)
-    private Long createdBy = -1L;
+    private UUID createdBy;
 
     @LastModifiedDate
     @Column(name = "updated_at")
@@ -55,5 +55,5 @@ public abstract class Auditable implements BaseEntity {
 
     @LastModifiedBy
     @Column(name = "updated_by")
-    private Long updatedBy;
+    private UUID updatedBy;
 }

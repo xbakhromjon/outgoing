@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 
 @Data
 @AllArgsConstructor
@@ -16,7 +18,7 @@ public class JournalCreateDto {
     private String journalPostfix;
     private Integer beginNumber;
     private Integer orderNumber;
-    private Long workPlaceID;
-    private Long orgId;
-    private Long userID;
+    private UUID workPlaceID;
+    private UUID orgId;
+    private UUID userID;
 }

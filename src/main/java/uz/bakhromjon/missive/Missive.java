@@ -18,20 +18,19 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "missive")
 public class Missive extends Auditable {
-    private Long orgID;
+    private UUID orgID;
     @OneToOne
     private Sender sender;
     @OneToOne
     private Signatory signatory;
     @OneToMany
     private List<Confirmative> confirmatives;
-    private Long departmentID;
+    private UUID departmentID;
     @OneToMany
     private List<OutReceiver> outReceivers;
     @OneToMany
@@ -54,8 +53,8 @@ public class Missive extends Auditable {
     private String number;
     private LocalDate registeredAt;
 
-    public Missive(Long orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,
-                   Long departmentID, List<OutReceiver> outReceivers, List<InReceiver> inReceivers,
+    public Missive(UUID orgID, Sender sender, Signatory signatory, List<Confirmative> confirmatives,
+                   UUID departmentID, List<OutReceiver> outReceivers, List<InReceiver> inReceivers,
                    List<ContentFile> baseFiles, MissiveFile missiveFile, UUID fishkaID) {
         this.orgID = orgID;
         this.sender = sender;

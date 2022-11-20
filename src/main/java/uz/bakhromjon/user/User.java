@@ -3,6 +3,8 @@ package uz.bakhromjon.user;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import uz.bakhromjon.base.entity.Auditable;
+import uz.bakhromjon.contentFile.ContentFile;
 import uz.bakhromjon.role.Role;
 
 import javax.persistence.*;
@@ -25,22 +27,18 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    @Size(max = 20)
+public class User extends Auditable {
     private String username;
 
-    @NotBlank
-    @Size(max = 50)
-    @Email(message = "email not valid")
     private String email;
-    @NotBlank
-    @Size(max = 120)
     private String password;
+
+    @OneToOne
+    private ContentFile avatar;
+
+    private String firstname;
+    private String lastname;
+    private Boolean isAttached = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",

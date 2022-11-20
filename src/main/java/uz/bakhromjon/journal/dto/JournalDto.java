@@ -27,6 +27,6 @@ public class JournalDto  {
     private String createdIpAddress;
     private String createdDevice;
     private String createdBrowser;
-    private Long orgId;
-    private Long createdId;
+    private UUID orgId;
+    private UUID createdId;
 }

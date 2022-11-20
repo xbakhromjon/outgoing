@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SignatoryGetDTO {
     private UUID ID;
-    private Long workPlaceID;
+    private UUID workPlaceID;
     private String firstName;
     private String lastName;
     private String middleName;

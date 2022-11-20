@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class MissiveListDTOBuilder {
     private UUID ID;
-    private Long orgID;
+    private UUID orgID;
     private String departmentName;
     private String senderFirstName;
     private String senderLastName;
@@ -29,7 +29,7 @@ public class MissiveListDTOBuilder {
         return this;
     }
 
-    public MissiveListDTOBuilder setOrgID(Long orgID) {
+    public MissiveListDTOBuilder setOrgID(UUID orgID) {
         this.orgID = orgID;
         return this;
     }

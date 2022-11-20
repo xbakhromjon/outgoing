@@ -3,6 +3,7 @@ package uz.bakhromjon.role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import uz.bakhromjon.base.entity.AbstractEntity;
 
 import javax.persistence.*;
 
@@ -12,13 +13,9 @@ import javax.persistence.*;
  **/
 @Setter
 @Getter
-@AllArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Role extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)

@@ -6,6 +6,7 @@ import uz.bakhromjon.base.entity.AbstractEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,14 +16,14 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "confirmative")
 public class Confirmative extends AbstractEntity {
-    private Long workPlaceID;
-    private Long userID;
+    private UUID workPlaceID;
+    private UUID userID;
     private Integer statusCode;
     private LocalDateTime statusTime = LocalDateTime.now();
     private Integer orderNumber;
     private Boolean isReadyToSend = false;
 
-    public Confirmative(Long workPlaceID, Long userID, Integer statusCode, Integer orderNumber) {
+    public Confirmative(UUID workPlaceID, UUID userID, Integer statusCode, Integer orderNumber) {
         this.workPlaceID = workPlaceID;
         this.userID = userID;
         this.statusCode = statusCode;

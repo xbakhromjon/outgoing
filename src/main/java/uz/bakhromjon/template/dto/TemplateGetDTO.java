@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TemplateGetDTO {
     private UUID ID;
-    private Long workPlaceID;
+    private UUID workPlaceID;
     private String content;
     private String name;
     private ContentFile image;

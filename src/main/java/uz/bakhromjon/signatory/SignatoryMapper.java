@@ -7,6 +7,8 @@ import uz.bakhromjon.base.mapper.BaseMapper;
 import uz.bakhromjon.feign.obj.UserInfo;
 import uz.bakhromjon.signatory.dto.SignatoryGetDTO;
 
+import java.util.UUID;
+
 @Component
 public class SignatoryMapper implements BaseMapper {
     private final WorkPlaceFeignService workPlaceFeignService;
@@ -17,7 +19,7 @@ public class SignatoryMapper implements BaseMapper {
         this.userFeignService = userFeignService;
     }
 
-    public Signatory toEntity(Long signatoryWorkPlaceID) {
+    public Signatory toEntity(UUID signatoryWorkPlaceID) {
         Signatory signatory = new Signatory(signatoryWorkPlaceID,
                 workPlaceFeignService.getUserID(signatoryWorkPlaceID),
                 SignatoryStatus.SIGNED.getCode());

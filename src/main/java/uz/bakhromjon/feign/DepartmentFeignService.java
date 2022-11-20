@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uz.bakhromjon.exception.exception.UniversalException;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class DepartmentFeignService {
     private final RestTemplate restTemplate;
 
-    public String getName(Long ID) {
+    public String getName(UUID ID) {
 //        return getNameRemote(ID);
         return "Soliq";
     }

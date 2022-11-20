@@ -5,6 +5,7 @@ import uz.bakhromjon.base.entity.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "in_receiver")
 public class InReceiver extends AbstractEntity {
-    private Long correspondentID;
+    private UUID correspondentID;
 }

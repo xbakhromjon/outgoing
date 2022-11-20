@@ -19,14 +19,14 @@ import java.util.UUID;
 @Entity
 public class Feedback extends AbstractEntity {
     private UUID rootMissiveID;
-    private Long workPlaceID;
+    private UUID workPlaceID;
     @OneToMany
     private List<ConfFeedback> confFeedbacks = new ArrayList<>();
 
     @OneToMany
     private List<SignatoryFeedback> signatoryFeedbacks = new ArrayList<>();
 
-    public Feedback(UUID rootMissiveID, Long workPlaceID) {
+    public Feedback(UUID rootMissiveID, UUID workPlaceID) {
         this.rootMissiveID = rootMissiveID;
         this.workPlaceID = workPlaceID;
     }

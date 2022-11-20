@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface FeedbackRepository extends JpaRepository<Feedback, UUID>, BaseRepository {
 
     @Query(nativeQuery = true, value = "select * from feedback where root_missiveid = :rootMissiveID and work_placeid = :workPlaceID")
-    Optional<Feedback> find(UUID rootMissiveID, Long workPlaceID);
+    Optional<Feedback> find(UUID rootMissiveID, UUID workPlaceID);
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TemplateCreateDTO {
-    private Long workPlaceID;
+    private UUID workPlaceID;
     private String content;
     private String name;
     private UUID fileID;

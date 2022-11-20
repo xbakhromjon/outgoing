@@ -71,11 +71,11 @@ public class MissiveMapper implements BaseMapper {
     }
 
     public Missive toEntity(MissiveCreateDTO createDTO) throws IOException {
-        Long workPlaceID = createDTO.getWorkPlaceID();
+        UUID workPlaceID = createDTO.getWorkPlaceID();
         Sender sender = senderMapper.toEntity(workPlaceID);
-        Long signatoryWorkPlaceID = createDTO.getSignatoryWorkPlaceID();
+        UUID signatoryWorkPlaceID = createDTO.getSignatoryWorkPlaceID();
         Signatory signatory = signatoryMapper.toEntity(signatoryWorkPlaceID);
-        List<Long> confirmativeWorkPlaceIDs = createDTO.getConfirmativeWorkPlaceIDs();
+        List<UUID> confirmativeWorkPlaceIDs = createDTO.getConfirmativeWorkPlaceIDs();
         List<Confirmative> confirmatives = confirmativeMapper.toEntity(confirmativeWorkPlaceIDs);
         List<OutReceiverCreateDTO> outReceiverCreateDTOs = createDTO.getOutReceivers();
         List<OutReceiver> outReceivers = outReceiverMapper.toEntity(outReceiverCreateDTOs);
@@ -100,7 +100,12 @@ public class MissiveMapper implements BaseMapper {
         for (MissiveListProjection missiveListProjection : missiveListProjections) {
             UserInfo userInfo = userFeignService.getUserInfo(missiveListProjection.getSenderUserID());
             String departmentName = departmentFeignService.getName(missiveListProjection.getDepartmentID());
-            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).setDepartmentName(departmentName).setSenderFirstName(userInfo.getFirstName()).setSenderLastName(userInfo.getLastName()).setShortInfo(missiveListProjection.getShortInfo()).setOrgID(missiveListProjection.getOrgID()).setTotalCount(missiveListProjection.getTotalCount())
+            MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().
+                    setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).
+                    setDepartmentName(departmentName).setSenderFirstName(userInfo.getFirstName()).
+                    setSenderLastName(userInfo.getLastName()).
+                    setShortInfo(missiveListProjection.getShortInfo()).
+                    setOrgID(missiveListProjection.getOrgID()).setTotalCount(missiveListProjection.getTotalCount())
                     .setNumber(missiveListProjection.getNumber())
                     .setRegisteredAt(missiveListProjection.getRegisteredAt())
                     .create();

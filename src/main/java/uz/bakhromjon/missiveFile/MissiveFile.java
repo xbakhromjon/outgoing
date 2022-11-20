@@ -8,6 +8,7 @@ import uz.bakhromjon.contentFile.ContentFile;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,6 +25,6 @@ public class MissiveFile extends Auditable {
     private ContentFile file;
     private Integer version;
     private String rejectedPurpose;
-    private Long rejectedWorkPlaceID;
-    private Long rejectedUserID;
+    private UUID rejectedWorkPlaceID;
+    private UUID rejectedUserID;
 }

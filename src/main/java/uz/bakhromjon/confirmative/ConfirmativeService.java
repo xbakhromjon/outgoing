@@ -27,14 +27,14 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
         this.baseUtils = baseUtils;
     }
 
-    public List<Confirmative> refresh(List<Long> confirmativeWorkPlaceIDs, List<Confirmative> trashConfirmatives) {
+    public List<Confirmative> refresh(List<UUID> confirmativeWorkPlaceIDs, List<Confirmative> trashConfirmatives) {
         List<Confirmative> newConfirmatives = create(confirmativeWorkPlaceIDs);
         deleteAll(trashConfirmatives);
         return newConfirmatives;
     }
 
 
-    public List<Confirmative> create(List<Long> confirmativeWorkPlaceIDs) {
+    public List<Confirmative> create(List<UUID> confirmativeWorkPlaceIDs) {
         List<Confirmative> confirmatives = mapper.toEntity(confirmativeWorkPlaceIDs);
         return repository.saveAll(confirmatives);
     }
@@ -87,7 +87,7 @@ public class ConfirmativeService extends AbstractService<ConfirmativeRepository,
     public List<ConfirmativePDFDTO> makePDFDTO(List<Confirmative> confirmatives) {
         List<ConfirmativePDFDTO> confirmativePDFDTOs = new ArrayList<>();
         for (Confirmative confirmative : confirmatives) {
-            WorkPlaceShortInfo workPlaceInfoRemote = workPlaceFeignService.getWorkPlaceInfoRemote(confirmative.getWorkPlaceID());
+            WorkPlaceShortInfo workPlaceInfoRemote = workPlaceFeignService.getWorkPlaceInfo(confirmative.getWorkPlaceID());
             String data = "" + confirmative.getWorkPlaceID();
             String path = contentFileService.generateQRCode(data, 200, 200);
             String fullPosition = workPlaceInfoRemote.getDepartmentName() + " " + workPlaceInfoRemote.getPositionName();

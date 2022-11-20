@@ -122,7 +122,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         Signatory signatory = missive.getSignatory();
         signatoryService.edit(signatory, updateDTO.getSignatoryWorkPlaceID());
 
-        List<Long> newConfirmativeWorkPlaceIDs = updateDTO.getConfirmativeWorkPlaceIDs();
+        List<UUID> newConfirmativeWorkPlaceIDs = updateDTO.getConfirmativeWorkPlaceIDs();
         List<Confirmative> newConfirmatives = confirmativeService.refresh(newConfirmativeWorkPlaceIDs, missive.getConfirmatives());
         missive.setConfirmatives(newConfirmatives);
 
@@ -162,7 +162,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(true);
     }
 
-    public ResponseEntity<?> get(Long workPlaceID, String id) {
+    public ResponseEntity<?> get(UUID workPlaceID, String id) {
         UUID ID = baseUtils.strToUUID(id);
         // search in cache
         Missive missive = cacheStore.get(ID);
@@ -181,7 +181,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return ResponseEntity.ok(missiveGetDTO);
     }
 
-    private void setStatus(Long workPlaceID, UUID missiveID) {
+    private void setStatus(UUID workPlaceID, UUID missiveID) {
         // signatory
         Missive missive = getPersist(missiveID);
         if (missive.getSignatory().getWorkPlaceID().equals(workPlaceID)) {
@@ -419,7 +419,7 @@ public class MissiveService extends AbstractService<MissiveRepository, MissiveVa
         return 0;
     }
 
-    public ResponseEntity<?> getSketchy(Long workPlaceID, String id) {
+    public ResponseEntity<?> getSketchy(UUID workPlaceID, String id) {
         UUID ID = baseUtils.strToUUID(id);
         Missive missive = getPersist(ID);
         MissiveGetDTO missiveGetDTO = mapper.toGetDTO(missive);

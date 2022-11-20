@@ -8,12 +8,14 @@ import org.springframework.web.client.RestTemplate;
 import uz.bakhromjon.exception.exception.UniversalException;
 import uz.bakhromjon.feign.obj.UserInfo;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserFeignService {
     private final RestTemplate restTemplate;
 
-    public UserInfo getUserInfo(Long ID) {
+    public UserInfo getUserInfo(UUID ID) {
         if (ID == null) {
             return null;
         }

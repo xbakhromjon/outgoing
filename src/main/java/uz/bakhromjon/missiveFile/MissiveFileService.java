@@ -7,7 +7,6 @@ import uz.bakhromjon.contentFile.ContentFileService;
 import uz.bakhromjon.exception.exception.UniversalException;
 import uz.bakhromjon.missiveFile.dto.MissiveFileCreateDTO;
 import uz.bakhromjon.outReceiver.OutReceiverValidator;
-import uz.bakhromjon.missiveFile.MissiveFile.MissiveFileBuilder;
 import uz.bakhromjon.utils.BaseUtils;
 
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class MissiveFileService extends AbstractService<MissiveFileRepository, O
     public MissiveFile createNewVersion(MissiveFileCreateDTO createDTO) {
         UUID missiveID = createDTO.getMissiveID();
         Integer maxVersion = repository.getMaxVersion(missiveID);
-        MissiveFile missiveFile = new MissiveFileBuilder().content(createDTO.getContent()).version(maxVersion + 1).build();
+        MissiveFile missiveFile = new MissiveFile.MissiveFileBuilder().content(createDTO.getContent()).version(maxVersion + 1).build();
         return repository.save(missiveFile);
     }
 

@@ -44,7 +44,7 @@ public class SenderService extends AbstractService<SenderRepository, SenderValid
     }
 
     public SenderPDFDTO makePDFDTO(Sender sender) {
-        WorkPlaceShortInfo workPlaceInfoRemote = workPlaceFeignService.getWorkPlaceInfoRemote(sender.getWorkPlaceID());
+        WorkPlaceShortInfo workPlaceInfoRemote = workPlaceFeignService.getWorkPlaceInfo(sender.getWorkPlaceID());
         String data = "" + sender.getWorkPlaceID();
         String path = contentFileService.generateQRCode(data, 200, 200);
         String fullPosition = workPlaceInfoRemote.getDepartmentName() + " " + workPlaceInfoRemote.getPositionName();
