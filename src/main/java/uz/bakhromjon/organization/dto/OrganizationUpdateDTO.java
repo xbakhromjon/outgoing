@@ -1,30 +1,29 @@
-package uz.bakhromjon.organization;
+package uz.bakhromjon.organization.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uz.bakhromjon.base.entity.AbstractEntity;
 import uz.bakhromjon.contentFile.ContentFile;
 
-import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.util.UUID;
 
 /**
  * @author : Bakhromjon Khasanboyev
  **/
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Organization extends AbstractEntity {
+public class OrganizationUpdateDTO {
+    private UUID id;
     private String name;
     private String shortName;
     private String address;
     private String mobileNumber;
     private String email;
-    @OneToOne
-    private ContentFile logo;
+    private UUID logoId;
     private String website;
 }

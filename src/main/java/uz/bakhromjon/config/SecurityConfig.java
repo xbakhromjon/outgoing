@@ -26,7 +26,7 @@ import uz.bakhromjon.user.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(
         prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final String[] WHITE_LIST = {"/auth/signin", "/auth/signup", "/auth/test"};
+    private final String[] WHITE_LIST = {"/outgoing/api/auth/signin", "/outgoing/api/auth/signout"};
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 

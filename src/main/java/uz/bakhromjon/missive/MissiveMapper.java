@@ -7,10 +7,9 @@ import uz.bakhromjon.confirmative.Confirmative;
 import uz.bakhromjon.confirmative.ConfirmativeMapper;
 import uz.bakhromjon.contentFile.ContentFile;
 import uz.bakhromjon.contentFile.ContentFileService;
+import uz.bakhromjon.department.DepartmentService;
 import uz.bakhromjon.exception.exception.UniversalException;
-import uz.bakhromjon.feign.DepartmentFeignService;
 import uz.bakhromjon.feign.OrganizationFeignService;
-import uz.bakhromjon.feign.UserFeignService;
 import uz.bakhromjon.feign.obj.UserInfo;
 import uz.bakhromjon.fishka.FishkaMapper;
 import uz.bakhromjon.fishka.FishkaService;
@@ -29,11 +28,14 @@ import uz.bakhromjon.sender.Sender;
 import uz.bakhromjon.sender.SenderMapper;
 import uz.bakhromjon.signatory.Signatory;
 import uz.bakhromjon.signatory.SignatoryMapper;
+import uz.bakhromjon.user.UserService;
 import uz.bakhromjon.utils.BaseUtils;
 import uz.bakhromjon.utils.OrgShortInfo;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -46,14 +48,17 @@ public class MissiveMapper implements BaseMapper {
     private final InReceiverMapper inReceiverMapper;
     private final ContentFileService contentFileService;
     private final MissiveFileMapper missiveFileMapper;
-    private final DepartmentFeignService departmentFeignService;
-    private final UserFeignService userFeignService;
+    private final DepartmentService departmentService;
+    private final UserService userService;
     private final BaseUtils baseUtils;
     private final OrganizationFeignService organizationFeignService;
     private final FishkaService fishkaService;
     private final FishkaMapper fishkaMapper;
 
-    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper, OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper, ContentFileService contentFileService, MissiveFileMapper missiveFileMapper, DepartmentFeignService departmentFeignService, UserFeignService userFeignService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService, FishkaService fishkaService,
+    public MissiveMapper(SenderMapper senderMapper, SignatoryMapper signatoryMapper, ConfirmativeMapper confirmativeMapper,
+                         OutReceiverMapper outReceiverMapper, InReceiverMapper inReceiverMapper,
+                         ContentFileService contentFileService, MissiveFileMapper missiveFileMapper,
+                         DepartmentService departmentService, UserService userService, BaseUtils baseUtils, OrganizationFeignService organizationFeignService, FishkaService fishkaService,
                          FishkaMapper fishkaMapper) {
         this.senderMapper = senderMapper;
         this.signatoryMapper = signatoryMapper;
@@ -62,8 +67,8 @@ public class MissiveMapper implements BaseMapper {
         this.inReceiverMapper = inReceiverMapper;
         this.contentFileService = contentFileService;
         this.missiveFileMapper = missiveFileMapper;
-        this.departmentFeignService = departmentFeignService;
-        this.userFeignService = userFeignService;
+        this.departmentService = departmentService;
+        this.userService = userService;
         this.baseUtils = baseUtils;
         this.organizationFeignService = organizationFeignService;
         this.fishkaService = fishkaService;
@@ -90,7 +95,7 @@ public class MissiveMapper implements BaseMapper {
         MissiveFile missiveFiles = missive.getMissiveFile();
         OrgShortInfo orgShortInfo = organizationFeignService.getShortInfo(missive.getOrgID());
         return new MissiveGetDTO(missive.getId(), missive.getRootVersionID(), orgShortInfo.getName(), orgShortInfo.getEmail(), senderMapper.toGetDTO(missive.getSender()), signatoryMapper.toGetDTO(missive.getSignatory()), confirmativeMapper.toGetDTO(missive.getConfirmatives()),
-                departmentFeignService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()),
+                departmentService.getName(missive.getDepartmentID()), outReceiverMapper.toGetDTO(missive.getOutReceivers()),
                 inReceiverMapper.toGetDTO(missive.getInReceivers()), missive.getBaseFiles(), missiveFileMapper.toGetDTO(missive.getMissiveFile()),
                 missive.getCreatedAt().toLocalDate(), missive.getReadyPDF());
     }
@@ -98,8 +103,8 @@ public class MissiveMapper implements BaseMapper {
     public List<MissiveListDTO> toListDTO(List<MissiveListProjection> missiveListProjections) {
         List<MissiveListDTO> missiveListDTOs = new ArrayList<>();
         for (MissiveListProjection missiveListProjection : missiveListProjections) {
-            UserInfo userInfo = userFeignService.getUserInfo(missiveListProjection.getSenderUserID());
-            String departmentName = departmentFeignService.getName(missiveListProjection.getDepartmentID());
+            UserInfo userInfo = userService.getUserInfo(missiveListProjection.getSenderUserID());
+            String departmentName = departmentService.getName(missiveListProjection.getDepartmentID());
             MissiveListDTO missiveListDTO = new MissiveListDTOBuilder().
                     setID(baseUtils.convertBytesToUUID(missiveListProjection.getID())).
                     setDepartmentName(departmentName).setSenderFirstName(userInfo.getFirstName()).

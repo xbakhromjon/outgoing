@@ -3,10 +3,13 @@ package uz.bakhromjon.contentFile.dto;
 /**
  * @author : Bakhromjon Khasanboyev
  **/
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 
 @Setter
@@ -14,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContentFileGetDTO {
-    private String path;
+    private UUID id;
     private String originalName;
     private String generatedName;
     private Long size;

@@ -17,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserCreateDTO {
+    private UUID departmentId;
     private UUID createdBy;
     private String username;
     private String email;

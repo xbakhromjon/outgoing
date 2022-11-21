@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.bakhromjon.contentFile.ContentFile;
+import uz.bakhromjon.contentFile.dto.ContentFileGetDTO;
 
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class UserGetDTO {
     private UUID id;
     private String username;
     private String email;
-    private ContentFile avatar;
+    private ContentFileGetDTO avatar;
     private String firstname;
     private String lastname;
 }

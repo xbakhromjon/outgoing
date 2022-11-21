@@ -24,5 +24,8 @@ public interface WorkPlaceRepository extends JpaRepository<WorkPlace, Long>, Bas
 
     @Query(nativeQuery = true, value = "select :userID in (select user_id from work_place where not is_deleted)")
     boolean isAttachedUser(UUID userID);
+
+    @Query(nativeQuery = true, value = "select * from work_place where user_id = :userId")
+    Optional<WorkPlace> findByUserId(UUID userId);
 }
 

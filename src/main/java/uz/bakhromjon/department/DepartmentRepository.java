@@ -16,11 +16,13 @@ import java.util.UUID;
 
 @Repository
 @Transactional
-public interface DepartmentRepository extends JpaRepository<Department, Long>, BaseRepository {
+public interface DepartmentRepository extends JpaRepository<Department, UUID>, BaseRepository {
     Optional<Department> findByIdAndIsDeleted(UUID id, boolean isDeleted);
 
     @Query(nativeQuery = true, value = "update department set is_deleted = true  where id = :id")
     void delete(UUID id);
 
+    @Query(nativeQuery = true, value = "select name from department where id = :id")
+    String getName(UUID id);
 }
 

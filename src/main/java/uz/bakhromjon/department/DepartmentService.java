@@ -69,10 +69,6 @@ public class DepartmentService extends AbstractService<
     }
 
 
-    public void empty(UUID id) {
-
-    }
-
     public Department getPersist(UUID id) {
         Optional<Department> optional = repository.findByIdAndIsDeleted(id, false);
         return optional.orElseThrow(() -> {
@@ -83,6 +79,10 @@ public class DepartmentService extends AbstractService<
 
     public void save(Department department) {
         repository.save(department);
+    }
+
+    public String getName(UUID id) {
+        return repository.getName(id);
     }
 }
 

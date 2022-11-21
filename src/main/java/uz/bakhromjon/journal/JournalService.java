@@ -13,6 +13,7 @@ import uz.bakhromjon.feign.UserFeignService;
 import uz.bakhromjon.feign.obj.UserInfo;
 import uz.bakhromjon.journal.dto.*;
 import uz.bakhromjon.missive.MissiveService;
+import uz.bakhromjon.user.UserService;
 import uz.bakhromjon.utils.BaseUtils;
 import uz.bakhromjon.utils.ResponsePage;
 
@@ -29,15 +30,15 @@ public class JournalService extends AbstractService<JournalRepository, JournalVa
     private final BaseUtils baseUtils;
     private final JournalMapper mapper;
     private final MissiveService missiveService;
-    private final UserFeignService userFeignService;
+    private final UserService userService;
 
     public JournalService(JournalRepository repository, JournalValidator validator, BaseUtils baseUtils, JournalMapper journalMapper, MissiveService missiveService,
-                          UserFeignService userFeignService) {
+                          UserService userService) {
         super(repository, validator, journalMapper);
         this.baseUtils = baseUtils;
         this.mapper = journalMapper;
         this.missiveService = missiveService;
-        this.userFeignService = userFeignService;
+        this.userService = userService;
     }
 
     public HttpEntity<?> create(JournalCreateDto createDto, HttpServletRequest request) throws JsonProcessingException {
@@ -158,7 +159,7 @@ public class JournalService extends AbstractService<JournalRepository, JournalVa
         UUID ID = validator.validOnKey(id);
         Journal journal = getPersist(ID);
         UUID userID = journal.getUserID();
-        UserInfo userInfo = userFeignService.getUserInfo(userID);
+        UserInfo userInfo = userService.getUserInfo(userID);
         JournalLogDto journalLogDto = new JournalLogDto();
         if (userInfo != null) {
             journalLogDto.setFirstName(userInfo.getFirstName());

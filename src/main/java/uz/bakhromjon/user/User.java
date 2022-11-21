@@ -38,6 +38,7 @@ public class User extends Auditable {
 
     private String firstname;
     private String lastname;
+    private String middleName;
     private Boolean isAttached = false;
 
     @ManyToMany(fetch = FetchType.LAZY)

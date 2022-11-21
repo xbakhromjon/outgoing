@@ -1,6 +1,7 @@
 package uz.bakhromjon.user;
 
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,10 @@ import org.springframework.stereotype.Service;
 import uz.bakhromjon.base.service.AbstractService;
 import uz.bakhromjon.contentFile.ContentFile;
 import uz.bakhromjon.contentFile.ContentFileService;
+import uz.bakhromjon.department.Department;
+import uz.bakhromjon.department.DepartmentService;
 import uz.bakhromjon.exception.exception.UniversalException;
+import uz.bakhromjon.feign.obj.UserInfo;
 import uz.bakhromjon.user.dto.UserCreateDTO;
 import uz.bakhromjon.workplace.WorkPlace;
 import uz.bakhromjon.workplace.WorkPlaceRepository;
@@ -26,6 +30,8 @@ public class UserService extends AbstractService<UserRepository, UserValidator, 
 
     @Autowired
     private ContentFileService contentFileService;
+    @Autowired
+    private DepartmentService departmentService;
 
     public UserService(UserRepository repository, UserValidator validator, UserMapper mapper) {
         super(repository, validator, mapper);
@@ -34,9 +40,12 @@ public class UserService extends AbstractService<UserRepository, UserValidator, 
     public ResponseEntity<?> create(UserCreateDTO createDTO) {
         validator.validForCreate(createDTO);
         User user = mapper.toEntity(createDTO);
+        Department department = departmentService.getPersist(createDTO.getDepartmentId());
         ContentFile avatar = contentFileService.getPersist(createDTO.getAvatarId());
         user.setAvatar(avatar);
         user = repository.save(user);
+        department.getUsers().add(user);
+        departmentService.save(department);
         return ResponseEntity.ok(mapper.toGetDTO(user));
     }
 
@@ -52,5 +61,10 @@ public class UserService extends AbstractService<UserRepository, UserValidator, 
             log.warn("User not found {} with id", id);
             throw new UniversalException(String.format("User not found %s with", id), HttpStatus.BAD_REQUEST);
         });
+    }
+
+    public UserInfo getUserInfo(UUID userID) {
+        User user = getPersist(userID);
+        return new UserInfo(user.getFirstname(), user.getLastname(), user.getMiddleName());
     }
 }

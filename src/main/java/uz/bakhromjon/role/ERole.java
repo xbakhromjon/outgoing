@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ERole {
-    BASE_ADMIN(-1),
     ADMIN(0),
     BOSS_1(1),
     BOSS_2(2),

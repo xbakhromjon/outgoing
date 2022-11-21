@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.bakhromjon.base.mapper.BaseMapper;
 import uz.bakhromjon.contentFile.ContentFileService;
-import uz.bakhromjon.feign.UserFeignService;
 import uz.bakhromjon.feign.obj.UserInfo;
 import uz.bakhromjon.missiveFile.dto.MissiveFileGetDTO;
+import uz.bakhromjon.user.UserService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class MissiveFileMapper implements BaseMapper {
-    private final UserFeignService userFeignService;
+    private final UserService userService;
     private final ContentFileService contentFileService;
 
     public MissiveFile toEntity(String content) throws IOException {
@@ -28,7 +28,7 @@ public class MissiveFileMapper implements BaseMapper {
         if (missiveFile == null) {
             return null;
         }
-        UserInfo userInfo = userFeignService.getUserInfo(missiveFile.getRejectedUserID());
+        UserInfo userInfo = userService.getUserInfo(missiveFile.getRejectedUserID());
         MissiveFileGetDTO missiveFileGetDTO = new MissiveFileGetDTO(missiveFile.getContent(), missiveFile.getVersion(), missiveFile.getRejectedPurpose());
         if (userInfo != null) {
             missiveFileGetDTO.setRejectedFirstName(userInfo.getFirstName());

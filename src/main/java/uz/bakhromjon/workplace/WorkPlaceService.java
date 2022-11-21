@@ -11,6 +11,7 @@ import uz.bakhromjon.department.Department;
 import uz.bakhromjon.department.DepartmentService;
 import uz.bakhromjon.exception.exception.UniversalException;
 import uz.bakhromjon.permission.PermissionService;
+import uz.bakhromjon.role.Role;
 import uz.bakhromjon.role.RoleService;
 import uz.bakhromjon.template.Template;
 import uz.bakhromjon.user.UserService;
@@ -123,6 +124,13 @@ public class WorkPlaceService extends AbstractService<
         });
     }
 
+    public Role getRoleByUser(UUID userId) {
+        Optional<WorkPlace> optional = repository.findByUserId(userId);
+        WorkPlace workPlace = optional.orElseThrow(() -> {
+            throw new UniversalException(String.format("WorkPlace not found by %s userId", userId), HttpStatus.BAD_REQUEST);
+        });
+        return workPlace.getRole();
+    }
 }
 
 

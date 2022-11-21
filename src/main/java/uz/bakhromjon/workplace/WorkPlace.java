@@ -33,4 +33,10 @@ public class WorkPlace extends Auditable {
     private UserPosition userPosition;
     @ManyToMany
     private List<Permission> permissions;
+
+    public WorkPlace(User user, Boolean isAttached, Role role) {
+        this.user = user;
+        this.isAttached = isAttached;
+        this.role = role;
+    }
 }
