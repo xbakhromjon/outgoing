@@ -26,11 +26,6 @@ public class AuthController {
         return service.authenticateUser(loginRequest);
     }
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpRequest) {
-//        return service.registerUser(signUpRequest);
-//    }
-
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
         return service.logoutUser();

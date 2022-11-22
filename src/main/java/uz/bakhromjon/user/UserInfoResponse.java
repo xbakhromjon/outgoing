@@ -20,5 +20,4 @@ public class UserInfoResponse {
     private UUID id;
     private String username;
     private String email;
-    private List<String> roles;
 }

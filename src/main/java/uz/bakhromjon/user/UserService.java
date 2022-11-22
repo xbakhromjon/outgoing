@@ -5,6 +5,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.bakhromjon.base.service.AbstractService;
 import uz.bakhromjon.contentFile.ContentFile;
@@ -32,6 +33,8 @@ public class UserService extends AbstractService<UserRepository, UserValidator, 
     private ContentFileService contentFileService;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    PasswordEncoder encoder;
 
     public UserService(UserRepository repository, UserValidator validator, UserMapper mapper) {
         super(repository, validator, mapper);
@@ -43,6 +46,7 @@ public class UserService extends AbstractService<UserRepository, UserValidator, 
         Department department = departmentService.getPersist(createDTO.getDepartmentId());
         ContentFile avatar = contentFileService.getPersist(createDTO.getAvatarId());
         user.setAvatar(avatar);
+        user.setPassword(encoder.encode(createDTO.getPassword()));
         user = repository.save(user);
         department.getUsers().add(user);
         departmentService.save(department);

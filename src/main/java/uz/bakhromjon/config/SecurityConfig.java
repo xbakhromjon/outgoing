@@ -26,7 +26,7 @@ import uz.bakhromjon.user.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(
         prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final String[] WHITE_LIST = {"/outgoing/api/auth/signin", "/outgoing/api/auth/signout"};
+    private final String[] WHITE_LIST = {"/auth/signin", "/auth/signout", "/swagger-ui/**", "/v3/api-docs/**"};
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("**").permitAll()
+                .authorizeRequests().antMatchers(WHITE_LIST).permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

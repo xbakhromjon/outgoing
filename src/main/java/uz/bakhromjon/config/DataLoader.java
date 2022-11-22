@@ -75,7 +75,7 @@ public class DataLoader implements CommandLineRunner {
 
             // admin
             User admin = userRepository.save(new User("xbakhromjon", "xbakhromjon@gmail.com",
-                    "123"));
+                    "$2a$04$wBrJp8kMCE7KgS/eJH19.uu9yHKWW/ldaYnmqr3nWEW7ePBK3eWQS"));
 
             department.setUsers(Collections.singletonList(admin));
             departmentRepository.save(department);

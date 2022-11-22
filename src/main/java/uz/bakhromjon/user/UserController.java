@@ -30,6 +30,7 @@ public class UserController extends AbstractController<UserService> {
         return service.create(createDTO);
     }
 
+    @CheckRole(value = ERole.ADMIN)
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestParam(name = "id") UUID id) {
         return service.delete(id);
